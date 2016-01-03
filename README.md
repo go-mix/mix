@@ -6,7 +6,7 @@ Atomix is sequence mixing for Music development.
 
 Read the API documentation at [godoc.org/github.com/outrightmental/go-atomix](https://godoc.org/github.com/outrightmental/go-atomix)
 
-Atomix _________________________________________________________________________________________________________.
+**Atomix** seeks to solve the problem of audio mixing on top of bare SDL, specifically for the purpose of the playback of sequences where audio files and their playback timing is known in advance. It seeks to do this with the absolute minimal logical overhead to SDL, and implement that logic in pure Go, though it is called entirely via C bindings by the SDL audio callback, for the most idiomatic Go approach to solving the **sequence mixing** problem.
 
 Copyright 2015 Outright Mental, Inc.
 
