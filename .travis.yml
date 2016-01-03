@@ -3,6 +3,7 @@ language: go
 install:
   - go get github.com/stretchr/testify/assert
   - go get github.com/stretchr/testify/mock
+  - go get github.com/veandco/go-sdl2/sdl
 
 go:
   - 1.5
