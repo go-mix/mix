@@ -5,7 +5,6 @@ package atomix // is for sequence mixing
 #include <stdio.h>
 #include <stdint.h>
 typedef unsigned char Uint8;
-extern uint8_t* Sha256data(uint8_t* p0, int p1);
 void AudioCallback(void *userdata, Uint8 *stream, int len);
 */
 import "C"
