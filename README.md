@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/outrightmental/go-atomix.svg?branch=master)](https://travis-ci.org/outrightmental/go-atomix)
 
-Atomix is sequence mixing for Music development.
+Atomix is for sequence mixing in music application development.
 
 Read the API documentation at [godoc.org/github.com/outrightmental/go-atomix](https://godoc.org/github.com/outrightmental/go-atomix)
 
@@ -12,7 +12,7 @@ Copyright 2015 Outright Mental, Inc.
 
 ### Why?
 
-#### Atomix is sequence mixing for Music development.
+For sequence mixing in music application development.
 
 Following principles of modularity and reusability according to [The Unix Philosophy](http://en.wikipedia.org/wiki/Unix_philosophy) and assuming the usefulness of [go-sdl2](https://github.com/veandco/go-sdl2) there is still a design problem to be solved, that was equally inherent when using the original [C++ SDL 2.0](https://www.libsdl.org/) library.
 
