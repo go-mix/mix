@@ -5,15 +5,7 @@ go:
   - tip
 
 install:
-  - cd ~
-  - mkdir sdl2install
-  - export SDL2DIR="`pwd`/sdl2install"
-  - wget https://www.libsdl.org/release/SDL2-2.0.3.tar.gz
-  - tar xzf SDL2-2.0.3.tar.gz
-  - cd SDL2-2.0.3
-  - ./configure --prefix=$SDL2DIR
-  - make
-  - make install
+  - sudo apt-get install cmake libsdl2-dev
   - go get github.com/stretchr/testify/assert
   - go get github.com/stretchr/testify/mock
   - go get github.com/veandco/go-sdl2/sdl
