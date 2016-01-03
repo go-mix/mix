@@ -28,7 +28,63 @@ Ergo, **atomix** seeks to solve the problem of audio mixing on top of bare SDL, 
 
 ### Usage
 
-    T. B. D.
+Here's an example implementation of **go-sdl2** + **go-atomix**:
+
+    package main
+    
+    import (
+      "time"    
+      "github.com/veandco/go-sdl2/sdl"
+      "github.com/outrightmental/go-atomix"
+    )
+    
+    func main() {
+      if err := sdl.Init(sdl.INIT_AUDIO); err != nil {
+        panic(err)
+      }
+      defer sdl.Quit()
+    
+      var (
+        start = time.Now().Add(1 * time.Second) // 1 second delay before start
+        beat = 500 * time.Millisecond
+        loops = 4
+        )
+    
+      var (
+        p808 = "assets/sounds/percussion/808/"
+        kick1 = p808 + "kick1.wav"
+        kick2 = p808 + "kick2.wav"
+        snare = p808 + "snare.wav"
+        marac = p808 + "maracas.wav"
+        )
+        
+      spec := atomix.Spec(&sdl.AudioSpec{
+        Freq:     44100,
+        Format:   sdl.AUDIO_U16,
+        Channels: 2,
+        Samples:  4096,
+      })
+    
+      t := start
+      for n := 0; n < loops; n++ {
+        atomix.Play(kick1, t, 1)
+        atomix.Play(marac, t + 0.5 * beat, 0.5)
+        atomix.Play(snare, t + 1 * beat, 0.8)
+        atomix.Play(marac, t + 1.5 * beat, 0.5)
+        atomix.Play(kick2, t + 1.75 * beat, 0.9)
+        atomix.Play(marac, t + 2.5 * beat, 0.5)
+        atomix.Play(kick2, t + 2.5 * beat, 0.9)
+        atomix.Play(snare, t + 3 * beat, 0.8)
+        atomix.Play(marac, t + 3.5 * beat, 0.5)
+        t += 4 * beat
+      }
+      runLength := loops * 4 * beat + 2 * second
+    
+      sdl.OpenAudio(spec, nil)
+      sdl.PauseAudio(false)
+    
+      time.Sleep(runLength)
+    }
 
 ### Development
 
