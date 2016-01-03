@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/outrightmental/go-atomix.svg?branch=master)](https://travis-ci.org/outrightmental/go-atomix)
 
-Atomix is for sequence mixing in music application development.
+#### Sequence-based mixer for Music apps, built on go-sdl2.
 
 Read the API documentation at [godoc.org/github.com/outrightmental/go-atomix](https://godoc.org/github.com/outrightmental/go-atomix)
 
