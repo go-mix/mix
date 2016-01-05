@@ -19,12 +19,12 @@ func NewSource(target string) *Source {
 
 type Source struct {
 	target         string
-	sample         []smp16
+	sample         []uint16
+	spec           *sdl.AudioSpec
 	state          SourceStateEnum
 }
 
-func (s *Source) At(at Hz) smp16 {
-	// TODO: dynamically support modes other than 16-bit (which is coded below as 2 * at and the two value slice)
+func (s *Source) SampleAt(at Hz) uint16 {
 	if at >= 0 && at < Hz(len(s.sample)) {
 		return s.sample[at]
 	}
@@ -63,12 +63,10 @@ func (s *Source) loadFile() {
 	if spec == nil || spec.Format==0 {
 		panic(fmt.Sprintf("could not load WAV %s", s.target))
 	}
-	s.store(data)
-	mixer().Printf("Stored %d bytes for '%s'\n", len(s.sample), s.target)
-}
-
-func (s *Source) store(d []byte) {
-	s.sample = append(s.sample, smp16(binary.BigEndian.Uint16(d)))
+	for n := 0; n < len(data); n += 2 {
+		s.sample = append(s.sample, binary.BigEndian.Uint16(data[n:n+2]))
+	}
+	s.spec = spec
 }
 
 type SourceStateEnum uint

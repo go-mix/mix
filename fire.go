@@ -3,6 +3,7 @@ package atomix // is for sequence mixing
 
 import (
 	"time"
+	// "math"
 )
 
 func NewFire(source string, begin time.Duration, duration time.Duration, volume float64) *Fire {
@@ -17,6 +18,7 @@ func NewFire(source string, begin time.Duration, duration time.Duration, volume 
 
 type Fire struct {
 	source string
+	nextPlaybackHz Hz
 	begin time.Duration
 	duration time.Duration
 	volume float64
@@ -26,13 +28,16 @@ func (f *Fire) Source() string {
 	return f.source
 }
 
-func (f *Fire) At(freq float64, at time.Duration) Hz {
-	rel := at - f.begin
-	if rel >= 0 && rel < f.duration {
-      return Hz(freq * float64(at.Nanoseconds()) / float64(1000000000))
-	} else {
-		return 0
+func (f *Fire) Volume() float64 {
+	return f.volume
+}
+
+func (f *Fire) NextHzAt(at time.Duration) (hz Hz) {
+	if at >= f.begin && at < f.begin + f.duration {
+		hz = f.nextPlaybackHz
+		f.nextPlaybackHz++
 	}
+	return
 }
 
 /*

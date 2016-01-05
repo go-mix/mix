@@ -54,8 +54,10 @@ func AudioCallback(userdata unsafe.Pointer, stream *C.Uint8, length C.int) {
 	hdr := reflect.SliceHeader{Data: uintptr(unsafe.Pointer(stream)), Len: n, Cap: n}
 	buf := *(*[]C.Uint8)(unsafe.Pointer(&hdr))
 
-	for i, b := range mixer().BufferNext(n) {
-		buf[i] = C.Uint8(b)
+	for i := 0; i < n; i += 2 {
+		b := mixer().NextOutputBytes()
+		buf[i] = C.Uint8(b[0])
+		buf[i+1] = C.Uint8(b[1])
 	}
 }
 

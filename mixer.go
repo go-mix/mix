@@ -36,10 +36,7 @@ var (
 	once     sync.Once
 )
 
-type (
-	Hz    uint64
-	smp16 uint16
-)
+type Hz    uint64
 
 type Mixer struct {
 	nowAtHz   Hz // current sample since init
@@ -70,13 +67,8 @@ func (m *Mixer) Play(source string, begin time.Duration, duration time.Duration,
 	m.fire = append(m.fire, NewFire(source, begin, duration, volume))
 }
 
-func (m *Mixer) BufferNext(n int) []byte {
-	var buffer []byte
-	for b := 0; b < n; b+=2 {
-		// this is 16-bit big-endian; TODO: support different bits and platform byte order.
-		buffer = append(buffer, m.mixNextHzBytes()...)
-	}
-	return buffer
+func (m *Mixer) NextOutputBytes() []byte {
+	return m.mixNextHzBytes()
 }
 
 func (m *Mixer) Teardown() {
@@ -87,40 +79,39 @@ func (m *Mixer) Teardown() {
  *
  private */
 
-func (m *Mixer) mixNextHz() smp16 {
+func (m *Mixer) mixNextHz() uint16 {
 	nowAtDur := time.Duration(m.nowAtHz) * time.Second / time.Duration(m.spec.Freq)
 	m.nowAtHz++
-	var Z []smp16
+	var mixThisHz []uint16
 	for _, fire := range m.fire {
-		if sourceAt := fire.At(m.freq, nowAtDur); sourceAt > 0 {
-			m.Printf("play %s at %+v\n", fire.Source(), sourceAt)
-			Z = append(Z, m.sourceAt(fire.Source(), sourceAt))
+		if fireHz := fire.NextHzAt(nowAtDur); fireHz > 0 {
+			mixThisHz = append(mixThisHz, m.sourceAtHz(fire.source, fireHz))
 		}
 	}
-	sumZ := smp16(0)
-	for _, z := range Z {
-		sumZ += z
+	mixSum := uint16(0)
+	for _, sample := range mixThisHz {
+		mixSum += sample
 	}
-	if cntZ := smp16(len(Z)); cntZ > 0 {
-		return sumZ / cntZ
+	if mixCount := uint16(len(mixThisHz)); mixCount > 0 {
+		return mixSum / mixCount
 	} else {
-		return smp16(m.spec.Silence)
+		return uint16(m.spec.Silence)
 	}
 }
 
 func (m *Mixer) mixNextHzBytes() []byte {
-	// TODO: dynamically support modes other than 16-bit Big-Endian (which is coded below as b+=2 and the two buffer[..] assignments per chunk)
-	byZ := make([]byte, 2)
-	binary.BigEndian.PutUint16(byZ, uint16(m.mixNextHz()))
-	return byZ
+	b := make([]byte, 2)
+	// TODO: dynamically support modes other than 16-bit Big-Endian
+	binary.BigEndian.PutUint16(b, m.mixNextHz())
+	return b
 }
 
-func (m *Mixer) sourceAt(source string, at Hz) smp16 {
-	src := m.getSource(source)
-	if src == nil {
+func (m *Mixer) sourceAtHz(src string, srcHz Hz) uint16 {
+	s := m.getSource(src)
+	if s == nil {
 		return 0x80
 	}
-	return src.At(at)
+	return s.SampleAt(srcHz)
 }
 
 func (m *Mixer) setSpec(s sdl.AudioSpec) {
@@ -156,7 +147,7 @@ func (m *Mixer) getSource(source string) *Source {
 
 var storedAudio []C.Uint16
 var	(
-	defaultSample = smp16(0xFFFF)
+	defaultSample = uint16(0xFFFF)
 	defaultAudio = C.Uint16(defaultSample)
 )
 
