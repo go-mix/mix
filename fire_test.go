@@ -1,44 +1,36 @@
 /** Copyright 2015 Outright Mental, Inc. */
 package atomix // is for sequence mixing
 
-// TODO: test fire instantiates with time, velocity, duration
-
-// TODO: test fire fires
-
 import (
 	"github.com/stretchr/testify/assert"
-	// "github.com/veandco/go-sdl2/sdl"
 	"testing"
-	"time"
 )
 
-//
-// Tests
-//
-
-func TestFireAtCorrectHz(t *testing.T) {
-	freq := float64(44100)
+func Test_Fire_Base(t *testing.T) {
+	testLengthTz := Tz(100)
 	src := "sound.wav"
-	bgn := 1 * time.Second
-	dur := 500 * time.Millisecond
-	hzDur := time.Second / time.Duration(freq)
+	bgnTz := Tz(5984)
+	endTz := bgnTz + testLengthTz
 	vol := float64(1)
-	fire := NewFire(src, bgn, dur, vol)
-	t.Logf("hzDur:%+v",hzDur)
-	// note: currently, the actual duration provided is ignored; still, these values ought to come out when queried in this (the expected) order
-	assert.Equal(t, Hz(0), fire.NextHzAt(0))
-	assert.Equal(t, Hz(0), fire.NextHzAt(bgn - hzDur))
-	assert.Equal(t, Hz(0), fire.NextHzAt(bgn))
-	assert.Equal(t, Hz(1), fire.NextHzAt(bgn + hzDur))
-	assert.Equal(t, Hz(2), fire.NextHzAt(bgn + 2 * hzDur))
+	pan := float64(0)
+	fire := NewFire(src, bgnTz, endTz, vol, pan)
+	// before start:
+	assert.Equal(t, Tz(0), fire.At(bgnTz-2))
+	assert.Equal(t, Tz(0), fire.At(bgnTz-1))
+	assert.Equal(t, FIRE_READY, fire.State())
+	assert.Equal(t, true, fire.IsAlive())
+	// start:
+	assert.Equal(t, Tz(0), fire.At(bgnTz))
+	assert.Equal(t, FIRE_PLAY, fire.State())
+	assert.Equal(t, true, fire.IsAlive())
+	// after start / before end:
+	for n := Tz(1); n < testLengthTz; n++ {
+		assert.Equal(t, Tz(n), fire.At(bgnTz+n))
+	}
+	// end:
+	assert.Equal(t, testLengthTz, fire.At(endTz))
+	assert.Equal(t, FIRE_DONE, fire.State())
+	assert.Equal(t, false, fire.IsAlive())
+	// after end:
+	assert.Equal(t, Tz(0), fire.At(endTz+1))
 }
-
-	// fmt.Printf("f.source:%v at:%v f.begin:%v rel:%v\n", f.source, at, f.begin, rel)
-
-	// Configure(sdl.AudioSpec{
-	// 	Freq:     44100,
-	// 	Format:   sdl.AUDIO_U16,
-	// 	Channels: 2,
-	// 	Samples:  4096,
-	// })
-	// assert.NotNil(t, Spec())

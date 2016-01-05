@@ -44,20 +44,30 @@ func Spec() *sdl.AudioSpec {
 	return mixer().getSpec()
 }
 
-func Play(source string, begin time.Duration, duration time.Duration, volume float64) {
-	mixer().Play(source, begin, duration, volume)
+func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) {
+	mixer().SetFire(source, begin, sustain, volume, pan)
+}
+
+func Start() {
+	mixer().Start()
+}
+
+func StartAt(t time.Time) {
+	mixer().StartAt(t)
 }
 
 //export AudioCallback
 func AudioCallback(userdata unsafe.Pointer, stream *C.Uint8, length C.int) {
-	n := int(length)
-	hdr := reflect.SliceHeader{Data: uintptr(unsafe.Pointer(stream)), Len: n, Cap: n}
+	byteSize := int(length)
+	hdr := reflect.SliceHeader{
+		Data: uintptr(unsafe.Pointer(stream)),
+		Len:  byteSize,
+		Cap:  byteSize,
+	}
 	buf := *(*[]C.Uint8)(unsafe.Pointer(&hdr))
 
-	for i := 0; i < n; i += 2 {
-		b := mixer().NextOutputBytes()
-		buf[i] = C.Uint8(b[0])
-		buf[i+1] = C.Uint8(b[1])
+	output := mixer().NextOutput(byteSize)
+	for i := 0; i < byteSize; i++ {
+		buf[i] = C.Uint8(output[i])
 	}
 }
-

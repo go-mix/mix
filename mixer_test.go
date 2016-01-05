@@ -11,7 +11,7 @@ import (
 // Tests
 //
 
-func TestNewMixer(t *testing.T) {
+func Test_Mixer_Base(t *testing.T) {
 	Configure(sdl.AudioSpec{
 		Freq:     44100,
 		Format:   sdl.AUDIO_U16,
@@ -21,7 +21,7 @@ func TestNewMixer(t *testing.T) {
 	assert.NotNil(t, Spec())
 }
 
-func TestNewMixerFailsWithoutProperAudioSpec(t *testing.T) {
+func Test_Mixer_RequiresProperAudioSpec(t *testing.T) {
 	assert.Panics(t, func() {
 		Configure(sdl.AudioSpec{})
 	})
@@ -32,8 +32,6 @@ func TestNewMixerFailsWithoutProperAudioSpec(t *testing.T) {
 // TODO: test atomix.Debug(true) and atomix.Debug(false)
 
 // TODO: test atomix.Play("filename", time, duration, volume)
-
-// TODO: test atomix.lay(source string, begin time.Time, duration time.Duration, volume float64) {
 
 // TODO: test sources are queued and loaded properly
 
