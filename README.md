@@ -30,64 +30,88 @@ Ergo, **atomix** seeks to solve the problem of audio mixing on top of bare SDL, 
 
 Here's an example implementation of **go-sdl2** + **go-atomix**:
 
+    /** Author: Charney Kaye */
+    
     package main
     
+    // typedef unsigned char Uint16;
+    // void AudioCallback(void *userdata, Uint16 *stream, int len);
+    import "C"
     import (
-      "time"    
-      "github.com/veandco/go-sdl2/sdl"
+      "time"
+    
       "github.com/outrightmental/go-atomix"
+      "github.com/veandco/go-sdl2/sdl"
+    )
+    
+    const (
+      sampleHz   = 44100
+      numSamples = 22050
     )
     
     func main() {
       if err := sdl.Init(sdl.INIT_AUDIO); err != nil {
-        panic(err)
+        log.WithFields(log.Fields{
+          "error": err,
+        }).Fatal("Cannot init SDL")
+        return
       }
-      defer sdl.Quit()
+        defer func() {
+            if r := recover(); r != nil {
+          log.WithFields(log.Fields{
+            "recover": r,
+          }).Warn("Player Recovered")
+            }
+        sdl.PauseAudio(true)
+        atomix.Teardown()
+        sdl.Quit()
+        }()
     
       var (
-        start = time.Now().Add(1 * time.Second) // 1 second delay before start
-        beat = 500 * time.Millisecond
+        step = 125 * time.Millisecond
         loops = 4
-        )
+      )
     
       var (
-        p808 = "assets/sounds/percussion/808/"
+        p808  = "assets/sounds/percussion/808/"
         kick1 = p808 + "kick1.wav"
         kick2 = p808 + "kick2.wav"
         snare = p808 + "snare.wav"
         marac = p808 + "maracas.wav"
-        )
-        
-      spec := atomix.Spec(&sdl.AudioSpec{
-        Freq:     44100,
-        Format:   sdl.AUDIO_U16,
-        Channels: 2,
-        Samples:  4096,
-      })
+      )
     
-      t := start
-      loopDur := 16 * step
-      totalDur := time.Duration(0)
+      atomix.Debug(true)
+      atomix.Configure(sdl.AudioSpec{
+          Freq:     sampleHz,
+          Format:   sdl.AUDIO_U16,
+          Channels: 2,
+          Samples:  numSamples,
+        })
+    
+      t := 1 * time.Second // padding before music
       for n := 0; n < loops; n++ {
-        atomix.Play(kick1, t,               4 *step,  1.0)
-        atomix.Play(marac, t.Add(1 *step),  1 *step,  0.5)
-        atomix.Play(snare, t.Add(4 *step),  4 *step,  0.8)
-        atomix.Play(marac, t.Add(6 *step),  1 *step,  0.5)
-        atomix.Play(kick2, t.Add(7 *step),  4 *step,  0.9)
-        atomix.Play(marac, t.Add(10 *step), 1 *step,  0.5)
-        atomix.Play(kick2, t.Add(10 *step), 4 *step,  0.9)
-        atomix.Play(snare, t.Add(12 *step), 4 *step,  0.8)
-        atomix.Play(marac, t.Add(14 *step), 1 *step,  0.5)
-        t = t.Add(loopDur)
-        totalDur += loopDur
+            atomix.Play(kick1, t,            4 *step,  1.0)
+            atomix.Play(marac, t + 1 *step,  1 *step,  0.5)
+            atomix.Play(snare, t + 4 *step,  4 *step,  0.8)
+            atomix.Play(marac, t + 6 *step,  1 *step,  0.5)
+            atomix.Play(kick2, t + 7 *step,  4 *step,  0.9)
+            atomix.Play(marac, t + 10 *step, 1 *step,  0.5)
+            atomix.Play(kick2, t + 10 *step, 4 *step,  0.9)
+            atomix.Play(snare, t + 12 *step, 4 *step,  0.8)
+            atomix.Play(marac, t + 14 *step, 1 *step,  0.5)
+        t += 16 * step
       }
-      runLength := totalDur + 2 * time.Second
-        
+    
+      spec := atomix.Spec()
       sdl.OpenAudio(spec, nil)
       sdl.PauseAudio(false)
+      log.WithFields(log.Fields{
+        "spec": spec,
+      }).Info("SDL OpenAudio > Atomix")
     
-      time.Sleep(runLength)
+      time.Sleep(t + 1 * time.Second) // padding after music
     }
+
 
 ### Development
 
