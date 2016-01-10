@@ -67,6 +67,10 @@ func AudioCallback(userdata unsafe.Pointer, stream *C.Uint8, length C.int) {
 	buf := *(*[]C.Uint8)(unsafe.Pointer(&hdr))
 
 	output := mixer().NextOutput(byteSize)
+	if output == nil {
+		// TODO: evaluate whether this failure is productive, or what else could be
+		panic("Nil output buffer")
+	}
 	for i := 0; i < byteSize; i++ {
 		buf[i] = C.Uint8(output[i])
 	}

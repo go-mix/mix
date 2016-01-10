@@ -41,7 +41,7 @@ type Mixer struct {
 	startAtTime time.Time
 	nowTz       Tz
 	tzDur       time.Duration
-	freq        float64 // cache this for maths
+	freq        float64
 	source      map[string]*Source
 	fires       []*Fire
 	spec        sdl.AudioSpec
@@ -50,7 +50,7 @@ type Mixer struct {
 
 func (m *Mixer) Initialize() {
 	m.source = make(map[string]*Source, 0)
-	m.startAtTime = time.Now().Add(1 * time.Hour) // won't start until Start() or StartAt()
+	m.startAtTime = time.Now().Add(0xFFFF * time.Hour) // this gets reset by Start() or StartAt()
 }
 
 func (m *Mixer) Debug(isOn bool) {
@@ -157,16 +157,22 @@ func (m *Mixer) nextSample() (sample float64) {
 			sample += m.sourceAtTz(fire.Source, fireTz)
 		}
 	}
+	if sample != 0 {
+		m.Debugf("nextSample %+v = %+v\n", m.nowTz, sample)
+	}
 	m.nowTz++
 	return
 }
 
-func (m *Mixer) sourceAtTz(src string, srcHz Tz) float64 {
+func (m *Mixer) sourceAtTz(src string, at Tz) float64 {
 	s := m.getSource(src)
 	if s == nil {
-		return 0x80
+		return 0
 	}
-	return s.SampleAt(srcHz)
+	// if at != 0 {
+	// 	m.Debugf("About to source.SampleAt %v in %v\n", at, s.URL)
+	// }
+	return s.SampleAt(at)
 }
 
 func (m *Mixer) setSpec(s sdl.AudioSpec) {
@@ -180,11 +186,9 @@ func (m *Mixer) getSpec() *sdl.AudioSpec {
 }
 
 func (m *Mixer) prepareSource(source string) {
-	// TODO: prepare this source and store in the map by its string
 	if _, ok := m.source[source]; ok {
 		// exists; take no action
 	} else {
-		// not exist
 		m.source[source] = NewSource(source)
 	}
 }

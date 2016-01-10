@@ -2,7 +2,7 @@
 package atomix // is for sequence mixing
 
 import (
-	"github.com/stretchr/testify/assert"
+//	"github.com/stretchr/testify/assert"
 	"testing"
 )
 

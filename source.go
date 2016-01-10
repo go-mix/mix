@@ -21,15 +21,18 @@ func NewSource(URL string) *Source {
 type Source struct {
 	URL    string
 	sample []float64
+	maxTz  Tz
 	spec   *sdl.AudioSpec
 	state  SourceStateEnum
 }
 
 func (s *Source) SampleAt(at Tz) float64 {
-	if at >= 0 && at < Tz(len(s.sample)) {
+	if at < s.maxTz {
+		mixer().Debugf("Source %v SampleAt(%v): %v\n", s.URL, at, s.sample[at])
 		return s.sample[at]
+	} else {
+		return 0
 	}
-	return 0
 }
 
 func (s *Source) State() SourceStateEnum {
@@ -85,6 +88,7 @@ func (s *Source) Load() {
 	default:
 		mixer().Debugf("could not load WAV format %+v", s.spec.Format)
 	}
+	s.maxTz = Tz(len(s.sample))
 }
 
 func (s *Source) load8(data []byte) {
