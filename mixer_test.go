@@ -1,3 +1,4 @@
+// Mixer singleton orchestrates Sources and Fires
 // Copyright 2015 Outright Mental, Inc.
 package atomix // is for sequence mixing
 
