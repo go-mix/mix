@@ -28,7 +28,9 @@ type Source struct {
 
 func (s *Source) SampleAt(at Tz) float64 {
 	if at < s.maxTz {
-		mixer().Debugf("Source %v SampleAt(%v): %v\n", s.URL, at, s.sample[at])
+		if s.sample[at] != 0 {
+			mixer().Debugf("*Source[%v].SampleAt(%v): %v\n", s.URL, at, s.sample[at])
+		}
 		return s.sample[at]
 	} else {
 		return 0
@@ -92,7 +94,7 @@ func (s *Source) Load() {
 }
 
 func (s *Source) load8(data []byte) {
-	// TODO: convert source Tz to the mixer output Tz
+	// TODO: convert source Hz; store at the mixer output Hz
 	for n := 0; n < len(data); n++ {
 		switch s.spec.Format {
 		case sdl.AUDIO_U8:
@@ -101,10 +103,11 @@ func (s *Source) load8(data []byte) {
 			s.sample = append(s.sample, sampleByteS8(data[n]))
 		}
 	}
+	mixer().Debugf("*Source[%s].load8(...) length %d\n", s.URL, len(s.sample))
 }
 
 func (s *Source) load16(data []byte) {
-	// TODO: convert source Tz to the mixer output Tz
+	// TODO: convert source Hz; store at the mixer output Hz
 	for n := 0; n < len(data); n += 2 {
 		switch s.spec.Format {
 		case sdl.AUDIO_U16LSB:
@@ -117,10 +120,11 @@ func (s *Source) load16(data []byte) {
 			s.sample = append(s.sample, sampleBytesS16MSB(data[n:n+2]))
 		}
 	}
+	mixer().Debugf("*Source[%s].load16(...) length %d\n", s.URL, len(s.sample))
 }
 
 func (s *Source) load32(data []byte) {
-	// TODO: convert source Tz to the mixer output Tz
+	// TODO: convert source Hz; store at the mixer output Hz
 	for n := 0; n < len(data); n += 4 {
 		switch s.spec.Format {
 		case sdl.AUDIO_S32LSB:
@@ -133,6 +137,7 @@ func (s *Source) load32(data []byte) {
 			s.sample = append(s.sample, sampleBytesF32MSB(data[n:n+4]))
 		}
 	}
+	mixer().Debugf("*Source[%s].load32(...) length %d\n", s.URL, len(s.sample))
 }
 
 func sampleByteU8(sample byte) float64 {

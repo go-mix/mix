@@ -1,6 +1,21 @@
 /** Copyright 2015 Outright Mental, Inc. */
 package atomix // is for sequence mixing
 
-// TODO: test source loads file
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
-// TODO: test source plays audio
+func Test_Source_Base(t *testing.T) {
+	// TODO: Test Source Base
+}
+
+func Test_Source_Load(t *testing.T) {
+	Debug(true)
+	source := NewSource("./lib/test.wav")
+	assert.NotNil(t, source)
+}
+
+func Test_Source_Playback(t *testing.T) {
+	// TODO: Test Source plays audio
+}

@@ -158,7 +158,7 @@ func (m *Mixer) nextSample() (sample float64) {
 		}
 	}
 	if sample != 0 {
-		m.Debugf("nextSample %+v = %+v\n", m.nowTz, sample)
+		m.Debugf("*Mixer.nextSample at %+v: %+v\n", m.nowTz, sample)
 	}
 	m.nowTz++
 	return
