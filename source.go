@@ -157,7 +157,7 @@ func sampleBytesU16MSB(sample []byte) float64 {
 }
 
 func sampleBytesS16LSB(sample []byte) float64 {
-	return float64(int16(binary.LittleEndian.Uint16(sample)) / 0x7FFF)
+	return float64(int16(binary.LittleEndian.Uint16(sample))) / float64(0x7FFF)
 }
 
 func sampleBytesS16MSB(sample []byte) float64 {
