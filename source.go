@@ -141,19 +141,19 @@ func (s *Source) load32(data []byte) {
 }
 
 func sampleByteU8(sample byte) float64 {
-	return float64(int8(sample)/0x7F - 1)
+	return float64(int8(sample))/float64(0x7F) - float64(1)
 }
 
 func sampleByteS8(sample byte) float64 {
-	return float64(int8(sample) / 0x7F)
+	return float64(int8(sample)) / float64(0x7F)
 }
 
 func sampleBytesU16LSB(sample []byte) float64 {
-	return float64(binary.LittleEndian.Uint16(sample)/0x8000 - 1)
+	return float64(binary.LittleEndian.Uint16(sample))/float64(0x8000) - float64(1)
 }
 
 func sampleBytesU16MSB(sample []byte) float64 {
-	return float64(binary.BigEndian.Uint16(sample)/0x8000 - 1)
+	return float64(binary.BigEndian.Uint16(sample))/float64(0x8000) - float64(1)
 }
 
 func sampleBytesS16LSB(sample []byte) float64 {
@@ -161,15 +161,15 @@ func sampleBytesS16LSB(sample []byte) float64 {
 }
 
 func sampleBytesS16MSB(sample []byte) float64 {
-	return float64(int16(binary.BigEndian.Uint16(sample)) / 0x7FFF)
+	return float64(int16(binary.BigEndian.Uint16(sample))) / float64(0x7FFF)
 }
 
 func sampleBytesS32LSB(sample []byte) float64 {
-	return float64(int32(binary.LittleEndian.Uint32(sample)) / 0x7FFFFFFF)
+	return float64(int32(binary.LittleEndian.Uint32(sample))) / float64(0x7FFFFFFF)
 }
 
 func sampleBytesS32MSB(sample []byte) float64 {
-	return float64(int32(binary.BigEndian.Uint32(sample)) / 0x7FFFFFFF)
+	return float64(int32(binary.BigEndian.Uint32(sample))) / float64(0x7FFFFFFF)
 }
 
 func sampleBytesF32LSB(sample []byte) float64 {

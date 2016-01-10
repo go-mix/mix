@@ -2,7 +2,7 @@
 package atomix // is for sequence mixing
 
 import (
-//	"github.com/stretchr/testify/assert"
+	//	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -37,4 +37,3 @@ func Test_API_StartAt(t *testing.T) {
 func Test_API_AudioCallback(t *testing.T) {
 	// TODO: Test API AudioCallback
 }
-

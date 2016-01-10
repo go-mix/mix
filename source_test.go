@@ -65,24 +65,32 @@ func Test_Source_sampleBytesU16MSB(t *testing.T) {
 }
 
 func Test_Source_sampleBytesS16LSB(t *testing.T) {
-	assert.Equal(t, sampleBytesS16LSB([]byte{2, 0}), float64(0.24207281716360973))
-	assert.Equal(t, sampleBytesS16LSB([]byte{3, 0}), float64(0.24149296548356577))
-	assert.Equal(t, sampleBytesS16LSB([]byte{7, 0}), float64(0.24100466933194983))
-	assert.Equal(t, sampleBytesS16LSB([]byte{7, 0}), float64(0.24069948423718984))
-	assert.Equal(t, sampleBytesS16LSB([]byte{3, 0}), float64(0.2402722251045259))
-	assert.Equal(t, sampleBytesS16LSB([]byte{2, 0}), float64(0.23993652150028993))
-	assert.Equal(t, sampleBytesS16LSB([]byte{2, 0}), float64(0.23932615131076998))
-	assert.Equal(t, sampleBytesS16LSB([]byte{5, 0}), float64(0.239112521744438))
-	assert.Equal(t, sampleBytesS16LSB([]byte{1, 0}), float64(0.23838007751701407))
-	assert.Equal(t, sampleBytesS16LSB([]byte{8, 5}), float64(-0.23767815179906612))
-	assert.Equal(t, sampleBytesS16LSB([]byte{5, 5}), float64(-0.23746452223273415))
-	assert.Equal(t, sampleBytesS16LSB([]byte{2, 5}), float64(-0.23725089266640217))
-	assert.Equal(t, sampleBytesS16LSB([]byte{2, 5}), float64(-0.2369457075716422))
-	assert.Equal(t, sampleBytesS16LSB([]byte{1, 5}), float64(-0.23667104098635822))
-	assert.Equal(t, sampleBytesS16LSB([]byte{3, 5}), float64(-0.23630481887264626))
-	assert.Equal(t, sampleBytesS16LSB([]byte{7, 5}), float64(-0.23618274483474228))
-	assert.Equal(t, sampleBytesS16LSB([]byte{1, 5}), float64(-0.2357554857020783))
-	assert.Equal(t, sampleBytesS16LSB([]byte{3, 5}), float64(-0.23538926358836634))
+	assert.Equal(t, sampleBytesS16LSB([]byte{51, 197}), float64(-0.4593951231421857))
+	assert.Equal(t, sampleBytesS16LSB([]byte{104, 196}), float64(-0.46559038056581314))
+	assert.Equal(t, sampleBytesS16LSB([]byte{160, 195}), float64(-0.47169408246101263))
+	assert.Equal(t, sampleBytesS16LSB([]byte{215, 194}), float64(-0.47782830286568806))
+	assert.Equal(t, sampleBytesS16LSB([]byte{24, 194}), float64(-0.4836573381756035))
+	assert.Equal(t, sampleBytesS16LSB([]byte{82, 193}), float64(-0.48970000305185096))
+	assert.Equal(t, sampleBytesS16LSB([]byte{142, 192}), float64(-0.4956816309091464))
+	assert.Equal(t, sampleBytesS16LSB([]byte{203, 191}), float64(-0.5016327402569658))
+	assert.Equal(t, sampleBytesS16LSB([]byte{14, 191}), float64(-0.5074007385479293))
+	assert.Equal(t, sampleBytesS16LSB([]byte{73, 190}), float64(-0.5134128849147007))
+	assert.Equal(t, sampleBytesS16LSB([]byte{132, 189}), float64(-0.5194250312814722))
+	assert.Equal(t, sampleBytesS16LSB([]byte{197, 188}), float64(-0.5252540665913876))
+	assert.Equal(t, sampleBytesS16LSB([]byte{5, 188}), float64(-0.5311136204107791))
+	assert.Equal(t, sampleBytesS16LSB([]byte{205, 2}), float64(0.021881771294289986))
+	assert.Equal(t, sampleBytesS16LSB([]byte{183, 2}), float64(0.02121036408581805))
+	assert.Equal(t, sampleBytesS16LSB([]byte{171, 2}), float64(0.020844141972106083))
+	assert.Equal(t, sampleBytesS16LSB([]byte{148, 2}), float64(0.020142216254158147))
+	assert.Equal(t, sampleBytesS16LSB([]byte{131, 2}), float64(0.019623401593066195))
+	assert.Equal(t, sampleBytesS16LSB([]byte{103, 2}), float64(0.018768883327738274))
+	assert.Equal(t, sampleBytesS16LSB([]byte{94, 2}), float64(0.0184942167424543))
+	assert.Equal(t, sampleBytesS16LSB([]byte{74, 2}), float64(0.017883846552934356))
+	assert.Equal(t, sampleBytesS16LSB([]byte{53, 2}), float64(0.017242957853938413))
+	assert.Equal(t, sampleBytesS16LSB([]byte{32, 2}), float64(0.016602069154942473))
+	assert.Equal(t, sampleBytesS16LSB([]byte{14, 2}), float64(0.016052735984374525))
+	assert.Equal(t, sampleBytesS16LSB([]byte{245, 1}), float64(0.015289773247474594))
+	assert.Equal(t, sampleBytesS16LSB([]byte{231, 1}), float64(0.014862514114810634))
 }
 
 func Test_Source_sampleBytesS16MSB(t *testing.T) {
@@ -104,4 +112,3 @@ func Test_Source_sampleBytesF32LSB(t *testing.T) {
 func Test_Source_sampleBytesF32MSB(t *testing.T) {
 	// TODO: Test Source sampleBytesF32MSB
 }
-
