@@ -45,8 +45,10 @@ func main() {
 		p808  = "assets/sounds/percussion/808/"
 		kick1 = p808 + "kick1.wav"
 		kick2 = p808 + "kick2.wav"
-		snare = p808 + "snare.wav"
 		marac = p808 + "maracas.wav"
+		snare = p808 + "snare.wav"
+		hitom = p808 + "hightom.wav"
+		clhat = p808 + "cl_hihat.wav"
 	)
 
 	atomix.Debug(true)
@@ -61,14 +63,21 @@ func main() {
 	t := 1 * time.Second // padding before music
 	for n := 0; n < loops; n++ {
         atomix.SetFire(kick2, t,            0, 1.0, 0)
-        atomix.SetFire(marac, t + 2 *step,  0, 0.5, 0)
+        atomix.SetFire(marac, t + 1 *step,  0, 0.5, 0)
+        atomix.SetFire(clhat, t + 2 *step,  0, 0.5, 0)
+        atomix.SetFire(marac, t + 3 *step,  0, 0.5, 0)
         atomix.SetFire(snare, t + 4 *step,  0, 0.8, 0)
-        atomix.SetFire(marac, t + 6 *step,  0, 0.5, 0)
-        atomix.SetFire(kick1, t + 7 *step,  0, 0.9, 0)
-        atomix.SetFire(marac, t + 8 *step,  0, 0.5, 0)
-        atomix.SetFire(kick1, t + 10 *step, 0, 0.9, 0)
+        atomix.SetFire(marac, t + 5 *step,  0, 0.5, 0)
+        atomix.SetFire(clhat, t + 6 *step,  0, 0.5, 0)
+        atomix.SetFire(kick2, t + 7 *step,  0, 0.9, 0)
+        atomix.SetFire(hitom, t + 8 *step,  0, 0.5, 0)
+        atomix.SetFire(marac, t + 9 *step,  0, 0.5, 0)
+        atomix.SetFire(hitom, t + 10 *step,  0, 0.5, 0)
+        atomix.SetFire(marac, t + 11 *step,  0, 0.5, 0)
         atomix.SetFire(snare, t + 12 *step, 0, 0.8, 0)
-        atomix.SetFire(marac, t + 14 *step, 0, 0.5, 0)
+        atomix.SetFire(kick1, t + 13 *step,  0, 0.9, 0)
+        atomix.SetFire(hitom, t + 14 *step, 0, 0.5, 0)
+        atomix.SetFire(marac, t + 15 *step,  0, 0.5, 0)
 		t += 16 * step
 	}
 
