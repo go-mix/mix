@@ -121,6 +121,7 @@ func (m *Mixer) Teardown() {
 
 func (m *Mixer) nextSample() float64 {
 	sample := float64(0)
+	// TODO: #FIXME need a more efficient method of iterating active fires; range m.fires hogs CPU with >100 fires
 	for _, fire := range m.fires {
 		if fireTz := fire.At(m.nowTz); fireTz > 0 {
 			sample += m.sourceAtTz(fire.Source, fireTz)
