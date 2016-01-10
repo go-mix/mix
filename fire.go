@@ -1,4 +1,4 @@
-/** Copyright 2015 Outright Mental, Inc. */
+// Copyright 2015 Outright Mental, Inc.
 package atomix // is for sequence mixing
 
 import ()
