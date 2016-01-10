@@ -1,6 +1,6 @@
 // Mixer singleton orchestrates Sources and Fires
-// Copyright 2015 Outright Mental, Inc.
 package atomix // is for sequence mixing
+// Copyright 2015 Outright Mental, Inc.
 
 import (
 	"github.com/stretchr/testify/assert"

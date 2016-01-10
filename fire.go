@@ -1,6 +1,6 @@
 // Fire models a single playback event
-// Copyright 2015 Outright Mental, Inc.
 package atomix // is for sequence mixing
+// Copyright 2015 Outright Mental, Inc.
 
 import ()
 

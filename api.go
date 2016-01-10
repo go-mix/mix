@@ -1,6 +1,6 @@
 // API exposes methods for use
-// Copyright 2015 Outright Mental, Inc.
 package atomix // is for sequence mixing
+// Copyright 2015 Outright Mental, Inc.
 
 /*
 #include <stdio.h>
