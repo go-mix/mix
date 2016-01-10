@@ -107,6 +107,57 @@ func (m *Mixer) Teardown() {
  *
  private */
 
+func (m *Mixer) nextSample() float64 {
+	sample := float64(0)
+	for _, fire := range m.fires {
+		if fireTz := fire.At(m.nowTz); fireTz > 0 {
+			sample += m.sourceAtTz(fire.Source, fireTz)
+		}
+	}
+	// if sample != 0 {
+	// 	m.Debugf("*Mixer.nextSample at %+v: %+v\n", m.nowTz, sample)
+	// }
+	m.nowTz++
+	return sample / 3
+}
+
+func (m *Mixer) sourceAtTz(src string, at Tz) float64 {
+	s := m.getSource(src)
+	if s == nil {
+		return 0
+	}
+	// if at != 0 {
+	// 	m.Debugf("About to source.SampleAt %v in %v\n", at, s.URL)
+	// }
+	return s.SampleAt(at)
+}
+
+func (m *Mixer) setSpec(s sdl.AudioSpec) {
+	m.spec = s
+	m.freq = float64(s.Freq) // cache a float64 of this for future maths
+	m.tzDur = time.Second / time.Duration(s.Freq)
+}
+
+func (m *Mixer) getSpec() *sdl.AudioSpec {
+	return &m.spec
+}
+
+func (m *Mixer) prepareSource(source string) {
+	if _, ok := m.source[source]; ok {
+		// exists; take no action
+	} else {
+		m.source[source] = NewSource(source)
+	}
+}
+
+func (m *Mixer) getSource(source string) *Source {
+	if _, ok := m.source[source]; ok {
+		return m.source[source]
+	} else {
+		return nil
+	}
+}
+
 func (m *Mixer) mix8(byteSize int) (out []byte) {
 	for n := 0; n < byteSize; n++ {
 		switch m.spec.Format {
@@ -149,56 +200,6 @@ func (m *Mixer) mix32(byteSize int) (out []byte) {
 		}
 	}
 	return
-}
-
-func (m *Mixer) nextSample() (sample float64) {
-	for _, fire := range m.fires {
-		if fireTz := fire.At(m.nowTz); fireTz > 0 {
-			sample += m.sourceAtTz(fire.Source, fireTz)
-		}
-	}
-	if sample != 0 {
-		m.Debugf("*Mixer.nextSample at %+v: %+v\n", m.nowTz, sample)
-	}
-	m.nowTz++
-	return
-}
-
-func (m *Mixer) sourceAtTz(src string, at Tz) float64 {
-	s := m.getSource(src)
-	if s == nil {
-		return 0
-	}
-	// if at != 0 {
-	// 	m.Debugf("About to source.SampleAt %v in %v\n", at, s.URL)
-	// }
-	return s.SampleAt(at)
-}
-
-func (m *Mixer) setSpec(s sdl.AudioSpec) {
-	m.spec = s
-	m.freq = float64(s.Freq) // cache a float64 of this for future maths
-	m.tzDur = time.Second / time.Duration(s.Freq)
-}
-
-func (m *Mixer) getSpec() *sdl.AudioSpec {
-	return &m.spec
-}
-
-func (m *Mixer) prepareSource(source string) {
-	if _, ok := m.source[source]; ok {
-		// exists; take no action
-	} else {
-		m.source[source] = NewSource(source)
-	}
-}
-
-func (m *Mixer) getSource(source string) *Source {
-	if _, ok := m.source[source]; ok {
-		return m.source[source]
-	} else {
-		return nil
-	}
 }
 
 func mixByteU8(sample float64) byte {

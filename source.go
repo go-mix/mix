@@ -28,9 +28,9 @@ type Source struct {
 
 func (s *Source) SampleAt(at Tz) float64 {
 	if at < s.maxTz {
-		if s.sample[at] != 0 {
-			mixer().Debugf("*Source[%v].SampleAt(%v): %v\n", s.URL, at, s.sample[at])
-		}
+		// if s.sample[at] != 0 {
+		// 	mixer().Debugf("*Source[%v].SampleAt(%v): %v\n", s.URL, at, s.sample[at])
+		// }
 		return s.sample[at]
 	} else {
 		return 0
