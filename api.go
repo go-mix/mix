@@ -18,6 +18,8 @@ import (
 	// "encoding/binary"
 )
 
+const VERSION = "0.0.1"
+
 func Debug(isOn bool) {
 	mixer().Debug(isOn)
 }
