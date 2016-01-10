@@ -1,4 +1,4 @@
-// Fire models a single playback event
+// Fire models the playback of a source
 package atomix // is for sequence mixing
 // Copyright 2015 Outright Mental, Inc.
 
