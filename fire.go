@@ -40,8 +40,12 @@ func (f *Fire) At(at Tz) (t Tz) {
 	case FIRE_PLAY:
 		t = f.nowTz
 		f.nowTz++
-		if at >= f.EndTz {
-			f.state = FIRE_DONE
+		if f.EndTz != 0 {
+			if at >= f.EndTz {
+				f.state = FIRE_DONE
+			}
+		} else {
+			f.EndTz = f.BeginTz + f.SourceLength()
 		}
 	case FIRE_DONE:
 		// garbage collection
@@ -59,6 +63,11 @@ func (f *Fire) IsAlive() bool {
 
 func (f *Fire) SetState(state FireStateEnum) {
 	f.state = state
+}
+
+func (f *Fire) SourceLength() Tz {
+	// TODO: evaluate if this is a bad circular dependency to call the singleton from here?
+	return mixer().SourceLength(f.Source)
 }
 
 /*

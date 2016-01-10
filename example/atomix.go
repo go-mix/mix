@@ -60,15 +60,15 @@ func main() {
 
 	t := 1 * time.Second // padding before music
 	for n := 0; n < loops; n++ {
-        atomix.SetFire(kick2, t,               16 *step, 1.0, 0)
-        atomix.SetFire(marac, t + 2 *step,     1 *step,  0.5, 0)
-        atomix.SetFire(snare, t + 4 *step,     4 *step,  0.8, 0)
-        atomix.SetFire(marac, t + 6 *step,     1 *step,  0.5, 0)
-        atomix.SetFire(kick1, t + 7 *step,     16 *step, 0.9, 0)
-        atomix.SetFire(marac, t + 8 *step,     1 *step,  0.5, 0)
-        atomix.SetFire(kick1, t + 10 *step,    16 *step, 0.9, 0)
-        atomix.SetFire(snare, t + 12 *step,    4 *step,  0.8, 0)
-        atomix.SetFire(marac, t + 14 *step,    1 *step,  0.5, 0)
+        atomix.SetFire(kick2, t,            0, 1.0, 0)
+        atomix.SetFire(marac, t + 2 *step,  0, 0.5, 0)
+        atomix.SetFire(snare, t + 4 *step,  0, 0.8, 0)
+        atomix.SetFire(marac, t + 6 *step,  0, 0.5, 0)
+        atomix.SetFire(kick1, t + 7 *step,  0, 0.9, 0)
+        atomix.SetFire(marac, t + 8 *step,  0, 0.5, 0)
+        atomix.SetFire(kick1, t + 10 *step, 0, 0.9, 0)
+        atomix.SetFire(snare, t + 12 *step, 0, 0.8, 0)
+        atomix.SetFire(marac, t + 14 *step, 0, 0.5, 0)
 		t += 16 * step
 	}
 

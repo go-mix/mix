@@ -56,6 +56,10 @@ func (s *Source) StateName() string {
 	return ""
 }
 
+func (s *Source) Length() Tz {
+	return s.maxTz
+}
+
 func (s *Source) Teardown() {
 	s.sample = nil
 }

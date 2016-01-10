@@ -56,6 +56,10 @@ func Test_Mixer_NextOutput(t *testing.T) {
 	// TODO: Test Mixer NextOutput
 }
 
+func Test_Mixer_SourceLength(t *testing.T) {
+	// TODO: Test Mixer SourceLength
+}
+
 func Test_Mixer_Teardown(t *testing.T) {
 	// TODO: Test Mixer Teardown
 }
