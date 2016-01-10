@@ -32,6 +32,10 @@ Ergo, **atomix** seeks to solve the problem of audio mixing on top of bare SDL, 
 
 Though it is called via C bindings by the SDL audio callback, atomix stores and mixes audio in native Go `[]float64`
 
+### The Mixing Algorithm
+
+Insipired by the theory paper "Mixing two digital audio streams with on the fly Loudness Normalization by Logarithmic Dynamic Range Compression" by Paul Vögler, 2012-04-20. A .PDF has been included [here](docs/LogarithmicDynamicRangeCompression-PaulVogler.pdf), from the paper originally published [here](http://www.voegler.eu/pub/audio/digital-audio-mixing-and-normalization.html).
+
 ### Usage
 
 Here's an example implementation of **go-sdl2** + **go-atomix**:
