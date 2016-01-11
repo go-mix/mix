@@ -51,6 +51,10 @@ func SetFire(source string, begin time.Duration, sustain time.Duration, volume f
 	return mixer().SetFire(source, begin, sustain, volume, pan)
 }
 
+func SetSoundsPath(prefix string) {
+	mixer().SetSoundsPath(prefix)
+}
+
 func Start() {
 	mixer().Start()
 }

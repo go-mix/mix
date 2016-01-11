@@ -39,14 +39,15 @@ var (
 type Tz uint64
 
 type Mixer struct {
-	startAtTime time.Time
-	nowTz       Tz
-	tzDur       time.Duration
-	freq        float64
-	source      map[string]*Source
-	fires       []*Fire
-	spec        sdl.AudioSpec
-	isDebug     bool
+	startAtTime  time.Time
+	nowTz        Tz
+	tzDur        time.Duration
+	freq         float64
+	source       map[string]*Source
+	sourcePrefix string
+	fires        []*Fire
+	spec         sdl.AudioSpec
+	isDebug      bool
 }
 
 func (m *Mixer) Initialize() {
@@ -81,15 +82,19 @@ func (m *Mixer) SourceLength(source string) Tz {
 }
 
 func (m *Mixer) SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) *Fire {
-	m.prepareSource(source)
+	m.prepareSource(m.sourcePrefix + source)
 	beginTz := Tz(begin.Nanoseconds() / m.tzDur.Nanoseconds())
 	var endTz Tz
 	if sustain != 0 {
 		endTz = beginTz + Tz(sustain.Nanoseconds()/m.tzDur.Nanoseconds())
 	}
-	fire := NewFire(source, beginTz, endTz, volume, pan)
+	fire := NewFire(m.sourcePrefix + source, beginTz, endTz, volume, pan)
 	m.fires = append(m.fires, fire)
 	return fire
+}
+
+func (m *Mixer) SetSoundsPath(prefix string) {
+	m.sourcePrefix = prefix
 }
 
 func (m *Mixer) NextOutput(byteSize int) []byte {

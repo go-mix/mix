@@ -42,13 +42,13 @@ func main() {
 	)
 
 	var (
-		p808    = "assets/sounds/percussion/808/"
-		kick1   = p808 + "kick1.wav"
-		kick2   = p808 + "kick2.wav"
-		marac   = p808 + "maracas.wav"
-		snare   = p808 + "snare.wav"
-		hitom   = p808 + "hightom.wav"
-		clhat   = p808 + "cl_hihat.wav"
+		prefix    = "assets/sounds/percussion/808/"
+		kick1   = "kick1.wav"
+		kick2   = "kick2.wav"
+		marac   = "maracas.wav"
+		snare   = "snare.wav"
+		hitom   = "hightom.wav"
+		clhat   = "cl_hihat.wav"
 		pattern = []string{
 			kick2,
 			marac,
@@ -76,6 +76,7 @@ func main() {
 		Channels: 1,
 		Samples:  numSamples,
 	})
+	atomix.SetSoundsPath(prefix)
 	atomix.StartAt(time.Now().Add(1 * time.Second))
 
 	t := 1 * time.Second // padding before music

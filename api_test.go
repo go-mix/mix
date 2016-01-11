@@ -31,6 +31,10 @@ func Test_API_SetFire(t *testing.T) {
 	assert.NotNil(t, fire)
 }
 
+func Test_API_SetSoundsPath(t *testing.T) {
+	// TODO: Test API SetSoundsPath
+}
+
 func Test_API_Start(t *testing.T) {
 	// TODO: Test API Start
 }

@@ -52,6 +52,10 @@ func Test_Mixer_SetFire(t *testing.T) {
 	// TODO: Test Mixer SetFire
 }
 
+func Test_Mixer_SetSoundsPath(t *testing.T) {
+	// TODO: Test Mixer SetSoundsPath
+}
+
 func Test_Mixer_NextOutput(t *testing.T) {
 	// TODO: Test Mixer NextOutput
 }
