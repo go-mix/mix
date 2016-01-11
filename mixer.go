@@ -73,6 +73,10 @@ func (m *Mixer) StartAt(t time.Time) {
 	m.startAtTime = t
 }
 
+func (m *Mixer) GetStartTime() time.Time {
+	return m.startAtTime
+}
+
 func (m *Mixer) SourceLength(source string) Tz {
 	s := m.getSource(source)
 	if s == nil {

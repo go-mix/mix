@@ -63,6 +63,10 @@ func StartAt(t time.Time) {
 	mixer().StartAt(t)
 }
 
+func GetStartTime() time.Time {
+	return mixer().GetStartTime()
+}
+
 //export AudioCallback
 func AudioCallback(userdata unsafe.Pointer, stream *C.Uint8, length C.int) {
 	byteSize := int(length)

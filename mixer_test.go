@@ -48,6 +48,10 @@ func Test_Mixer_StartAt(t *testing.T) {
 	// TODO: Test Mixer StartAt
 }
 
+func Test_Mixer_GetStartTime(t *testing.T) {
+	// TODO: Test Mixer GetStartTime
+}
+
 func Test_Mixer_SetFire(t *testing.T) {
 	// TODO: Test Mixer SetFire
 }

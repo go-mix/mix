@@ -43,6 +43,10 @@ func Test_API_StartAt(t *testing.T) {
 	// TODO: Test API StartAt
 }
 
+func Test_API_GetStartTime(t *testing.T) {
+	// TODO: Test API GetStartTime
+}
+
 func Test_API_AudioCallback(t *testing.T) {
 	// TODO: Test API AudioCallback
 }
