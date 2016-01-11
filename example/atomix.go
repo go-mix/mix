@@ -72,7 +72,7 @@ func main() {
 	atomix.Debug(true)
 	atomix.Configure(sdl.AudioSpec{
 		Freq:     sampleHz,
-		Format:   sdl.AUDIO_S16,
+		Format:   sdl.AUDIO_F32,
 		Channels: 1,
 		Samples:  numSamples,
 	})
