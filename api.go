@@ -47,8 +47,8 @@ func Spec() *sdl.AudioSpec {
 	return mixer().getSpec()
 }
 
-func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) {
-	mixer().SetFire(source, begin, sustain, volume, pan)
+func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) *Fire {
+	return mixer().SetFire(source, begin, sustain, volume, pan)
 }
 
 func Start() {

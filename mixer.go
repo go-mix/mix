@@ -80,14 +80,16 @@ func (m *Mixer) SourceLength(source string) Tz {
 	return s.Length()
 }
 
-func (m *Mixer) SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) {
+func (m *Mixer) SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) *Fire {
 	m.prepareSource(source)
 	beginTz := Tz(begin.Nanoseconds() / m.tzDur.Nanoseconds())
 	var endTz Tz
 	if sustain != 0 {
 		endTz = beginTz + Tz(sustain.Nanoseconds()/m.tzDur.Nanoseconds())
 	}
-	m.fires = append(m.fires, NewFire(source, beginTz, endTz, volume, pan))
+	fire := NewFire(source, beginTz, endTz, volume, pan)
+	m.fires = append(m.fires, fire)
+	return fire
 }
 
 func (m *Mixer) NextOutput(byteSize int) []byte {

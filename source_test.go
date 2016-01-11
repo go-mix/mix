@@ -4,6 +4,7 @@ package atomix // is for sequence mixing
 
 import (
 	"github.com/stretchr/testify/assert"
+	"github.com/veandco/go-sdl2/sdl"
 	"testing"
 )
 
@@ -11,9 +12,14 @@ func Test_Source_Base(t *testing.T) {
 	// TODO: Test Source Base
 }
 
+func Test_Source_Load_FAIL(t *testing.T) {
+	// TODO: Test Source loading nonexistent URL results in a graceful failure
+}
+
 func Test_Source_Load(t *testing.T) {
 	Debug(true)
-	source := NewSource("./lib/test.wav")
+	testSourceSetup()
+	source := NewSource("./lib/S16.wav")
 	assert.NotNil(t, source)
 }
 
@@ -116,4 +122,17 @@ func Test_sampleBytesF32LSB(t *testing.T) {
 
 func Test_sampleBytesF32MSB(t *testing.T) {
 	// TODO: Test Source sampleBytesF32MSB
+}
+
+//
+// Test Components
+//
+
+func testSourceSetup() {
+	Configure(sdl.AudioSpec{
+		Freq:     44100,
+		Format:   sdl.AUDIO_S16,
+		Channels: 1,
+		Samples:  4096,
+	})
 }
