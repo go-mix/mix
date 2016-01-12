@@ -77,7 +77,7 @@ func Test_Mixer_nextSample(t *testing.T) {
 }
 
 func Test_Mixer_sourceAtTz(t *testing.T) {
-	// TODO: Test Mixer sourceAtTz
+	// TODO: Test Mixer sourceAt
 }
 
 func Test_Mixer_setSpec(t *testing.T) {

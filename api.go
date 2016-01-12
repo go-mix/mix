@@ -56,7 +56,7 @@ func SetSoundsPath(prefix string) {
 }
 
 func Start() {
-	mixer().Start()
+	mixer().StartAt(time.Now())
 }
 
 func StartAt(t time.Time) {

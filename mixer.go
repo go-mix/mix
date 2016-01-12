@@ -65,10 +65,6 @@ func (m *Mixer) Debugf(format string, args ...interface{}) {
 	}
 }
 
-func (m *Mixer) Start() {
-	m.startAtTime = time.Now()
-}
-
 func (m *Mixer) StartAt(t time.Time) {
 	m.startAtTime = t
 }
@@ -134,8 +130,9 @@ func (m *Mixer) nextSample() float64 {
 	sample := float64(0)
 	// TODO: #FIXME need a more efficient method of iterating active fires; range m.fires hogs CPU with >100 fires
 	for _, fire := range m.fires {
+		// mixer().Debugf("see me try to fire? %v", fire.Source, fire.BeginTz)
 		if fireTz := fire.At(m.nowTz); fireTz > 0 {
-			sample += m.sourceAtTz(fire.Source, fireTz)
+			sample += m.sourceAt(fire.Source, fireTz)
 		}
 	}
 	// if sample != 0 {
@@ -145,7 +142,7 @@ func (m *Mixer) nextSample() float64 {
 	return sample / 3
 }
 
-func (m *Mixer) sourceAtTz(src string, at Tz) float64 {
+func (m *Mixer) sourceAt(src string, at Tz) float64 {
 	s := m.getSource(src)
 	if s == nil {
 		return 0
