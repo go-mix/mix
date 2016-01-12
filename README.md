@@ -32,6 +32,12 @@ Ergo, **atomix** seeks to solve the problem of audio mixing on top of bare SDL, 
 
 Though it is called via C bindings by the SDL audio callback, atomix stores and mixes audio in native Go `[]float64`
 
+### Time
+
+To the Atomix API, time is specified as a time.Duration-since-epoch, where the epoch is the moment that atomix.Start() was called.
+
+Internally, time is tracked as samples-since-epoch at the master output playback frequency (e.g. 48000 Hz). This is most efficient because source audio is pre-converted to the master output playback frequency, and all audio maths are performed in terms of samples.
+
 ### The Mixing Algorithm
 
 Insipired by the theory paper "Mixing two digital audio streams with on the fly Loudness Normalization by Logarithmic Dynamic Range Compression" by Paul Vögler, 2012-04-20. A .PDF has been included [here](docs/LogarithmicDynamicRangeCompression-PaulVogler.pdf), from the paper originally published [here](http://www.voegler.eu/pub/audio/digital-audio-mixing-and-normalization.html).
