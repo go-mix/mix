@@ -35,3 +35,31 @@ func Test_Fire_Base(t *testing.T) {
 	// after end:
 	assert.Equal(t, Tz(0), fire.At(endTz+1))
 }
+
+func Test_Fire_NewFire(t *testing.T) {
+	// TODO
+}
+
+func Test_Fire_At(t *testing.T) {
+	// TODO
+}
+
+func Test_Fire_State(t *testing.T) {
+	// TODO
+}
+
+func Test_Fire_IsAlive(t *testing.T) {
+	// TODO
+}
+
+func Test_Fire_IsPlaying(t *testing.T) {
+	// TODO
+}
+
+func Test_Fire_SetState(t *testing.T) {
+	// TODO
+}
+
+func Test_Fire_SourceLength(t *testing.T) {
+	// TODO
+}

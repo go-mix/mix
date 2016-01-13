@@ -63,6 +63,10 @@ func (f *Fire) IsAlive() bool {
 	return f.state < FIRE_DONE
 }
 
+func (f *Fire) IsPlaying() bool {
+	return f.state == FIRE_PLAY
+}
+
 func (f *Fire) SetState(state FireStateEnum) {
 	f.state = state
 }
