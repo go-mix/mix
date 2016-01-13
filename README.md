@@ -2,7 +2,9 @@
 
 [![Build Status](https://travis-ci.org/outrightmental/go-atomix.svg?branch=master)](https://travis-ci.org/outrightmental/go-atomix)
 
-#### Sequence-based mixer for Music apps, built on go-sdl2.
+#### Sequence-based Go-native audio mixer for Music apps, built on SDL 2.0 via C++ bindings.
+
+Game audio mixers offer playback timing accuracy +/- 2 milliseconds. But that's totally unacceptable for music, specifically sequence-based sample playback.
 
 Read the API documentation at [godoc.org/github.com/outrightmental/go-atomix](https://godoc.org/github.com/outrightmental/go-atomix)
 
@@ -17,6 +19,8 @@ Author: [Charney Kaye](http://w.charney.io)
 Copyright 2015 Outright Mental, Inc.
 
 ### Why?
+
+Game audio mixers offer playback timing accuracy +/- 2 milliseconds. But that's totally unacceptable for music, specifically sequence-based sample playback.
 
 For sequence mixing in music application development.
 
