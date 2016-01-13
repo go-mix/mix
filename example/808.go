@@ -36,9 +36,9 @@ func main() {
 	}()
 
 	var (
-		bpm   = 127
+		bpm   = 120
 		step  = time.Minute / time.Duration(bpm*4)
-		loops = 4
+		loops = 16
 	)
 
 	var (
@@ -64,7 +64,7 @@ func main() {
 			marac,
 			snare,
 			kick1,
-			marac,
+			clhat,
 			marac,
 		}
 	)
