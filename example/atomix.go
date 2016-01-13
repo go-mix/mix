@@ -58,13 +58,13 @@ func main() {
 			marac,
 			clhat,
 			kick2,
-			hitom,
+			marac,
 			marac,
 			hitom,
 			marac,
 			snare,
 			kick1,
-			hitom,
+			marac,
 			marac,
 		}
 	)

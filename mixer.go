@@ -139,7 +139,7 @@ func (m *Mixer) nextSample() float64 {
 	// 	m.Debugf("*Mixer.nextSample at %+v: %+v\n", m.nowTz, sample)
 	// }
 	m.nowTz++
-	return sample / 3
+	return mixLogarithmicRangeCompression(sample)
 }
 
 func (m *Mixer) sourceAt(src string, at Tz) float64 {
@@ -305,4 +305,14 @@ func mixInt32(sample float64) int32 {
 
 func mixFloat32(sample float64) float32 {
 	return float32(sample)
+}
+
+func mixLogarithmicRangeCompression(i float64) float64 {
+	if i < -1 {
+		return -math.Log(-i - 0.85) / 14 - 0.75
+	} else if i > 1 {
+		return math.Log(i - 0.85) / 14 + 0.75
+	} else {
+		return i / 1.61803398875
+	}
 }
