@@ -39,14 +39,15 @@ var (
 type Tz uint64
 
 type Mixer struct {
-	startAtTime time.Time
-	nowTz       Tz
-	tzDur       time.Duration
-	freq        float64
-	source      map[string]*Source
-	fires       []*Fire
-	spec        sdl.AudioSpec
-	isDebug     bool
+	startAtTime  time.Time
+	nowTz        Tz
+	tzDur        time.Duration
+	freq         float64
+	source       map[string]*Source
+	sourcePrefix string
+	fires        []*Fire
+	spec         sdl.AudioSpec
+	isDebug      bool
 }
 
 func (m *Mixer) Initialize() {
@@ -64,19 +65,36 @@ func (m *Mixer) Debugf(format string, args ...interface{}) {
 	}
 }
 
-func (m *Mixer) Start() {
-	m.startAtTime = time.Now()
-}
-
 func (m *Mixer) StartAt(t time.Time) {
 	m.startAtTime = t
 }
 
-func (m *Mixer) SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) {
-	m.prepareSource(source)
+func (m *Mixer) GetStartTime() time.Time {
+	return m.startAtTime
+}
+
+func (m *Mixer) SourceLength(source string) Tz {
+	s := m.getSource(source)
+	if s == nil {
+		return 0
+	}
+	return s.Length()
+}
+
+func (m *Mixer) SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) *Fire {
+	m.prepareSource(m.sourcePrefix + source)
 	beginTz := Tz(begin.Nanoseconds() / m.tzDur.Nanoseconds())
-	endTz := beginTz + Tz(sustain.Nanoseconds()/m.tzDur.Nanoseconds())
-	m.fires = append(m.fires, NewFire(source, beginTz, endTz, volume, pan))
+	var endTz Tz
+	if sustain != 0 {
+		endTz = beginTz + Tz(sustain.Nanoseconds()/m.tzDur.Nanoseconds())
+	}
+	fire := NewFire(m.sourcePrefix + source, beginTz, endTz, volume, pan)
+	m.fires = append(m.fires, fire)
+	return fire
+}
+
+func (m *Mixer) SetSoundsPath(prefix string) {
+	m.sourcePrefix = prefix
 }
 
 func (m *Mixer) NextOutput(byteSize int) []byte {
@@ -110,19 +128,21 @@ func (m *Mixer) Teardown() {
 
 func (m *Mixer) nextSample() float64 {
 	sample := float64(0)
+	// TODO: #FIXME need a more efficient method of iterating active fires; range m.fires hogs CPU with >100 fires
 	for _, fire := range m.fires {
+		// mixer().Debugf("see me try to fire? %v", fire.Source, fire.BeginTz)
 		if fireTz := fire.At(m.nowTz); fireTz > 0 {
-			sample += m.sourceAtTz(fire.Source, fireTz)
+			sample += m.sourceAt(fire.Source, fireTz)
 		}
 	}
 	// if sample != 0 {
 	// 	m.Debugf("*Mixer.nextSample at %+v: %+v\n", m.nowTz, sample)
 	// }
 	m.nowTz++
-	return sample / 3
+	return mixLogarithmicRangeCompression(sample)
 }
 
-func (m *Mixer) sourceAtTz(src string, at Tz) float64 {
+func (m *Mixer) sourceAt(src string, at Tz) float64 {
 	s := m.getSource(src)
 	if s == nil {
 		return 0
@@ -285,4 +305,14 @@ func mixInt32(sample float64) int32 {
 
 func mixFloat32(sample float64) float32 {
 	return float32(sample)
+}
+
+func mixLogarithmicRangeCompression(i float64) float64 {
+	if i < -1 {
+		return -math.Log(-i - 0.85) / 14 - 0.75
+	} else if i > 1 {
+		return math.Log(i - 0.85) / 14 + 0.75
+	} else {
+		return i / 1.61803398875
+	}
 }

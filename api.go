@@ -19,7 +19,7 @@ import (
 	// "encoding/binary"
 )
 
-const VERSION = "0.0.1"
+const VERSION = "0.0.2"
 
 func Debug(isOn bool) {
 	mixer().Debug(isOn)
@@ -47,16 +47,24 @@ func Spec() *sdl.AudioSpec {
 	return mixer().getSpec()
 }
 
-func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) {
-	mixer().SetFire(source, begin, sustain, volume, pan)
+func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) *Fire {
+	return mixer().SetFire(source, begin, sustain, volume, pan)
+}
+
+func SetSoundsPath(prefix string) {
+	mixer().SetSoundsPath(prefix)
 }
 
 func Start() {
-	mixer().Start()
+	mixer().StartAt(time.Now())
 }
 
 func StartAt(t time.Time) {
 	mixer().StartAt(t)
+}
+
+func GetStartTime() time.Time {
+	return mixer().GetStartTime()
 }
 
 //export AudioCallback

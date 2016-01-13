@@ -48,12 +48,24 @@ func Test_Mixer_StartAt(t *testing.T) {
 	// TODO: Test Mixer StartAt
 }
 
+func Test_Mixer_GetStartTime(t *testing.T) {
+	// TODO: Test Mixer GetStartTime
+}
+
 func Test_Mixer_SetFire(t *testing.T) {
 	// TODO: Test Mixer SetFire
 }
 
+func Test_Mixer_SetSoundsPath(t *testing.T) {
+	// TODO: Test Mixer SetSoundsPath
+}
+
 func Test_Mixer_NextOutput(t *testing.T) {
 	// TODO: Test Mixer NextOutput
+}
+
+func Test_Mixer_SourceLength(t *testing.T) {
+	// TODO: Test Mixer SourceLength
 }
 
 func Test_Mixer_Teardown(t *testing.T) {
@@ -65,7 +77,7 @@ func Test_Mixer_nextSample(t *testing.T) {
 }
 
 func Test_Mixer_sourceAtTz(t *testing.T) {
-	// TODO: Test Mixer sourceAtTz
+	// TODO: Test Mixer sourceAt
 }
 
 func Test_Mixer_setSpec(t *testing.T) {

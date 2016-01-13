@@ -2,7 +2,9 @@
 
 [![Build Status](https://travis-ci.org/outrightmental/go-atomix.svg?branch=master)](https://travis-ci.org/outrightmental/go-atomix)
 
-#### Sequence-based mixer for Music apps, built on go-sdl2.
+#### Sequence-based Go-native audio mixer for Music apps, built on SDL 2.0 via C++ bindings.
+
+Game audio mixers offer playback timing accuracy +/- 2 milliseconds. But that's totally unacceptable for music, specifically sequence-based sample playback.
 
 Read the API documentation at [godoc.org/github.com/outrightmental/go-atomix](https://godoc.org/github.com/outrightmental/go-atomix)
 
@@ -18,6 +20,8 @@ Copyright 2015 Outright Mental, Inc.
 
 ### Why?
 
+Game audio mixers offer playback timing accuracy +/- 2 milliseconds. But that's totally unacceptable for music, specifically sequence-based sample playback.
+
 For sequence mixing in music application development.
 
 Following principles of modularity and reusability according to [The Unix Philosophy](http://en.wikipedia.org/wiki/Unix_philosophy) and 
@@ -31,6 +35,12 @@ In the field of Music development, often the timing is known in advance, e.g. a 
 Ergo, **atomix** seeks to solve the problem of audio mixing on top of bare SDL, specifically for the purpose of the playback of sequences where audio files and their playback timing is known in advance. It seeks to do this with the absolute minimal logical overhead on top of SDL.
 
 Though it is called via C bindings by the SDL audio callback, atomix stores and mixes audio in native Go `[]float64`
+
+### Time
+
+To the Atomix API, time is specified as a time.Duration-since-epoch, where the epoch is the moment that atomix.Start() was called.
+
+Internally, time is tracked as samples-since-epoch at the master output playback frequency (e.g. 48000 Hz). This is most efficient because source audio is pre-converted to the master output playback frequency, and all audio maths are performed in terms of samples.
 
 ### The Mixing Algorithm
 

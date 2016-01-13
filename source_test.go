@@ -4,6 +4,7 @@ package atomix // is for sequence mixing
 
 import (
 	"github.com/stretchr/testify/assert"
+	"github.com/veandco/go-sdl2/sdl"
 	"testing"
 )
 
@@ -11,9 +12,14 @@ func Test_Source_Base(t *testing.T) {
 	// TODO: Test Source Base
 }
 
+func Test_Source_Load_FAIL(t *testing.T) {
+	// TODO: Test Source loading nonexistent URL results in a graceful failure
+}
+
 func Test_Source_Load(t *testing.T) {
 	Debug(true)
-	source := NewSource("./lib/test.wav")
+	testSourceSetup()
+	source := NewSource("./lib/S16.wav")
 	assert.NotNil(t, source)
 }
 
@@ -31,6 +37,10 @@ func Test_Source_State(t *testing.T) {
 
 func Test_Source_StateName(t *testing.T) {
 	// TODO: Test Source StateName
+}
+
+func Test_Source_Length(t *testing.T) {
+	// TODO: Test Source reports length
 }
 
 func Test_Source_Teardown(t *testing.T) {
@@ -57,15 +67,15 @@ func Test_Source_sampleByteS8(t *testing.T) {
 	// TODO: Test Source sampleByteS8
 }
 
-func Test_Source_sampleBytesU16LSB(t *testing.T) {
+func Test_sampleBytesU16LSB(t *testing.T) {
 	// TODO: Test Source sampleBytesU16LSB
 }
 
-func Test_Source_sampleBytesU16MSB(t *testing.T) {
+func Test_sampleBytesU16MSB(t *testing.T) {
 	// TODO: Test Source sampleBytesU16MSB
 }
 
-func Test_Source_sampleBytesS16LSB(t *testing.T) {
+func Test_sampleBytesS16LSB(t *testing.T) {
 	assert.Equal(t, sampleBytesS16LSB([]byte{51, 197}), float64(-0.4593951231421857))
 	assert.Equal(t, sampleBytesS16LSB([]byte{104, 196}), float64(-0.46559038056581314))
 	assert.Equal(t, sampleBytesS16LSB([]byte{160, 195}), float64(-0.47169408246101263))
@@ -94,22 +104,35 @@ func Test_Source_sampleBytesS16LSB(t *testing.T) {
 	assert.Equal(t, sampleBytesS16LSB([]byte{231, 1}), float64(0.014862514114810634))
 }
 
-func Test_Source_sampleBytesS16MSB(t *testing.T) {
+func Test_sampleBytesS16MSB(t *testing.T) {
 	// TODO: Test Source sampleBytesS16MSB
 }
 
-func Test_Source_sampleBytesS32LSB(t *testing.T) {
+func Test_sampleBytesS32LSB(t *testing.T) {
 	// TODO: Test Source sampleBytesS32LSB
 }
 
-func Test_Source_sampleBytesS32MSB(t *testing.T) {
+func Test_sampleBytesS32MSB(t *testing.T) {
 	// TODO: Test Source sampleBytesS32MSB
 }
 
-func Test_Source_sampleBytesF32LSB(t *testing.T) {
+func Test_sampleBytesF32LSB(t *testing.T) {
 	// TODO: Test Source sampleBytesF32LSB
 }
 
-func Test_Source_sampleBytesF32MSB(t *testing.T) {
+func Test_sampleBytesF32MSB(t *testing.T) {
 	// TODO: Test Source sampleBytesF32MSB
+}
+
+//
+// Test Components
+//
+
+func testSourceSetup() {
+	Configure(sdl.AudioSpec{
+		Freq:     44100,
+		Format:   sdl.AUDIO_S16,
+		Channels: 1,
+		Samples:  4096,
+	})
 }
