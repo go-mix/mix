@@ -98,6 +98,7 @@ func (m *Mixer) SetSoundsPath(prefix string) {
 }
 
 func (m *Mixer) NextOutput(byteSize int) []byte {
+	m.cleanup()
 	switch m.spec.Format {
 	case
 		sdl.AUDIO_U8,
@@ -129,6 +130,7 @@ func (m *Mixer) Teardown() {
 func (m *Mixer) nextSample() float64 {
 	sample := float64(0)
 	// TODO: #FIXME need a more efficient method of iterating active fires; range m.fires hogs CPU with >100 fires
+	// TODO: #FIXME ^ really this is a serious processor bottleneck. Find a method to avoid iterating over all these inactive fires every sample!
 	for _, fire := range m.fires {
 		// mixer().Debugf("see me try to fire? %v", fire.Source, fire.BeginTz)
 		if fireTz := fire.At(m.nowTz); fireTz > 0 {
@@ -176,6 +178,15 @@ func (m *Mixer) getSource(source string) *Source {
 		return m.source[source]
 	} else {
 		return nil
+	}
+}
+
+func (m *Mixer) cleanup() {
+	for i, fire := range m.fires {
+		if !fire.IsAlive() {
+			fire.Teardown()
+			m.fires = append(m.fires[:i], m.fires[i+1:]...)
+		}
 	}
 }
 

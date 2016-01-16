@@ -63,3 +63,7 @@ func Test_Fire_SetState(t *testing.T) {
 func Test_Fire_SourceLength(t *testing.T) {
 	// TODO
 }
+
+func Test_Fire_Teardown(t *testing.T) {
+	// TODO
+}

@@ -9,6 +9,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/outrightmental/go-atomix"
 	"github.com/veandco/go-sdl2/sdl"
+	"os"
 	"time"
 )
 
@@ -42,7 +43,7 @@ func main() {
 	)
 
 	var (
-		prefix    = "assets/sounds/percussion/808/"
+		prefix  = "assets/sounds/percussion/808/"
 		kick1   = "kick1.wav"
 		kick2   = "kick2.wav"
 		marac   = "maracas.wav"
@@ -91,6 +92,7 @@ func main() {
 	sdl.OpenAudio(spec, nil)
 	sdl.PauseAudio(false)
 	log.WithFields(log.Fields{
+		"pid":  os.Getpid(),
 		"spec": spec,
 	}).Info("SDL OpenAudio > Atomix")
 
