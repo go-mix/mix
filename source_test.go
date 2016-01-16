@@ -8,6 +8,8 @@ import (
 	"testing"
 )
 
+// TODO: test multi-channel source audio files
+
 func Test_Source_Base(t *testing.T) {
 	// TODO: Test Source Base
 }
