@@ -89,6 +89,6 @@ type FireStateEnum uint
 const (
 	FIRE_READY FireStateEnum = 1
 	FIRE_PLAY  FireStateEnum = 2
-	// it can be assumed that all alive states are < SOURCE_FINISHED
+	// it is assumed that all alive states are < SOURCE_FINISHED
 	FIRE_DONE FireStateEnum = 6
 )

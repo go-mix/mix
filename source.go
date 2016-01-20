@@ -211,7 +211,7 @@ type SourceStateEnum uint
 const (
 	SOURCE_LOADING SourceStateEnum = 1
 	SOURCE_READY   SourceStateEnum = 2
-	// it can be assumed that all alive states are < SOURCE_FINISHED
+	// it is assumed that all alive states are < SOURCE_FINISHED
 	SOURCE_FINISHED SourceStateEnum = 6
 	SOURCE_FAILED   SourceStateEnum = 7
 )
