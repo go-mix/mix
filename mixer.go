@@ -51,6 +51,9 @@ type Mixer struct {
 }
 
 func (m *Mixer) Initialize() {
+	mutex := &sync.Mutex{}
+	mutex.Lock()
+	defer mutex.Unlock()
 	m.source = make(map[string]*Source, 0)
 	m.startAtTime = time.Now().Add(0xFFFF * time.Hour) // this gets reset by Start() or StartAt()
 }
@@ -166,14 +169,18 @@ func (m *Mixer) getSpec() *sdl.AudioSpec {
 }
 
 func (m *Mixer) prepareSource(source string) {
-	if _, ok := m.source[source]; ok {
-		// exists; take no action
-	} else {
+	mutex := &sync.Mutex{}
+	mutex.Lock()
+	defer mutex.Unlock()
+	if _, exists := m.source[source]; !exists {
 		m.source[source] = NewSource(source)
 	}
 }
 
 func (m *Mixer) getSource(source string) *Source {
+	mutex := &sync.Mutex{}
+	mutex.Lock()
+	defer mutex.Unlock()
 	if _, ok := m.source[source]; ok {
 		return m.source[source]
 	} else {
