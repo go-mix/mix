@@ -20,6 +20,9 @@ import (
 
 var (
 	defaultAudio = C.Uint8(0)
+	instance *Mixer
+	once     sync.Once
+	mutex    *sync.Mutex = &sync.Mutex{}
 )
 
 // singleton
@@ -30,11 +33,6 @@ func mixer() *Mixer {
 	})
 	return instance
 }
-
-var (
-	instance *Mixer
-	once     sync.Once
-)
 
 type Tz uint64
 
@@ -51,7 +49,6 @@ type Mixer struct {
 }
 
 func (m *Mixer) Initialize() {
-	mutex := &sync.Mutex{}
 	mutex.Lock()
 	defer mutex.Unlock()
 	m.source = make(map[string]*Source, 0)
@@ -169,7 +166,6 @@ func (m *Mixer) getSpec() *sdl.AudioSpec {
 }
 
 func (m *Mixer) prepareSource(source string) {
-	mutex := &sync.Mutex{}
 	mutex.Lock()
 	defer mutex.Unlock()
 	if _, exists := m.source[source]; !exists {
@@ -178,7 +174,6 @@ func (m *Mixer) prepareSource(source string) {
 }
 
 func (m *Mixer) getSource(source string) *Source {
-	mutex := &sync.Mutex{}
 	mutex.Lock()
 	defer mutex.Unlock()
 	if _, ok := m.source[source]; ok {
