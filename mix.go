@@ -19,11 +19,11 @@ import (
 )
 
 var (
-	mixMutex        *sync.Mutex = &sync.Mutex{}
-	mixStartAtTime  time.Time
-	mixNowTz        Tz
-	mixTzDur        time.Duration
-    // TODO: implement mixFreq float64
+	mixMutex       *sync.Mutex = &sync.Mutex{}
+	mixStartAtTime time.Time
+	mixNowTz       Tz
+	mixTzDur       time.Duration
+	// TODO: implement mixFreq float64
 	mixSource       map[string]*Source
 	mixSourcePrefix string
 	mixFires        []*Fire
@@ -66,7 +66,7 @@ func mixSetFire(source string, begin time.Duration, sustain time.Duration, volum
 	if sustain != 0 {
 		endTz = beginTz + Tz(sustain.Nanoseconds()/mixTzDur.Nanoseconds())
 	}
-	fire := NewFire(mixSourcePrefix + source, beginTz, endTz, volume, pan)
+	fire := NewFire(mixSourcePrefix+source, beginTz, endTz, volume, pan)
 	mixFires = append(mixFires, fire)
 	return fire
 }
@@ -300,9 +300,9 @@ func mixInt32(sample float64) int32 {
 
 func mixLogarithmicRangeCompression(i float64) float64 {
 	if i < -1 {
-		return -math.Log(-i - 0.85) / 14 - 0.75
+		return -math.Log(-i-0.85)/14 - 0.75
 	} else if i > 1 {
-		return math.Log(i - 0.85) / 14 + 0.75
+		return math.Log(i-0.85)/14 + 0.75
 	} else {
 		return i / 1.61803398875
 	}
@@ -312,5 +312,3 @@ func init() {
 	mixSource = make(map[string]*Source, 0)
 	mixStartAtTime = time.Now().Add(0xFFFF * time.Hour) // this gets reset by Start() or StartAt()
 }
-
-

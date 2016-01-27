@@ -32,7 +32,7 @@ type Fire struct {
 }
 
 func (f *Fire) At(at Tz) (t Tz) {
-//	Debugf("*Fire[%s].At(%v vs %v)\n", f.Source, at, f.BeginTz)
+	//	Debugf("*Fire[%s].At(%v vs %v)\n", f.Source, at, f.BeginTz)
 	switch f.state {
 	case FIRE_READY:
 		if at >= f.BeginTz {

@@ -98,7 +98,6 @@ func (s *Source) Load() {
 	s.maxTz = Tz(len(s.sample))
 }
 
-
 func (s *Source) load8(data []byte) {
 	channels := int(s.spec.Channels)
 	// TODO: convert source Hz; store at the mixer output Hz
@@ -124,16 +123,16 @@ func (s *Source) load16(data []byte) {
 	for n := 0; n < len(data); n += 2 {
 		sample := make([]float64, channels)
 		for c := 0; c < channels; c++ {
-			b := n + c * 2
+			b := n + c*2
 			switch s.spec.Format {
 			case sdl.AUDIO_U16LSB:
-				sample[c] = sampleBytesU16LSB(data[b:b+2])
+				sample[c] = sampleBytesU16LSB(data[b : b+2])
 			case sdl.AUDIO_S16LSB:
-				sample[c] = sampleBytesS16LSB(data[b:b+2])
+				sample[c] = sampleBytesS16LSB(data[b : b+2])
 			case sdl.AUDIO_U16MSB:
-				sample[c] = sampleBytesU16MSB(data[b:b+2])
+				sample[c] = sampleBytesU16MSB(data[b : b+2])
 			case sdl.AUDIO_S16MSB:
-				sample[c] = sampleBytesS16MSB(data[b:b+2])
+				sample[c] = sampleBytesS16MSB(data[b : b+2])
 			}
 		}
 		// TODO: instead of append(..), make([][]float64,length) ahead of time!
@@ -148,16 +147,16 @@ func (s *Source) load32(data []byte) {
 	for n := 0; n < len(data); n += channels * 4 {
 		sample := make([]float64, channels)
 		for c := 0; c < channels; c++ {
-			b := n + c * 4
+			b := n + c*4
 			switch s.spec.Format {
 			case sdl.AUDIO_S32LSB:
-				sample[c] = sampleBytesS32LSB(data[b:b+4])
+				sample[c] = sampleBytesS32LSB(data[b : b+4])
 			case sdl.AUDIO_S32MSB:
-				sample[c] = sampleBytesS32MSB(data[b:b+4])
+				sample[c] = sampleBytesS32MSB(data[b : b+4])
 			case sdl.AUDIO_F32LSB:
-				sample[c] = sampleBytesF32LSB(data[b:b+4])
+				sample[c] = sampleBytesF32LSB(data[b : b+4])
 			case sdl.AUDIO_F32MSB:
-				sample[c] = sampleBytesF32MSB(data[b:b+4])
+				sample[c] = sampleBytesF32MSB(data[b : b+4])
 			}
 		}
 		// TODO: instead of append(..), make([][]float64,length) ahead of time!

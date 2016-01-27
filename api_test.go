@@ -5,8 +5,8 @@ package atomix // is for sequence mixing
 import (
 	"github.com/stretchr/testify/assert"
 	"github.com/veandco/go-sdl2/sdl"
-	"time"
 	"testing"
+	"time"
 )
 
 func TestAPI_Debug(t *testing.T) {
