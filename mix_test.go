@@ -12,7 +12,7 @@ import (
 // Tests
 //
 
-func Test_Mixer_Base(t *testing.T) {
+func TestMixer_Base(t *testing.T) {
 	Configure(sdl.AudioSpec{
 		Freq:     44100,
 		Format:   sdl.AUDIO_U16,
@@ -22,89 +22,89 @@ func Test_Mixer_Base(t *testing.T) {
 	assert.NotNil(t, Spec())
 }
 
-func Test_Mixer_RequiresProperAudioSpec(t *testing.T) {
+func TestMixer_RequiresProperAudioSpec(t *testing.T) {
 	assert.Panics(t, func() {
 		Configure(sdl.AudioSpec{})
 	})
 }
 
-func Test_Mixer_Initialize(t *testing.T) {
+func TestMixer_Initialize(t *testing.T) {
 	// TODO: Test Mixer Initialize
 }
 
-func Test_Mixer_Debug(t *testing.T) {
+func TestMixer_Debug(t *testing.T) {
 	// TODO: Test Mixer Debug
 }
 
-func Test_Mixer_Debugf(t *testing.T) {
+func TestMixer_Debugf(t *testing.T) {
 	// TODO: Test Mixer Debugf
 }
 
-func Test_Mixer_Start(t *testing.T) {
+func TestMixer_Start(t *testing.T) {
 	// TODO: Test Mixer Start
 }
 
-func Test_Mixer_StartAt(t *testing.T) {
+func TestMixer_StartAt(t *testing.T) {
 	// TODO: Test Mixer StartAt
 }
 
-func Test_Mixer_GetStartTime(t *testing.T) {
+func TestMixer_GetStartTime(t *testing.T) {
 	// TODO: Test Mixer GetStartTime
 }
 
-func Test_Mixer_SetFire(t *testing.T) {
+func TestMixer_SetFire(t *testing.T) {
 	// TODO: Test Mixer SetFire
 }
 
-func Test_Mixer_SetSoundsPath(t *testing.T) {
+func TestMixer_SetSoundsPath(t *testing.T) {
 	// TODO: Test Mixer SetSoundsPath
 }
 
-func Test_Mixer_NextOutput(t *testing.T) {
+func TestMixer_NextOutput(t *testing.T) {
 	// TODO: Test Mixer NextOutput
 }
 
-func Test_Mixer_SourceLength(t *testing.T) {
+func TestMixer_SourceLength(t *testing.T) {
 	// TODO: Test Mixer SourceLength
 }
 
-func Test_Mixer_Teardown(t *testing.T) {
+func TestMixer_Teardown(t *testing.T) {
 	// TODO: Test Mixer Teardown
 }
 
-func Test_Mixer_nextSample(t *testing.T) {
+func TestMixer_nextSample(t *testing.T) {
 	// TODO: Test Mixer nextSample
 }
 
-func Test_Mixer_sourceAtTz(t *testing.T) {
+func TestMixer_sourceAtTz(t *testing.T) {
 	// TODO: Test Mixer sourceAt
 }
 
-func Test_Mixer_setSpec(t *testing.T) {
+func TestMixer_setSpec(t *testing.T) {
 	// TODO: Test Mixer setSpec
 }
 
-func Test_Mixer_getSpec(t *testing.T) {
+func TestMixer_getSpec(t *testing.T) {
 	// TODO: Test Mixer getSpec
 }
 
-func Test_Mixer_prepareSource(t *testing.T) {
+func TestMixer_prepareSource(t *testing.T) {
 	// TODO: Test Mixer prepareSource
 }
 
-func Test_Mixer_getSource(t *testing.T) {
+func TestMixer_getSource(t *testing.T) {
 	// TODO: Test Mixer getSource
 }
 
-func Test_Mixer_mix8(t *testing.T) {
+func TestMixer_mix8(t *testing.T) {
 	// TODO: Test Mixer mix8
 }
 
-func Test_Mixer_mix16(t *testing.T) {
+func TestMixer_mix16(t *testing.T) {
 	// TODO: Test Mixer mix16
 }
 
-func Test_Mixer_mix32(t *testing.T) {
+func TestMixer_mix32(t *testing.T) {
 	// TODO: Test Mixer mix32
 }
 

@@ -30,7 +30,7 @@ type Source struct {
 func (s *Source) SampleAt(at Tz) float64 {
 	if at < s.maxTz {
 		// if s.sample[at] != 0 {
-		// 	mixer().Debugf("*Source[%v].SampleAt(%v): %v\n", s.URL, at, s.sample[at])
+		// 	Debugf("*Source[%v].SampleAt(%v): %v\n", s.URL, at, s.sample[at])
 		// }
 		return s.sample[at][0]
 	} else {
@@ -73,7 +73,7 @@ func (s *Source) Load() {
 	data, spec := sdl.LoadWAV(s.URL, &sdl.AudioSpec{})
 	if spec == nil || spec.Format == 0 {
 		// TODO: handle errors loading file
-		mixer().Debugf("could not load WAV %s", s.URL)
+		mixDebugf("could not load WAV %s", s.URL)
 	}
 	s.spec = spec
 	switch s.spec.Format {
@@ -93,7 +93,7 @@ func (s *Source) Load() {
 		sdl.AUDIO_F32LSB:
 		s.load32(data)
 	default:
-		mixer().Debugf("could not load WAV format %+v", s.spec.Format)
+		mixDebugf("could not load WAV format %+v", s.spec.Format)
 	}
 	s.maxTz = Tz(len(s.sample))
 }
@@ -115,7 +115,7 @@ func (s *Source) load8(data []byte) {
 		// TODO: instead of append(..), make([][]float64,length) ahead of time!
 		s.sample = append(s.sample, sample)
 	}
-	mixer().Debugf("*Source[%s].load8(...) length %d channels %d\n", s.URL, len(s.sample), s.spec.Channels)
+	mixDebugf("*Source[%s].load8(...) length %d channels %d\n", s.URL, len(s.sample), s.spec.Channels)
 }
 
 func (s *Source) load16(data []byte) {
@@ -139,7 +139,7 @@ func (s *Source) load16(data []byte) {
 		// TODO: instead of append(..), make([][]float64,length) ahead of time!
 		s.sample = append(s.sample, sample)
 	}
-	mixer().Debugf("*Source[%s].load16(...) length %d channels %d\n", s.URL, len(s.sample), s.spec.Channels)
+	mixDebugf("*Source[%s].load16(...) length %d channels %d\n", s.URL, len(s.sample), s.spec.Channels)
 }
 
 func (s *Source) load32(data []byte) {
@@ -163,7 +163,7 @@ func (s *Source) load32(data []byte) {
 		// TODO: instead of append(..), make([][]float64,length) ahead of time!
 		s.sample = append(s.sample, sample)
 	}
-	mixer().Debugf("*Source[%s].load32(...) length %d channels %d\n", s.URL, len(s.sample), s.spec.Channels)
+	mixDebugf("*Source[%s].load32(...) length %d channels %d\n", s.URL, len(s.sample), s.spec.Channels)
 }
 
 func sampleByteU8(sample byte) float64 {

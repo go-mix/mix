@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func Test_Fire_Base(t *testing.T) {
+func TestFire_Base(t *testing.T) {
 	testLengthTz := Tz(100)
 	src := "sound.wav"
 	bgnTz := Tz(5984)
@@ -36,34 +36,34 @@ func Test_Fire_Base(t *testing.T) {
 	assert.Equal(t, Tz(0), fire.At(endTz+1))
 }
 
-func Test_Fire_NewFire(t *testing.T) {
+func TestFire_NewFire(t *testing.T) {
 	// TODO
 }
 
-func Test_Fire_At(t *testing.T) {
+func TestFire_At(t *testing.T) {
 	// TODO
 }
 
-func Test_Fire_State(t *testing.T) {
+func TestFire_State(t *testing.T) {
 	// TODO
 }
 
-func Test_Fire_IsAlive(t *testing.T) {
+func TestFire_IsAlive(t *testing.T) {
 	// TODO
 }
 
-func Test_Fire_IsPlaying(t *testing.T) {
+func TestFire_IsPlaying(t *testing.T) {
 	// TODO
 }
 
-func Test_Fire_SetState(t *testing.T) {
+func TestFire_SetState(t *testing.T) {
 	// TODO
 }
 
-func Test_Fire_SourceLength(t *testing.T) {
+func TestFire_SourceLength(t *testing.T) {
 	// TODO
 }
 
-func Test_Fire_Teardown(t *testing.T) {
+func TestFire_Teardown(t *testing.T) {
 	// TODO
 }

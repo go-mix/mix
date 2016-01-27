@@ -22,7 +22,7 @@ import (
 const VERSION = "0.0.2"
 
 func Debug(isOn bool) {
-	mixer().Debug(isOn)
+	mixDebug(isOn)
 }
 
 func Configure(spec sdl.AudioSpec) {
@@ -36,35 +36,35 @@ func Configure(spec sdl.AudioSpec) {
 		panic("Must specify Samples")
 	}
 	spec.Callback = sdl.AudioCallback(C.AudioCallback)
-	mixer().setSpec(spec)
+	mixSetSpec(spec)
 }
 
 func Teardown() {
-	mixer().Teardown()
+	mixTeardown()
 }
 
 func Spec() *sdl.AudioSpec {
-	return mixer().getSpec()
+	return mixGetSpec()
 }
 
 func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) *Fire {
-	return mixer().SetFire(source, begin, sustain, volume, pan)
+	return mixSetFire(source, begin, sustain, volume, pan)
 }
 
 func SetSoundsPath(prefix string) {
-	mixer().SetSoundsPath(prefix)
+	mixSetSoundsPath(prefix)
 }
 
 func Start() {
-	mixer().StartAt(time.Now())
+	mixStartAt(time.Now())
 }
 
 func StartAt(t time.Time) {
-	mixer().StartAt(t)
+	mixStartAt(t)
 }
 
 func GetStartTime() time.Time {
-	return mixer().GetStartTime()
+	return mixGetStartTime()
 }
 
 //export AudioCallback
@@ -77,7 +77,7 @@ func AudioCallback(userdata unsafe.Pointer, stream *C.Uint8, length C.int) {
 	}
 	buf := *(*[]C.Uint8)(unsafe.Pointer(&hdr))
 
-	output := mixer().NextOutput(byteSize)
+	output := mixNextOutput(byteSize)
 	if output == nil {
 		// TODO: evaluate whether this failure is productive, or what else could be
 		panic("Nil output buffer")

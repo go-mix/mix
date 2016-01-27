@@ -10,62 +10,62 @@ import (
 
 // TODO: test multi-channel source audio files
 
-func Test_Source_Base(t *testing.T) {
+func TestSource_Base(t *testing.T) {
 	// TODO: Test Source Base
 }
 
-func Test_Source_Load_FAIL(t *testing.T) {
+func TestSource_Load_FAIL(t *testing.T) {
 	// TODO: Test Source loading nonexistent URL results in a graceful failure
 }
 
-func Test_Source_Load(t *testing.T) {
+func TestSource_Load(t *testing.T) {
 	Debug(true)
 	testSourceSetup()
 	source := NewSource("./lib/S16.wav")
 	assert.NotNil(t, source)
 }
 
-func Test_Source_Playback(t *testing.T) {
+func TestSource_Playback(t *testing.T) {
 	// TODO: Test Source plays audio
 }
 
-func Test_Source_SampleAt(t *testing.T) {
+func TestSource_SampleAt(t *testing.T) {
 	// TODO: Test Source SampleAt
 }
 
-func Test_Source_State(t *testing.T) {
+func TestSource_State(t *testing.T) {
 	// TODO: Test Source State
 }
 
-func Test_Source_StateName(t *testing.T) {
+func TestSource_StateName(t *testing.T) {
 	// TODO: Test Source StateName
 }
 
-func Test_Source_Length(t *testing.T) {
+func TestSource_Length(t *testing.T) {
 	// TODO: Test Source reports length
 }
 
-func Test_Source_Teardown(t *testing.T) {
+func TestSource_Teardown(t *testing.T) {
 	// TODO: Test Source Teardown
 }
 
-func Test_Source_load8(t *testing.T) {
+func TestSource_load8(t *testing.T) {
 	// TODO: Test Source load8
 }
 
-func Test_Source_load16(t *testing.T) {
+func TestSource_load16(t *testing.T) {
 	// TODO: Test Source load16
 }
 
-func Test_Source_load32(t *testing.T) {
+func TestSource_load32(t *testing.T) {
 	// TODO: Test Source load32
 }
 
-func Test_Source_sampleByteU8(t *testing.T) {
+func TestSource_sampleByteU8(t *testing.T) {
 	// TODO: Test Source sampleByteU8
 }
 
-func Test_Source_sampleByteS8(t *testing.T) {
+func TestSource_sampleByteS8(t *testing.T) {
 	// TODO: Test Source sampleByteS8
 }
 

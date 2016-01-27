@@ -5,7 +5,7 @@ package atomix // is for sequence mixing
 import ()
 
 func NewFire(source string, beginTz Tz, endTz Tz, volume float64, pan float64) *Fire {
-	// mixer().Debugf("NewFire(%v, %v, %v, %v, %v)\n", source, beginTz, endTz, volume, pan)
+	// Debugf("NewFire(%v, %v, %v, %v, %v)\n", source, beginTz, endTz, volume, pan)
 	s := &Fire{
 		/* setup */
 		Source:  source,
@@ -32,7 +32,7 @@ type Fire struct {
 }
 
 func (f *Fire) At(at Tz) (t Tz) {
-//	mixer().Debugf("*Fire[%s].At(%v vs %v)\n", f.Source, at, f.BeginTz)
+//	Debugf("*Fire[%s].At(%v vs %v)\n", f.Source, at, f.BeginTz)
 	switch f.state {
 	case FIRE_READY:
 		if at >= f.BeginTz {
@@ -73,7 +73,7 @@ func (f *Fire) SetState(state FireStateEnum) {
 
 func (f *Fire) SourceLength() Tz {
 	// TODO: evaluate if this is a bad circular dependency to call the singleton from here?
-	return mixer().SourceLength(f.Source)
+	return mixSourceLength(f.Source)
 }
 
 func (f *Fire) Teardown() {
