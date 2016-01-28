@@ -1,6 +1,5 @@
-// Fire models the playback of a source
-package atomix // is for sequence mixing
-// Copyright 2015 Outright Mental, Inc.
+// Package atomix is a sequence-based Go-native audio mixer
+package atomix
 
 import (
 	"github.com/stretchr/testify/assert"

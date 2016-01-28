@@ -1,6 +1,5 @@
-// Source imports audio for playback
-package atomix // is for sequence mixing
-// Copyright 2015 Outright Mental, Inc.
+// Package atomix is a sequence-based Go-native audio mixer
+package atomix
 
 import (
 	"encoding/binary"
