@@ -1,8 +1,6 @@
 // Package atomix is a sequence-based Go-native audio mixer
 package atomix
 
-import ()
-
 func NewFire(source string, beginTz Tz, endTz Tz, volume float64, pan float64) *Fire {
 	// Debugf("NewFire(%v, %v, %v, %v, %v)\n", source, beginTz, endTz, volume, pan)
 	s := &Fire{
