@@ -1,20 +1,14 @@
 // Package atomix is a sequence-based Go-native audio mixer
 package atomix
 
-/*
-#include <stdio.h>
-#include <stdint.h>
-typedef unsigned char Uint8;
-void AudioCallback(void *userdata, Uint8 *stream, int len);
-*/
-import "C"
 import (
 	"encoding/binary"
 	"fmt"
-	"github.com/veandco/go-sdl2/sdl"
 	"math"
 	"sync"
 	"time"
+
+	"github.com/outrightmental/go-atomix/bind"
 )
 
 var (
@@ -26,7 +20,7 @@ var (
 	mixSource       map[string]*Source
 	mixSourcePrefix string
 	mixFires        []*Fire
-	mixSpec         sdl.AudioSpec
+	mixSpec         bind.AudioSpec
 	isDebug         bool
 )
 
@@ -79,26 +73,26 @@ func mixNextOutput(byteSize int) []byte {
 	mixCleanup()
 	switch mixSpec.Format {
 	case
-		sdl.AUDIO_U8,
-		sdl.AUDIO_S8:
+		bind.AudioU8,
+		bind.AudioS8:
 		return mix8(byteSize)
 	case
-		sdl.AUDIO_U16LSB,
-		sdl.AUDIO_S16LSB,
-		sdl.AUDIO_U16MSB,
-		sdl.AUDIO_S16MSB:
+		bind.AudioU16LSB,
+		bind.AudioS16LSB,
+		bind.AudioU16MSB,
+		bind.AudioS16MSB:
 		return mix16(byteSize)
 	case
-		sdl.AUDIO_S32LSB,
-		sdl.AUDIO_S32MSB,
-		sdl.AUDIO_F32LSB:
+		bind.AudioS32LSB,
+		bind.AudioS32MSB,
+		bind.AudioF32LSB:
 		return mix32(byteSize)
 	}
 	return nil
 }
 
 func mixTeardown() {
-	// nothing yet
+	bind.Teardown()
 }
 
 /*
@@ -133,13 +127,13 @@ func mixSourceAt(src string, at Tz) float64 {
 	return s.SampleAt(at)
 }
 
-func mixSetSpec(s sdl.AudioSpec) {
+func mixSetSpec(s bind.AudioSpec) {
 	mixSpec = s
 	// TODO: implement mixFreq = float64(s.Freq) // cache a float64 of this for future maths
 	mixTzDur = time.Second / time.Duration(s.Freq)
 }
 
-func mixGetSpec() *sdl.AudioSpec {
+func mixGetSpec() *bind.AudioSpec {
 	return &mixSpec
 }
 
@@ -172,9 +166,9 @@ func mixCleanup() {
 func mix8(byteSize int) (out []byte) {
 	for n := 0; n < byteSize; n++ {
 		switch mixSpec.Format {
-		case sdl.AUDIO_U8:
+		case bind.AudioU8:
 			out = append(out, mixByteU8(mixNextSample()))
-		case sdl.AUDIO_S8:
+		case bind.AudioS8:
 			out = append(out, mixByteS8(mixNextSample()))
 		}
 	}
@@ -184,13 +178,13 @@ func mix8(byteSize int) (out []byte) {
 func mix16(byteSize int) (out []byte) {
 	for n := 0; n < byteSize; n += 2 {
 		switch mixSpec.Format {
-		case sdl.AUDIO_U16LSB:
+		case bind.AudioU16LSB:
 			out = append(out, mixBytesU16LSB(mixNextSample())...)
-		case sdl.AUDIO_S16LSB:
+		case bind.AudioS16LSB:
 			out = append(out, mixBytesS16LSB(mixNextSample())...)
-		case sdl.AUDIO_U16MSB:
+		case bind.AudioU16MSB:
 			out = append(out, mixBytesU16MSB(mixNextSample())...)
-		case sdl.AUDIO_S16MSB:
+		case bind.AudioS16MSB:
 			out = append(out, mixBytesS16MSB(mixNextSample())...)
 		}
 	}
@@ -200,13 +194,13 @@ func mix16(byteSize int) (out []byte) {
 func mix32(byteSize int) (out []byte) {
 	for n := 0; n < byteSize; n += 4 {
 		switch mixSpec.Format {
-		case sdl.AUDIO_S32LSB:
+		case bind.AudioS32LSB:
 			out = append(out, mixBytesS32LSB(mixNextSample())...)
-		case sdl.AUDIO_S32MSB:
+		case bind.AudioS32MSB:
 			out = append(out, mixBytesS32MSB(mixNextSample())...)
-		case sdl.AUDIO_F32LSB:
+		case bind.AudioF32LSB:
 			out = append(out, mixBytesF32LSB(mixNextSample())...)
-		case sdl.AUDIO_F32MSB:
+		case bind.AudioF32MSB:
 			out = append(out, mixBytesF32MSB(mixNextSample())...)
 		}
 	}

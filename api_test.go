@@ -2,10 +2,12 @@
 package atomix
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/veandco/go-sdl2/sdl"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+
+	"github.com/outrightmental/go-atomix/bind"
 )
 
 func TestAPI_Debug(t *testing.T) {
@@ -35,15 +37,18 @@ func TestAPI_SetSoundsPath(t *testing.T) {
 }
 
 func TestAPI_Start(t *testing.T) {
-	// TODO: Test API Start
+	Start()
 }
 
 func TestAPI_StartAt(t *testing.T) {
-	// TODO: Test API StartAt
+	StartAt(time.Now().Add(1*time.Second))
 }
 
 func TestAPI_GetStartTime(t *testing.T) {
-	// TODO: Test API GetStartTime
+	startExpect := time.Now().Add(1*time.Second)
+	StartAt(startExpect)
+	startActual := GetStartTime()
+	assert.Equal(t, startExpect, startActual)
 }
 
 func TestAPI_AudioCallback(t *testing.T) {
@@ -55,10 +60,9 @@ func TestAPI_AudioCallback(t *testing.T) {
 //
 
 func testAPISetup() {
-	Configure(sdl.AudioSpec{
+	Configure(bind.AudioSpec{
 		Freq:     44100,
-		Format:   sdl.AUDIO_S16,
+		Format:   bind.AudioS16LSB,
 		Channels: 1,
-		Samples:  4096,
 	})
 }

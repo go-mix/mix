@@ -2,9 +2,10 @@
 package atomix
 
 import (
-	"encoding/binary"
-	"github.com/veandco/go-sdl2/sdl"
 	"math"
+	"encoding/binary"
+
+	"github.com/outrightmental/go-atomix/bind"
 )
 
 // NewSource from a "URL" (which is actually only a file path for now)
@@ -24,7 +25,7 @@ type Source struct {
 	URL    string
 	sample [][]float64
 	maxTz  Tz
-	spec   *sdl.AudioSpec
+	spec   *bind.AudioSpec
 	state  sourceStateEnum
 }
 
@@ -55,7 +56,7 @@ func (s *Source) Teardown() {
 
 func (s *Source) load() {
 	// TODO: support audio formats other than WAV
-	data, spec := sdl.LoadWAV(s.URL, &sdl.AudioSpec{})
+	data, spec := bind.LoadWAV(s.URL, &bind.AudioSpec{})
 	if spec == nil || spec.Format == 0 {
 		// TODO: handle errors loading file
 		mixDebugf("could not load WAV %s", s.URL)
@@ -63,19 +64,19 @@ func (s *Source) load() {
 	s.spec = spec
 	switch s.spec.Format {
 	case
-		sdl.AUDIO_U8,
-		sdl.AUDIO_S8:
+		bind.AudioU8,
+		bind.AudioS8:
 		s.load8(data)
 	case
-		sdl.AUDIO_U16LSB,
-		sdl.AUDIO_S16LSB,
-		sdl.AUDIO_U16MSB,
-		sdl.AUDIO_S16MSB:
+		bind.AudioU16LSB,
+		bind.AudioS16LSB,
+		bind.AudioU16MSB,
+		bind.AudioS16MSB:
 		s.load16(data)
 	case
-		sdl.AUDIO_S32LSB,
-		sdl.AUDIO_S32MSB,
-		sdl.AUDIO_F32LSB:
+		bind.AudioS32LSB,
+		bind.AudioS32MSB,
+		bind.AudioF32LSB:
 		s.load32(data)
 	default:
 		mixDebugf("could not load WAV format %+v", s.spec.Format)
@@ -90,9 +91,9 @@ func (s *Source) load8(data []byte) {
 		sample := make([]float64, channels)
 		for c := 0; c < channels; c++ {
 			switch s.spec.Format {
-			case sdl.AUDIO_U8:
+			case bind.AudioU8:
 				sample[c] = sampleByteU8(data[n])
-			case sdl.AUDIO_S8:
+			case bind.AudioS8:
 				sample[c] = sampleByteS8(data[n])
 			}
 		}
@@ -110,13 +111,13 @@ func (s *Source) load16(data []byte) {
 		for c := 0; c < channels; c++ {
 			b := n + c*2
 			switch s.spec.Format {
-			case sdl.AUDIO_U16LSB:
+			case bind.AudioU16LSB:
 				sample[c] = sampleBytesU16LSB(data[b : b+2])
-			case sdl.AUDIO_S16LSB:
+			case bind.AudioS16LSB:
 				sample[c] = sampleBytesS16LSB(data[b : b+2])
-			case sdl.AUDIO_U16MSB:
+			case bind.AudioU16MSB:
 				sample[c] = sampleBytesU16MSB(data[b : b+2])
-			case sdl.AUDIO_S16MSB:
+			case bind.AudioS16MSB:
 				sample[c] = sampleBytesS16MSB(data[b : b+2])
 			}
 		}
@@ -134,13 +135,13 @@ func (s *Source) load32(data []byte) {
 		for c := 0; c < channels; c++ {
 			b := n + c*4
 			switch s.spec.Format {
-			case sdl.AUDIO_S32LSB:
+			case bind.AudioS32LSB:
 				sample[c] = sampleBytesS32LSB(data[b : b+4])
-			case sdl.AUDIO_S32MSB:
+			case bind.AudioS32MSB:
 				sample[c] = sampleBytesS32MSB(data[b : b+4])
-			case sdl.AUDIO_F32LSB:
+			case bind.AudioF32LSB:
 				sample[c] = sampleBytesF32LSB(data[b : b+4])
-			case sdl.AUDIO_F32MSB:
+			case bind.AudioF32MSB:
 				sample[c] = sampleBytesF32MSB(data[b : b+4])
 			}
 		}

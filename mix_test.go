@@ -3,8 +3,8 @@ package atomix
 
 import (
 	"github.com/stretchr/testify/assert"
-	"github.com/veandco/go-sdl2/sdl"
 	"testing"
+	"github.com/outrightmental/go-atomix/bind"
 )
 
 //
@@ -12,18 +12,17 @@ import (
 //
 
 func TestMixer_Base(t *testing.T) {
-	Configure(sdl.AudioSpec{
+	Configure(bind.AudioSpec{
 		Freq:     44100,
-		Format:   sdl.AUDIO_U16,
+		Format:   bind.AudioU16LSB,
 		Channels: 2,
-		Samples:  4096,
 	})
 	assert.NotNil(t, Spec())
 }
 
 func TestMixer_RequiresProperAudioSpec(t *testing.T) {
 	assert.Panics(t, func() {
-		Configure(sdl.AudioSpec{})
+		Configure(bind.AudioSpec{})
 	})
 }
 

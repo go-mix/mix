@@ -1,21 +1,10 @@
 // Package atomix is a sequence-based Go-native audio mixer
 package atomix
 
-/*
-#include <stdio.h>
-#include <stdint.h>
-typedef unsigned char Uint8;
-void AudioCallback(void *userdata, Uint8 *stream, int len);
-*/
-import "C"
 import (
-	// "fmt"
-	"github.com/veandco/go-sdl2/sdl"
-	"reflect"
-	// "sync"
 	"time"
-	"unsafe"
-	// "encoding/binary"
+
+	"github.com/outrightmental/go-atomix/bind"
 )
 
 // VERSION # of this go-atomix source code
@@ -27,17 +16,15 @@ func Debug(isOn bool) {
 }
 
 // Configure the mixer frequency, format, channels & sample rate.
-func Configure(spec sdl.AudioSpec) {
+func Configure(spec bind.AudioSpec) {
 	if spec.Freq == 0 {
 		panic("Must specify Frequency")
 	} else if spec.Format == 0 {
 		panic("Must specify Format")
 	} else if spec.Channels == 0 {
 		panic("Must specify Channels")
-	} else if spec.Samples == 0 {
-		panic("Must specify Samples")
 	}
-	spec.Callback = sdl.AudioCallback(C.AudioCallback)
+	bind.SetMixNextOutput(mixNextOutput)
 	mixSetSpec(spec)
 }
 
@@ -47,7 +34,7 @@ func Teardown() {
 }
 
 // Spec for the mixer, which may include callback functions, e.g. go-sdl2
-func Spec() *sdl.AudioSpec {
+func Spec() *bind.AudioSpec {
 	return mixGetSpec()
 }
 
@@ -76,45 +63,7 @@ func GetStartTime() time.Time {
 	return mixGetStartTime()
 }
 
-// AudioCallback is an unsafe C++ callback function for go-sdl2
-//export AudioCallback
-func AudioCallback(userdata unsafe.Pointer, stream *C.Uint8, length C.int) {
-	byteSize := int(length)
-	hdr := reflect.SliceHeader{
-		Data: uintptr(unsafe.Pointer(stream)),
-		Len:  byteSize,
-		Cap:  byteSize,
-	}
-	buf := *(*[]C.Uint8)(unsafe.Pointer(&hdr))
-
-	output := mixNextOutput(byteSize)
-	if output == nil {
-		// TODO: evaluate whether this failure is productive, or what else could be
-		panic("Nil output buffer")
-	}
-	for i := 0; i < byteSize; i++ {
-		buf[i] = C.Uint8(output[i])
-	}
+// OpenAudio begins streaming to the bound output audio interface, via a callback function
+func OpenAudio() {
+	bind.OpenAudio(mixGetSpec())
 }
-
-// Constants to represent different audio formats
-const (
-	AudioU8     = 1
-	AudioS8     = 2
-	AudioU16LSB = 16
-	AudioS16LSB = 17
-	AudioU16MSB = 18
-	AudioS16MSB = 19
-	AudioU16    = 20
-	AudioS16    = 21
-	AudioS32LSB = 32
-	AudioS32MSB = 33
-	AudioS32    = 34
-	AudioF32LSB = 35
-	AudioF32MSB = 36
-	AudioF32    = 37
-	AudioU16SYS = 38
-	AudioS16SYS = 39
-	AudioS32SYS = 40
-	AudioF32SYS = 41
-)

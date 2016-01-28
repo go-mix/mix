@@ -2,9 +2,12 @@
 package atomix
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/veandco/go-sdl2/sdl"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+
+	"github.com/outrightmental/go-atomix/bind"
 )
 
 // TODO: test multi-channel source audio files
@@ -130,10 +133,9 @@ func Test_sampleBytesF32MSB(t *testing.T) {
 //
 
 func testSourceSetup() {
-	Configure(sdl.AudioSpec{
+	Configure(bind.AudioSpec{
 		Freq:     44100,
-		Format:   sdl.AUDIO_S16,
+		Format:   bind.AudioS16LSB,
 		Channels: 1,
-		Samples:  4096,
 	})
 }
