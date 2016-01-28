@@ -96,3 +96,25 @@ func AudioCallback(userdata unsafe.Pointer, stream *C.Uint8, length C.int) {
 		buf[i] = C.Uint8(output[i])
 	}
 }
+
+// Constants to represent different audio formats
+const (
+	AudioU8     = 1
+	AudioS8     = 2
+	AudioU16LSB = 16
+	AudioS16LSB = 17
+	AudioU16MSB = 18
+	AudioS16MSB = 19
+	AudioU16    = 20
+	AudioS16    = 21
+	AudioS32LSB = 32
+	AudioS32MSB = 33
+	AudioS32    = 34
+	AudioF32LSB = 35
+	AudioF32MSB = 36
+	AudioF32    = 37
+	AudioU16SYS = 38
+	AudioS16SYS = 39
+	AudioS32SYS = 40
+	AudioF32SYS = 41
+)
