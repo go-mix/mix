@@ -1,7 +1,7 @@
 // Package atomix is a sequence-based Go-native audio mixer
 package atomix
 
-// Create a new Fire to represent a single audio source playing at a specific time in the future.
+// NewFire to represent a single audio source playing at a specific time in the future.
 func NewFire(source string, beginTz Tz, endTz Tz, volume float64, pan float64) *Fire {
 	// Debugf("NewFire(%v, %v, %v, %v, %v)\n", source, beginTz, endTz, volume, pan)
 	s := &Fire{
@@ -17,7 +17,7 @@ func NewFire(source string, beginTz Tz, endTz Tz, volume float64, pan float64) *
 	return s
 }
 
-// A Fire represents a single audio source playing at a specific time in the future.
+// Fire represents a single audio source playing at a specific time in the future.
 type Fire struct {
 	/* setup */
 	BeginTz Tz
@@ -26,11 +26,11 @@ type Fire struct {
 	Volume  float64
 	Pan     float64
 	/* playback */
-	nowTz   Tz
-	state   fireStateEnum
+	nowTz Tz
+	state fireStateEnum
 }
 
-// When the Fire is At(..) the series of Tz it's playing for, it streams the series of Tz corresponding to source audio.
+// At the series of Tz it's playing for, return the series of Tz corresponding to source audio.
 func (f *Fire) At(at Tz) (t Tz) {
 	//	Debugf("*Fire[%s].At(%v vs %v)\n", f.Source, at, f.BeginTz)
 	switch f.state {
@@ -55,12 +55,12 @@ func (f *Fire) At(at Tz) (t Tz) {
 	return
 }
 
-// Is the Fire alive?
+// IsAlive the Fire?
 func (f *Fire) IsAlive() bool {
 	return f.state < fireStateDone
 }
 
-// Is the Fire playing?
+// IsPlaying the Fire?
 func (f *Fire) IsPlaying() bool {
 	return f.state == fireStatePlay
 }

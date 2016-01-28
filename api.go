@@ -18,10 +18,10 @@ import (
 	// "encoding/binary"
 )
 
-// The version # of this go-atomix source code
+// VERSION # of this go-atomix source code
 const VERSION = "0.0.2"
 
-// Turn on debugging (ripples down to all sub-modules)
+// Debug ON/OFF (ripples down to all sub-modules)
 func Debug(isOn bool) {
 	mixDebug(isOn)
 }
@@ -46,17 +46,17 @@ func Teardown() {
 	mixTeardown()
 }
 
-// Return the mixer Spec, which may include callback functions, e.g. go-sdl2
+// Spec for the mixer, which may include callback functions, e.g. go-sdl2
 func Spec() *sdl.AudioSpec {
 	return mixGetSpec()
 }
 
-// Set a "Fire" to represent a single audio source playing at a specific time in the future.
+// SetFire to represent a single audio source playing at a specific time in the future.
 func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) *Fire {
 	return mixSetFire(source, begin, sustain, volume, pan)
 }
 
-// Set the master sounds path prefix
+// SetSoundsPath prefix
 func SetSoundsPath(prefix string) {
 	mixSetSoundsPath(prefix)
 }
@@ -66,16 +66,17 @@ func Start() {
 	mixStartAt(time.Now())
 }
 
-// Start the mixer at a specified time in the future
+// StartAt a specific time in the future
 func StartAt(t time.Time) {
 	mixStartAt(t)
 }
 
-// Get the time the mixer was started at
+// GetStartTime the mixer was started at
 func GetStartTime() time.Time {
 	return mixGetStartTime()
 }
 
+// AudioCallback is an unsafe C++ callback function for go-sdl2
 //export AudioCallback
 func AudioCallback(userdata unsafe.Pointer, stream *C.Uint8, length C.int) {
 	byteSize := int(length)

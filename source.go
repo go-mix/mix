@@ -7,7 +7,7 @@ import (
 	"math"
 )
 
-// Create a new source from a "URL" (which is actually only a file path for now)
+// NewSource from a "URL" (which is actually only a file path for now)
 func NewSource(URL string) *Source {
 	// TODO: implement true URL (for now, it's being used as a path)
 	s := &Source{
@@ -19,7 +19,7 @@ func NewSource(URL string) *Source {
 	return s
 }
 
-// A Source stores a series of Samples in Channels across Time, for audio playback.
+// Source stores a series of Samples in Channels across Time, for audio playback.
 type Source struct {
 	URL    string
 	sample [][]float64
@@ -28,19 +28,18 @@ type Source struct {
 	state  sourceStateEnum
 }
 
-// Fetch the sample at a specific Tz (currently only mono, uses channel 0)
+// SampleAt at a specific Tz (currently only mono, uses channel 0)
 func (s *Source) SampleAt(at Tz) float64 {
 	if at < s.maxTz {
 		// if s.sample[at] != 0 {
 		// 	Debugf("*Source[%v].SampleAt(%v): %v\n", s.URL, at, s.sample[at])
 		// }
 		return s.sample[at][0]
-	} else {
-		return 0
 	}
+	return 0
 }
 
-// Get the length of the source audio in Tz
+// Length of the source audio in Tz
 func (s *Source) Length() Tz {
 	return s.maxTz
 }

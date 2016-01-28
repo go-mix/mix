@@ -25,7 +25,7 @@ func TestAPI_Spec(t *testing.T) {
 }
 
 func TestAPI_SetFire(t *testing.T) {
-	testApiSetup()
+	testAPISetup()
 	fire := SetFire("lib/S16.wav", time.Duration(0), 0, 1.0, 0)
 	assert.NotNil(t, fire)
 }
@@ -54,7 +54,7 @@ func TestAPI_AudioCallback(t *testing.T) {
 // Test Components
 //
 
-func testApiSetup() {
+func testAPISetup() {
 	Configure(sdl.AudioSpec{
 		Freq:     44100,
 		Format:   sdl.AUDIO_S16,
