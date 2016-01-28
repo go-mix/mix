@@ -6,69 +6,59 @@ package main
 // void AudioCallback(void *userdata, Uint16 *stream, int len);
 import "C"
 import (
-	log "github.com/Sirupsen/logrus"
+	"fmt"
 	"github.com/outrightmental/go-atomix"
 	"github.com/veandco/go-sdl2/sdl"
 	"os"
 	"time"
 )
 
-const (
-	sampleHz   = 44100
-	numSamples = 4096
+var (
+	sampleHz   = int32(44100)
+	numSamples = uint16(4096)
+	bpm        = 120
+	step       = time.Minute / time.Duration(bpm*4)
+	loops      = 16
+	prefix     = "assets/sounds/percussion/808/"
+	kick1      = "kick1.wav"
+	kick2      = "kick2.wav"
+	marac      = "maracas.wav"
+	snare      = "snare.wav"
+	hitom      = "hightom.wav"
+	clhat      = "cl_hihat.wav"
+	pattern    = []string{
+		kick2,
+		marac,
+		clhat,
+		marac,
+		snare,
+		marac,
+		clhat,
+		kick2,
+		marac,
+		marac,
+		hitom,
+		marac,
+		snare,
+		kick1,
+		clhat,
+		marac,
+	}
 )
 
 func main() {
 	if err := sdl.Init(sdl.INIT_AUDIO); err != nil {
-		log.WithFields(log.Fields{
-			"error": err,
-		}).Fatal("Cannot init SDL")
+		fmt.Printf("Cannot init SDL. Error: %v\n", err)
 		return
 	}
 	defer func() {
 		if r := recover(); r != nil {
-			log.WithFields(log.Fields{
-				"recover": r,
-			}).Warn("Player Recovered")
+			fmt.Printf("Player Recovered: %v\n", r)
 		}
 		sdl.PauseAudio(true)
 		atomix.Teardown()
 		sdl.Quit()
 	}()
-
-	var (
-		bpm   = 120
-		step  = time.Minute / time.Duration(bpm*4)
-		loops = 16
-	)
-
-	var (
-		prefix  = "assets/sounds/percussion/808/"
-		kick1   = "kick1.wav"
-		kick2   = "kick2.wav"
-		marac   = "maracas.wav"
-		snare   = "snare.wav"
-		hitom   = "hightom.wav"
-		clhat   = "cl_hihat.wav"
-		pattern = []string{
-			kick2,
-			marac,
-			clhat,
-			marac,
-			snare,
-			marac,
-			clhat,
-			kick2,
-			marac,
-			marac,
-			hitom,
-			marac,
-			snare,
-			kick1,
-			clhat,
-			marac,
-		}
-	)
 
 	atomix.Debug(true)
 	atomix.Configure(sdl.AudioSpec{
@@ -91,10 +81,7 @@ func main() {
 	spec := atomix.Spec()
 	sdl.OpenAudio(spec, nil)
 	sdl.PauseAudio(false)
-	log.WithFields(log.Fields{
-		"pid":  os.Getpid(),
-		"spec": spec,
-	}).Info("SDL OpenAudio > Atomix")
 
+	fmt.Printf("SDL OpenAudio > Atomix, pid:%v, spec:%v\n", os.Getpid(), spec)
 	time.Sleep(t + 1*time.Second) // padding after music
 }
