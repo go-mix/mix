@@ -17,11 +17,11 @@ func TestFire_Base(t *testing.T) {
 	// before start:
 	assert.Equal(t, Tz(0), fire.At(bgnTz-2))
 	assert.Equal(t, Tz(0), fire.At(bgnTz-1))
-	assert.Equal(t, FIRE_READY, fire.State())
+	assert.Equal(t, fireStateReady, fire.state)
 	assert.Equal(t, true, fire.IsAlive())
 	// start:
 	assert.Equal(t, Tz(0), fire.At(bgnTz))
-	assert.Equal(t, FIRE_PLAY, fire.State())
+	assert.Equal(t, fireStatePlay, fire.state)
 	assert.Equal(t, true, fire.IsAlive())
 	// after start / before end:
 	for n := Tz(1); n < testLengthTz; n++ {
@@ -29,7 +29,7 @@ func TestFire_Base(t *testing.T) {
 	}
 	// end:
 	assert.Equal(t, testLengthTz, fire.At(endTz))
-	assert.Equal(t, FIRE_DONE, fire.State())
+	assert.Equal(t, fireStateDone, fire.state)
 	assert.Equal(t, false, fire.IsAlive())
 	// after end:
 	assert.Equal(t, Tz(0), fire.At(endTz+1))

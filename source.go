@@ -7,25 +7,28 @@ import (
 	"math"
 )
 
+// Create a new source from a "URL" (which is actually only a file path for now)
 func NewSource(URL string) *Source {
 	// TODO: implement true URL (for now, it's being used as a path)
 	s := &Source{
 		URL: URL,
 	}
-	s.state = SOURCE_LOADING
-	s.Load()
-	s.state = SOURCE_READY
+	s.state = sourceStateLoading
+	s.load()
+	s.state = sourceStateReady
 	return s
 }
 
+// A Source stores a series of Samples in Channels across Time, for audio playback.
 type Source struct {
 	URL    string
 	sample [][]float64
 	maxTz  Tz
 	spec   *sdl.AudioSpec
-	state  SourceStateEnum
+	state  sourceStateEnum
 }
 
+// Fetch the sample at a specific Tz (currently only mono, uses channel 0)
 func (s *Source) SampleAt(at Tz) float64 {
 	if at < s.maxTz {
 		// if s.sample[at] != 0 {
@@ -37,28 +40,12 @@ func (s *Source) SampleAt(at Tz) float64 {
 	}
 }
 
-func (s *Source) State() SourceStateEnum {
-	return s.state
-}
-
-func (s *Source) StateName() string {
-	switch s.state {
-	case SOURCE_LOADING:
-		return "Loading"
-	case SOURCE_READY:
-		return "Ready"
-	case SOURCE_FINISHED:
-		return "Finished"
-	case SOURCE_FAILED:
-		return "Failed"
-	}
-	return ""
-}
-
+// Get the length of the source audio in Tz
 func (s *Source) Length() Tz {
 	return s.maxTz
 }
 
+// Teardown the source audio and release its memory.
 func (s *Source) Teardown() {
 	s.sample = nil
 }
@@ -67,7 +54,7 @@ func (s *Source) Teardown() {
  *
  private */
 
-func (s *Source) Load() {
+func (s *Source) load() {
 	// TODO: support audio formats other than WAV
 	data, spec := sdl.LoadWAV(s.URL, &sdl.AudioSpec{})
 	if spec == nil || spec.Format == 0 {
@@ -204,12 +191,12 @@ func sampleBytesF32MSB(sample []byte) float64 {
 	return float64(math.Float32frombits(binary.BigEndian.Uint32(sample)))
 }
 
-type SourceStateEnum uint
+type sourceStateEnum uint
 
 const (
-	SOURCE_LOADING SourceStateEnum = 1
-	SOURCE_READY   SourceStateEnum = 2
+	sourceStateLoading sourceStateEnum = 1
+	sourceStateReady   sourceStateEnum = 2
 	// it is assumed that all alive states are < SOURCE_FINISHED
-	SOURCE_FINISHED SourceStateEnum = 6
-	SOURCE_FAILED   SourceStateEnum = 7
+	sourceStateFinished sourceStateEnum = 6
+	sourceStateFailed   sourceStateEnum = 7
 )

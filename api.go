@@ -18,12 +18,15 @@ import (
 	// "encoding/binary"
 )
 
+// The version # of this go-atomix source code
 const VERSION = "0.0.2"
 
+// Turn on debugging (ripples down to all sub-modules)
 func Debug(isOn bool) {
 	mixDebug(isOn)
 }
 
+// Configure the mixer frequency, format, channels & sample rate.
 func Configure(spec sdl.AudioSpec) {
 	if spec.Freq == 0 {
 		panic("Must specify Frequency")
@@ -38,30 +41,37 @@ func Configure(spec sdl.AudioSpec) {
 	mixSetSpec(spec)
 }
 
+// Teardown everything and release all memory.
 func Teardown() {
 	mixTeardown()
 }
 
+// Return the mixer Spec, which may include callback functions, e.g. go-sdl2
 func Spec() *sdl.AudioSpec {
 	return mixGetSpec()
 }
 
+// Set a "Fire" to represent a single audio source playing at a specific time in the future.
 func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) *Fire {
 	return mixSetFire(source, begin, sustain, volume, pan)
 }
 
+// Set the master sounds path prefix
 func SetSoundsPath(prefix string) {
 	mixSetSoundsPath(prefix)
 }
 
+// Start the mixer now
 func Start() {
 	mixStartAt(time.Now())
 }
 
+// Start the mixer at a specified time in the future
 func StartAt(t time.Time) {
 	mixStartAt(t)
 }
 
+// Get the time the mixer was started at
 func GetStartTime() time.Time {
 	return mixGetStartTime()
 }

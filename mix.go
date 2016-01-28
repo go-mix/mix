@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	mixMutex       *sync.Mutex = &sync.Mutex{}
+	mixMutex       = &sync.Mutex{}
 	mixStartAtTime time.Time
 	mixNowTz       Tz
 	mixTzDur       time.Duration
@@ -30,6 +30,7 @@ var (
 	isDebug         bool
 )
 
+// Tz is the unit of measurement of samples-over-time, e.g. for 48000Hz playback there are 48,000 Tz in 1 second.
 type Tz uint64
 
 func mixDebug(isOn bool) {
@@ -155,9 +156,8 @@ func mixGetSource(source string) *Source {
 	defer mixMutex.Unlock()
 	if _, ok := mixSource[source]; ok {
 		return mixSource[source]
-	} else {
-		return nil
 	}
+	return nil
 }
 
 func mixCleanup() {
