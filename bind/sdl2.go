@@ -22,16 +22,11 @@ func sdl2OpenAudio(spec *AudioSpec) {
 	sdl.PauseAudio(false)
 }
 
-func sdl2LoadWAV(file string, spec *AudioSpec) ([]byte, *AudioSpec) {
-	data, sdlSpec := sdl.LoadWAV(file, sdl2Spec(spec))
-	return data, sdl2Unspec(sdlSpec)
-}
-
 func sdl2Spec(spec *AudioSpec) *sdl.AudioSpec {
 	return &sdl.AudioSpec{
 		Freq: spec.Freq,
 		Format: sdl2Format(spec.Format),
-		Channels: spec.Channels,
+		Channels: uint8(spec.Channels),
 		Samples: 4096,
 		Callback: sdl.AudioCallback(C.AudioCallback),
 	}
@@ -40,7 +35,7 @@ func sdl2Spec(spec *AudioSpec) *sdl.AudioSpec {
 func sdl2Unspec(sdlSpec *sdl.AudioSpec) *AudioSpec {
 	return &AudioSpec{
 		Freq: sdlSpec.Freq,
-		Channels: sdlSpec.Channels,
+		Channels: uint16(sdlSpec.Channels),
 		Format: sdl2Unformat(sdlSpec.Format),
 	}
 }
@@ -122,3 +117,115 @@ func AudioCallback(userdata unsafe.Pointer, stream *C.Uint8, length C.int) {
 		buf[i] = C.Uint8(output[i])
 	}
 }
+
+/*
+
+// DEPRECATED IN FAVOR OF go-wav
+
+func sdl2LoadWAV(file string, spec *AudioSpec) ([]byte, *AudioSpec) {
+	data, sdlSpec := sdl.LoadWAV(file, sdl2Spec(spec))
+	return data, sdl2Unspec(sdlSpec)
+}
+
+
+func (s *Source) load8(data []byte) {
+	channels := int(s.spec.Channels)
+	for n := 0; n < len(data); n++ {
+		sample := make([]float64, channels)
+		for c := 0; c < channels; c++ {
+			switch s.spec.Format {
+			case bind.AudioU8:
+				sample[c] = sampleByteU8(data[n])
+			case bind.AudioS8:
+				sample[c] = sampleByteS8(data[n])
+			}
+		}
+		s.sample = append(s.sample, sample)
+	}
+	mixDebugf("*Source[%s].load8(...) length %d channels %d\n", s.URL, len(s.sample), s.spec.Channels)
+}
+
+func (s *Source) load16(data []byte) {
+	channels := int(s.spec.Channels)
+	for n := 0; n < len(data); n += 2 {
+		sample := make([]float64, channels)
+		for c := 0; c < channels; c++ {
+			b := n + c*2
+			switch s.spec.Format {
+			case bind.AudioU16LSB:
+				sample[c] = sampleBytesU16LSB(data[b : b+2])
+			case bind.AudioS16LSB:
+				sample[c] = sampleBytesS16LSB(data[b : b+2])
+			case bind.AudioU16MSB:
+				sample[c] = sampleBytesU16MSB(data[b : b+2])
+			case bind.AudioS16MSB:
+				sample[c] = sampleBytesS16MSB(data[b : b+2])
+			}
+		}
+		s.sample = append(s.sample, sample)
+	}
+	mixDebugf("*Source[%s].load16(...) length %d channels %d\n", s.URL, len(s.sample), s.spec.Channels)
+}
+
+func (s *Source) load32(data []byte) {
+	channels := int(s.spec.Channels)
+	for n := 0; n < len(data); n += channels * 4 {
+		sample := make([]float64, channels)
+		for c := 0; c < channels; c++ {
+			b := n + c*4
+			switch s.spec.Format {
+			case bind.AudioS32LSB:
+				sample[c] = sampleBytesS32LSB(data[b : b+4])
+			case bind.AudioS32MSB:
+				sample[c] = sampleBytesS32MSB(data[b : b+4])
+			case bind.AudioF32LSB:
+				sample[c] = sampleBytesF32LSB(data[b : b+4])
+			case bind.AudioF32MSB:
+				sample[c] = sampleBytesF32MSB(data[b : b+4])
+			}
+		}
+		s.sample = append(s.sample, sample)
+	}
+	mixDebugf("*Source[%s].load32(...) length %d channels %d\n", s.URL, len(s.sample), s.spec.Channels)
+}
+
+func sampleByteU8(sample byte) float64 {
+	return float64(int8(sample))/float64(0x7F) - float64(1)
+}
+
+func sampleByteS8(sample byte) float64 {
+	return float64(int8(sample)) / float64(0x7F)
+}
+
+func sampleBytesU16LSB(sample []byte) float64 {
+	return float64(binary.LittleEndian.Uint16(sample))/float64(0x8000) - float64(1)
+}
+
+func sampleBytesU16MSB(sample []byte) float64 {
+	return float64(binary.BigEndian.Uint16(sample))/float64(0x8000) - float64(1)
+}
+
+func sampleBytesS16LSB(sample []byte) float64 {
+	return float64(int16(binary.LittleEndian.Uint16(sample))) / float64(0x7FFF)
+}
+
+func sampleBytesS16MSB(sample []byte) float64 {
+	return float64(int16(binary.BigEndian.Uint16(sample))) / float64(0x7FFF)
+}
+
+func sampleBytesS32LSB(sample []byte) float64 {
+	return float64(int32(binary.LittleEndian.Uint32(sample))) / float64(0x7FFFFFFF)
+}
+
+func sampleBytesS32MSB(sample []byte) float64 {
+	return float64(int32(binary.BigEndian.Uint32(sample))) / float64(0x7FFFFFFF)
+}
+
+func sampleBytesF32LSB(sample []byte) float64 {
+	return float64(math.Float32frombits(binary.LittleEndian.Uint32(sample)))
+}
+
+func sampleBytesF32MSB(sample []byte) float64 {
+	return float64(math.Float32frombits(binary.BigEndian.Uint32(sample)))
+}
+*/

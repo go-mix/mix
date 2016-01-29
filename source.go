@@ -2,9 +2,6 @@
 package atomix
 
 import (
-	"math"
-	"encoding/binary"
-
 	"github.com/outrightmental/go-atomix/bind"
 )
 
@@ -55,141 +52,14 @@ func (s *Source) Teardown() {
  private */
 
 func (s *Source) load() {
-	// TODO: support audio formats other than WAV
-	data, spec := bind.LoadWAV(s.URL, &bind.AudioSpec{})
-	if spec == nil || spec.Format == 0 {
+	s.sample, s.spec = bind.LoadWAV(s.URL)
+	if s.spec == nil {
 		// TODO: handle errors loading file
-		mixDebugf("could not load WAV %s", s.URL)
-	}
-	s.spec = spec
-	switch s.spec.Format {
-	case
-		bind.AudioU8,
-		bind.AudioS8:
-		s.load8(data)
-	case
-		bind.AudioU16LSB,
-		bind.AudioS16LSB,
-		bind.AudioU16MSB,
-		bind.AudioS16MSB:
-		s.load16(data)
-	case
-		bind.AudioS32LSB,
-		bind.AudioS32MSB,
-		bind.AudioF32LSB:
-		s.load32(data)
-	default:
-		mixDebugf("could not load WAV format %+v", s.spec.Format)
+		mixDebugf("could not load WAV %s\n", s.URL)
 	}
 	s.maxTz = Tz(len(s.sample))
 }
 
-func (s *Source) load8(data []byte) {
-	channels := int(s.spec.Channels)
-	// TODO: convert source Hz; store at the mixer output Hz
-	for n := 0; n < len(data); n++ {
-		sample := make([]float64, channels)
-		for c := 0; c < channels; c++ {
-			switch s.spec.Format {
-			case bind.AudioU8:
-				sample[c] = sampleByteU8(data[n])
-			case bind.AudioS8:
-				sample[c] = sampleByteS8(data[n])
-			}
-		}
-		// TODO: instead of append(..), make([][]float64,length) ahead of time!
-		s.sample = append(s.sample, sample)
-	}
-	mixDebugf("*Source[%s].load8(...) length %d channels %d\n", s.URL, len(s.sample), s.spec.Channels)
-}
-
-func (s *Source) load16(data []byte) {
-	channels := int(s.spec.Channels)
-	// TODO: convert source Hz; store at the mixer output Hz
-	for n := 0; n < len(data); n += 2 {
-		sample := make([]float64, channels)
-		for c := 0; c < channels; c++ {
-			b := n + c*2
-			switch s.spec.Format {
-			case bind.AudioU16LSB:
-				sample[c] = sampleBytesU16LSB(data[b : b+2])
-			case bind.AudioS16LSB:
-				sample[c] = sampleBytesS16LSB(data[b : b+2])
-			case bind.AudioU16MSB:
-				sample[c] = sampleBytesU16MSB(data[b : b+2])
-			case bind.AudioS16MSB:
-				sample[c] = sampleBytesS16MSB(data[b : b+2])
-			}
-		}
-		// TODO: instead of append(..), make([][]float64,length) ahead of time!
-		s.sample = append(s.sample, sample)
-	}
-	mixDebugf("*Source[%s].load16(...) length %d channels %d\n", s.URL, len(s.sample), s.spec.Channels)
-}
-
-func (s *Source) load32(data []byte) {
-	channels := int(s.spec.Channels)
-	// TODO: convert source Hz; store at the mixer output Hz
-	for n := 0; n < len(data); n += channels * 4 {
-		sample := make([]float64, channels)
-		for c := 0; c < channels; c++ {
-			b := n + c*4
-			switch s.spec.Format {
-			case bind.AudioS32LSB:
-				sample[c] = sampleBytesS32LSB(data[b : b+4])
-			case bind.AudioS32MSB:
-				sample[c] = sampleBytesS32MSB(data[b : b+4])
-			case bind.AudioF32LSB:
-				sample[c] = sampleBytesF32LSB(data[b : b+4])
-			case bind.AudioF32MSB:
-				sample[c] = sampleBytesF32MSB(data[b : b+4])
-			}
-		}
-		// TODO: instead of append(..), make([][]float64,length) ahead of time!
-		s.sample = append(s.sample, sample)
-	}
-	mixDebugf("*Source[%s].load32(...) length %d channels %d\n", s.URL, len(s.sample), s.spec.Channels)
-}
-
-func sampleByteU8(sample byte) float64 {
-	return float64(int8(sample))/float64(0x7F) - float64(1)
-}
-
-func sampleByteS8(sample byte) float64 {
-	return float64(int8(sample)) / float64(0x7F)
-}
-
-func sampleBytesU16LSB(sample []byte) float64 {
-	return float64(binary.LittleEndian.Uint16(sample))/float64(0x8000) - float64(1)
-}
-
-func sampleBytesU16MSB(sample []byte) float64 {
-	return float64(binary.BigEndian.Uint16(sample))/float64(0x8000) - float64(1)
-}
-
-func sampleBytesS16LSB(sample []byte) float64 {
-	return float64(int16(binary.LittleEndian.Uint16(sample))) / float64(0x7FFF)
-}
-
-func sampleBytesS16MSB(sample []byte) float64 {
-	return float64(int16(binary.BigEndian.Uint16(sample))) / float64(0x7FFF)
-}
-
-func sampleBytesS32LSB(sample []byte) float64 {
-	return float64(int32(binary.LittleEndian.Uint32(sample))) / float64(0x7FFFFFFF)
-}
-
-func sampleBytesS32MSB(sample []byte) float64 {
-	return float64(int32(binary.BigEndian.Uint32(sample))) / float64(0x7FFFFFFF)
-}
-
-func sampleBytesF32LSB(sample []byte) float64 {
-	return float64(math.Float32frombits(binary.LittleEndian.Uint32(sample)))
-}
-
-func sampleBytesF32MSB(sample []byte) float64 {
-	return float64(math.Float32frombits(binary.BigEndian.Uint32(sample)))
-}
 
 type sourceStateEnum uint
 
