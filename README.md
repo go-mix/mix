@@ -105,6 +105,10 @@ Built on **[go-sdl2](https://github.com/veandco/go-sdl2)** - Go bindings for the
 
 Author: [Charney Kaye](http://w.charney.io)
 
+***NOTICE: THIS PROJECT IS IN ALPHA STAGE, AND THE API MAY BE SUBJECT TO CHANGE.***
+
+Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. [http://gopkg.in](http://gopkg.in) 
+
 ### Why?
 
 Even after selecting a hardware interface library such as [C++ SDL 2.0](https://www.libsdl.org/) via [go-sdl2](https://github.com/veandco/go-sdl2), there remains a critical design problem to be solved.
