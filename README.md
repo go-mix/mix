@@ -12,14 +12,18 @@
     import (
       "fmt"
       "github.com/outrightmental/go-atomix"
-      "github.com/veandco/go-sdl2/sdl"
+      "github.com/outrightmental/go-atomix/bind"
       "os"
       "time"
     )
     
     var (
       sampleHz   = int32(44100)
-      numSamples = uint16(4096)
+      spec = bind.AudioSpec{
+        Freq:     sampleHz,
+        Format:   bind.AudioF32LSB,
+        Channels: 1,
+        }
       bpm        = 120
       step       = time.Minute / time.Duration(bpm*4)
       loops      = 16
@@ -51,26 +55,12 @@
     )
     
     func main() {
-      if err := sdl.Init(sdl.INIT_AUDIO); err != nil {
-        fmt.Printf("Cannot init SDL. Error: %v\n", err)
-        return
-      }
       defer func() {
-        if r := recover(); r != nil {
-          fmt.Printf("Player Recovered: %v\n", r)
-        }
-        sdl.PauseAudio(true)
         atomix.Teardown()
-        sdl.Quit()
       }()
     
       atomix.Debug(true)
-      atomix.Configure(sdl.AudioSpec{
-        Freq:     sampleHz,
-        Format:   sdl.AUDIO_F32,
-        Channels: 1,
-        Samples:  numSamples,
-      })
+      atomix.Configure(spec)
       atomix.SetSoundsPath(prefix)
       atomix.StartAt(time.Now().Add(1 * time.Second))
     
@@ -82,13 +72,12 @@
         t += time.Duration(len(pattern)) * step
       }
     
-      spec := atomix.Spec()
-      sdl.OpenAudio(spec, nil)
-      sdl.PauseAudio(false)
+      atomix.OpenAudio()
     
       fmt.Printf("SDL OpenAudio > Atomix, pid:%v, spec:%v\n", os.Getpid(), spec)
-      time.Sleep(t + 1*time.Second) // padding after music
+      time.Sleep(t + 1*time.Second) // wait until music + 1 second
     }
+
 
 ### What?
 
