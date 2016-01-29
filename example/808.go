@@ -2,9 +2,6 @@
 
 package main
 
-// typedef unsigned char Uint16;
-// void AudioCallback(void *userdata, Uint16 *stream, int len);
-import "C"
 import (
 	"fmt"
 	"github.com/outrightmental/go-atomix"
