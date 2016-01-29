@@ -90,7 +90,6 @@
       time.Sleep(t + 1*time.Second) // padding after music
     }
 
-
 ### What?
 
 Game audio mixers are designed to play audio spontaneously, but when the timing is known in advance (e.g. sequence-based music apps) there is a demand for much greater accuracy in playback timing.
