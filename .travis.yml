@@ -14,3 +14,4 @@ install:
   - go get github.com/stretchr/testify/mock
   - go get github.com/veandco/go-sdl2/sdl
   - go get github.com/Sirupsen/logrus
+  - go get github.com/youpy/go-wav
