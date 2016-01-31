@@ -3,7 +3,7 @@ package bind
 
 import (
 	"testing"
-	"github.com/outrightmental/go-testify/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestAPI(t *testing.T) {
