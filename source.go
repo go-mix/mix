@@ -60,7 +60,6 @@ func (s *Source) load() {
 	s.maxTz = Tz(len(s.sample))
 }
 
-
 type sourceStateEnum uint
 
 const (

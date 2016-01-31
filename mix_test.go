@@ -2,8 +2,10 @@
 package atomix
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
 	"github.com/outrightmental/go-atomix/bind"
 )
 

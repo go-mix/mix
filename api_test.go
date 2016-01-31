@@ -41,11 +41,11 @@ func TestAPI_Start(t *testing.T) {
 }
 
 func TestAPI_StartAt(t *testing.T) {
-	StartAt(time.Now().Add(1*time.Second))
+	StartAt(time.Now().Add(1 * time.Second))
 }
 
 func TestAPI_GetStartTime(t *testing.T) {
-	startExpect := time.Now().Add(1*time.Second)
+	startExpect := time.Now().Add(1 * time.Second)
 	StartAt(startExpect)
 	startActual := GetStartTime()
 	assert.Equal(t, startExpect, startActual)
