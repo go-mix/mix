@@ -24,7 +24,7 @@ func Configure(spec bind.AudioSpec) {
 	} else if spec.Channels == 0 {
 		panic("Must specify Channels")
 	}
-	bind.SetMixNextOutput(mixNextOutput)
+	bind.SetMixNextOutput(mixNextSample)
 	mixSetSpec(spec)
 }
 
@@ -33,12 +33,17 @@ func Teardown() {
 	mixTeardown()
 }
 
-// Spec for the mixer, which may include callback functions, e.g. go-sdl2
-func Spec() *bind.AudioSpec {
-	return mixGetSpec()
+// Cleanup approximately once per second to conserve memory.
+func Cleanup() {
+	mixCleanup()
 }
 
-// SetFire to represent a single audio source playing at a specific time in the future.
+// Spec for the mixer, which may include callback functions, e.g. go-sdl2
+func Spec() *bind.AudioSpec {
+	return mixSpec
+}
+
+// SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start), with sustain time.Duration, volume from 0 to 1, and pan from -1 to +1
 func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) *Fire {
 	return mixSetFire(source, begin, sustain, volume, pan)
 }
@@ -65,5 +70,5 @@ func GetStartTime() time.Time {
 
 // OpenAudio begins streaming to the bound output audio interface, via a callback function
 func OpenAudio() {
-	bind.OpenAudio(mixGetSpec())
+	bind.OpenAudio(mixSpec)
 }

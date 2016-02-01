@@ -11,15 +11,15 @@ import (
 )
 
 var (
-	sampleHz   = int32(44100)
+	sampleHz   = float64(48000)
 	spec = bind.AudioSpec{
 		Freq:     sampleHz,
-		Format:   bind.AudioF32LSB,
+		Format:   bind.AudioF32,
 		Channels: 1,
 		}
 	bpm        = 120
 	step       = time.Minute / time.Duration(bpm*4)
-	loops      = 16
+	loops      = 1
 	prefix     = "assets/sounds/percussion/808/"
 	kick1      = "kick1.wav"
 	kick2      = "kick2.wav"
@@ -67,6 +67,6 @@ func main() {
 
 	atomix.OpenAudio()
 
-	fmt.Printf("SDL OpenAudio > Atomix, pid:%v, spec:%v\n", os.Getpid(), spec)
+	fmt.Printf("Atomix, pid:%v, spec:%v\n", os.Getpid(), spec)
 	time.Sleep(t + 1*time.Second) // wait until music + 1 second
 }

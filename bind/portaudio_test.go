@@ -5,6 +5,6 @@ import (
 	"testing"
 )
 
-func TestSDL2(t *testing.T) {
+func TestPortaudio(t *testing.T) {
 	// TODO
 }

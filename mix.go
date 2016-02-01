@@ -2,7 +2,6 @@
 package atomix
 
 import (
-	"encoding/binary"
 	"fmt"
 	"math"
 	"sync"
@@ -10,6 +9,13 @@ import (
 
 	"github.com/outrightmental/go-atomix/bind"
 )
+
+// Tz is the unit of measurement of samples-over-time, e.g. for 48000Hz playback there are 48,000 Tz in 1 second.
+type Tz uint64
+
+/*
+ *
+ private */
 
 var (
 	mixMutex       = &sync.Mutex{}
@@ -20,12 +26,11 @@ var (
 	mixSource       map[string]*Source
 	mixSourcePrefix string
 	mixFires        []*Fire
-	mixSpec         bind.AudioSpec
+	mixSpec         *bind.AudioSpec
+	mixFreq         float64
+	mixChannels     float64
 	isDebug         bool
 )
-
-// Tz is the unit of measurement of samples-over-time, e.g. for 48000Hz playback there are 48,000 Tz in 1 second.
-type Tz uint64
 
 func mixDebug(isOn bool) {
 	isDebug = isOn
@@ -69,72 +74,50 @@ func mixSetSoundsPath(prefix string) {
 	mixSourcePrefix = prefix
 }
 
-func mixNextOutput(byteSize int) []byte {
-	mixCleanup()
-	switch mixSpec.Format {
-	case
-		bind.AudioU8,
-		bind.AudioS8:
-		return mix8(byteSize)
-	case
-		bind.AudioU16LSB,
-		bind.AudioS16LSB,
-		bind.AudioU16MSB,
-		bind.AudioS16MSB:
-		return mix16(byteSize)
-	case
-		bind.AudioS32LSB,
-		bind.AudioS32MSB,
-		bind.AudioF32LSB:
-		return mix32(byteSize)
-	}
-	return nil
+func mixSetSpec(s bind.AudioSpec) {
+	mixSpec = &s
+	mixFreq = float64(s.Freq)
+	mixChannels = float64(s.Channels)
+	mixTzDur = time.Second / time.Duration(mixFreq)
 }
 
 func mixTeardown() {
 	bind.Teardown()
 }
 
-/*
- *
- private */
-
-func mixNextSample() float64 {
-	sample := float64(0)
+func mixNextSample() []float64 {
+	sample := make([]float64,mixSpec.Channels)
+	var fireSample []float64
 	// TODO: #FIXME need a more efficient method of iterating active fires; range fires hogs CPU with >100 fires
 	// TODO: #FIXME ^ really this is a serious processor bottleneck. Find a method to avoid iterating over all these inactive fires every sample!
 	for _, fire := range mixFires {
-		// mixer().Debugf("see me try to fire? %v", fire.Source, fire.BeginTz)
 		if fireTz := fire.At(mixNowTz); fireTz > 0 {
-			sample += mixSourceAt(fire.Source, fireTz)
+			fireSample = mixSourceAt(fire.Source, fire.Volume, fire.Pan, fireTz)
+			for c := 0; c < mixSpec.Channels; c++ {
+				sample[c] += fireSample[c]
+			}
 		}
 	}
 	// if sample != 0 {
 	// 	Debugf("*Mixer.nextSample at %+v: %+v\n", nowTz, sample)
 	// }
 	mixNowTz++
-	return mixLogarithmicRangeCompression(sample)
+	out := make([]float64,mixSpec.Channels)
+	for c := 0; c < mixSpec.Channels; c++ {
+		out[c] = mixLogarithmicRangeCompression(sample[c])
+	}
+	return out
 }
 
-func mixSourceAt(src string, at Tz) float64 {
+func mixSourceAt(src string, volume float64, pan float64, at Tz) []float64 {
 	s := mixGetSource(src)
 	if s == nil {
-		return 0
+		return make([]float64, mixSpec.Channels)
 	}
 	// if at != 0 {
 	// 	Debugf("About to source.SampleAt %v in %v\n", at, s.URL)
 	// }
-	return s.SampleAt(at)
-}
-
-func mixSetSpec(s bind.AudioSpec) {
-	mixSpec = s
-	// TODO: implement mixFreq = float64(s.Freq) // cache a float64 of this for future maths
-	mixTzDur = time.Second / time.Duration(s.Freq)
-}
-
-func mixGetSpec() *bind.AudioSpec {
-	return &mixSpec
+	return s.SampleAt(at, volume, pan)
 }
 
 func mixPrepareSource(source string) {
@@ -163,134 +146,6 @@ func mixCleanup() {
 	}
 }
 
-func mix8(byteSize int) (out []byte) {
-	for n := 0; n < byteSize; n++ {
-		switch mixSpec.Format {
-		case bind.AudioU8:
-			out = append(out, mixByteU8(mixNextSample()))
-		case bind.AudioS8:
-			out = append(out, mixByteS8(mixNextSample()))
-		}
-	}
-	return
-}
-
-func mix16(byteSize int) (out []byte) {
-	for n := 0; n < byteSize; n += 2 {
-		switch mixSpec.Format {
-		case bind.AudioU16LSB:
-			out = append(out, mixBytesU16LSB(mixNextSample())...)
-		case bind.AudioS16LSB:
-			out = append(out, mixBytesS16LSB(mixNextSample())...)
-		case bind.AudioU16MSB:
-			out = append(out, mixBytesU16MSB(mixNextSample())...)
-		case bind.AudioS16MSB:
-			out = append(out, mixBytesS16MSB(mixNextSample())...)
-		}
-	}
-	return
-}
-
-func mix32(byteSize int) (out []byte) {
-	for n := 0; n < byteSize; n += 4 {
-		switch mixSpec.Format {
-		case bind.AudioS32LSB:
-			out = append(out, mixBytesS32LSB(mixNextSample())...)
-		case bind.AudioS32MSB:
-			out = append(out, mixBytesS32MSB(mixNextSample())...)
-		case bind.AudioF32LSB:
-			out = append(out, mixBytesF32LSB(mixNextSample())...)
-		case bind.AudioF32MSB:
-			out = append(out, mixBytesF32MSB(mixNextSample())...)
-		}
-	}
-	return
-}
-
-func mixByteU8(sample float64) byte {
-	return byte(mixUint8(sample))
-}
-
-func mixByteS8(sample float64) byte {
-	return byte(mixInt8(sample))
-}
-
-func mixBytesU16LSB(sample float64) (out []byte) {
-	out = make([]byte, 2)
-	binary.LittleEndian.PutUint16(out, mixUint16(sample))
-	return
-}
-
-func mixBytesU16MSB(sample float64) (out []byte) {
-	out = make([]byte, 2)
-	binary.BigEndian.PutUint16(out, mixUint16(sample))
-	return
-}
-
-func mixBytesS16LSB(sample float64) (out []byte) {
-	out = make([]byte, 2)
-	binary.LittleEndian.PutUint16(out, uint16(mixInt16(sample)))
-	return
-}
-
-func mixBytesS16MSB(sample float64) (out []byte) {
-	out = make([]byte, 2)
-	binary.BigEndian.PutUint16(out, uint16(mixInt16(sample)))
-	return
-}
-
-func mixBytesS32LSB(sample float64) (out []byte) {
-	out = make([]byte, 4)
-	binary.LittleEndian.PutUint32(out, uint32(mixInt32(sample)))
-	return
-}
-
-func mixBytesS32MSB(sample float64) (out []byte) {
-	out = make([]byte, 4)
-	binary.BigEndian.PutUint32(out, uint32(mixInt32(sample)))
-	return
-}
-
-func mixBytesF32LSB(sample float64) (out []byte) {
-	out = make([]byte, 4)
-	binary.LittleEndian.PutUint32(out, math.Float32bits(float32(sample)))
-	return
-}
-
-func mixBytesF32MSB(sample float64) (out []byte) {
-	out = make([]byte, 4)
-	binary.BigEndian.PutUint32(out, math.Float32bits(float32(sample)))
-	return
-}
-
-func mixUint8(sample float64) uint8 {
-	return uint8(0x80 * (sample + 1))
-}
-
-func mixInt8(sample float64) int8 {
-	return int8(0x80 * sample)
-}
-
-func mixUint16(sample float64) uint16 {
-	return uint16(0x8000 * (sample + 1))
-}
-
-func mixInt16(sample float64) int16 {
-	return int16(0x8000 * sample)
-}
-
-//func mixUint32(sample float64) uint32 {
-//	return uint32(0x80000000 * (sample + 1))
-//}
-
-func mixInt32(sample float64) int32 {
-	return int32(0x80000000 * sample)
-}
-
-//func mixFloat32(sample float64) float32 {
-//	return float32(sample)
-//}
-
 func mixLogarithmicRangeCompression(i float64) float64 {
 	if i < -1 {
 		return -math.Log(-i-0.85)/14 - 0.75
@@ -298,6 +153,16 @@ func mixLogarithmicRangeCompression(i float64) float64 {
 		return math.Log(i-0.85)/14 + 0.75
 	} else {
 		return i / 1.61803398875
+	}
+}
+
+func mixVolume(channel float64, volume float64, pan float64) float64 {
+	if pan == 0 {
+		return volume
+	} else if pan < 0 {
+		return math.Max(0, 1 + pan * channel / mixChannels)
+	} else { // pan > 0
+		return math.Max(0, 1 - pan * channel / mixChannels)
 	}
 }
 

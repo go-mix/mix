@@ -16,7 +16,7 @@ import (
 func TestMixer_Base(t *testing.T) {
 	Configure(bind.AudioSpec{
 		Freq:     44100,
-		Format:   bind.AudioU16LSB,
+		Format:   bind.AudioU16,
 		Channels: 2,
 	})
 	assert.NotNil(t, Spec())
@@ -96,85 +96,27 @@ func TestMixer_getSource(t *testing.T) {
 	// TODO: Test Mixer getSource
 }
 
-func TestMixer_mix8(t *testing.T) {
-	// TODO: Test Mixer mix8
+func TestMixer_mixVolume(t *testing.T) {
+	mixChannels = 1
+	assert.Equal(t, float64(0), mixVolume(0, 0, 0))
+	assert.Equal(t, float64(1), mixVolume(0, 1, .5))
+	mixChannels = 2
+	assert.Equal(t, float64(1), mixVolume(0, 1, -.5))
+	assert.Equal(t, float64(.75), mixVolume(1, 1, .5))
+	assert.Equal(t, float64(.5), mixVolume(0, .5, 0))
+	assert.Equal(t, float64(.5), mixVolume(1, .5, 1))
+	mixChannels = 3
+	assert.Equal(t, float64(1), mixVolume(0, 1, 0))
+	assert.Equal(t, float64(0.6666666666666667), mixVolume(1, 1,  -1))
+	assert.Equal(t, float64(0.6666666666666667), mixVolume(2, .5, -.5))
+	assert.Equal(t, float64(0.6666666666666667), mixVolume(1, .5, 1))
+	mixChannels = 4
+	assert.Equal(t, float64(1), mixVolume(0, 1, -1))
+	assert.Equal(t, float64(1), mixVolume(1, 1, 0))
+	assert.Equal(t, float64(.75), mixVolume(2, .5, .5))
+	assert.Equal(t, float64(.625), mixVolume(3, .5, -.5))
 }
 
-func TestMixer_mix16(t *testing.T) {
-	// TODO: Test Mixer mix16
-}
-
-func TestMixer_mix32(t *testing.T) {
-	// TODO: Test Mixer mix32
-}
-
-func Test_mixByteU8(t *testing.T) {
-	// TODO: Test mixByteU8
-}
-
-func Test_mixByteS8(t *testing.T) {
-	// TODO: Test mixByteS8
-}
-
-func Test_mixBytesU16LSB(t *testing.T) {
-	// TODO: Test mixBytesU16LSB
-}
-
-func Test_mixBytesU16MSB(t *testing.T) {
-	// TODO: Test mixBytesU16MSB
-}
-
-func Test_mixBytesS16LSB(t *testing.T) {
-	// TODO: Test mixBytesS16LSB
-}
-
-func Test_mixBytesS16MSB(t *testing.T) {
-	// TODO: Test mixBytesS16MSB
-}
-
-func Test_mixBytesS32LSB(t *testing.T) {
-	// TODO: Test mixBytesS32LSB
-}
-
-func Test_mixBytesS32MSB(t *testing.T) {
-	// TODO: Test mixBytesS32MSB
-}
-
-func Test_mixBytesF32LSB(t *testing.T) {
-	// TODO: Test mixBytesF32LSB
-}
-
-func Test_mixBytesF32MSB(t *testing.T) {
-	// TODO: Test mixBytesF32MSB
-}
-
-func Test_mixUint8(t *testing.T) {
-	// TODO: Test mixUint8
-}
-
-func Test_mixInt8(t *testing.T) {
-	// TODO: Test mixInt8
-}
-
-func Test_mixUint16(t *testing.T) {
-	// TODO: Test mixUint16
-}
-
-func Test_mixInt16(t *testing.T) {
-	// TODO: Test mixInt16
-}
-
-func Test_mixUint32(t *testing.T) {
-	// TODO: Test mixUint32
-}
-
-func Test_mixInt32(t *testing.T) {
-	// TODO: Test mixInt32
-}
-
-func Test_mixFloat32(t *testing.T) {
-	// TODO: Test mixFloat32
-}
 
 // TODO: test atomix.GetSpec()
 

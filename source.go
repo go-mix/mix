@@ -3,6 +3,7 @@ package atomix
 
 import (
 	"github.com/outrightmental/go-atomix/bind"
+	"math"
 )
 
 // NewSource from a "URL" (which is actually only a file path for now)
@@ -27,14 +28,24 @@ type Source struct {
 }
 
 // SampleAt at a specific Tz (currently only mono, uses channel 0)
-func (s *Source) SampleAt(at Tz) float64 {
+func (s *Source) SampleAt(at Tz, volume float64, pan float64) (out []float64) {
+	out = make([]float64, mixSpec.Channels)
 	if at < s.maxTz {
 		// if s.sample[at] != 0 {
 		// 	Debugf("*Source[%v].SampleAt(%v): %v\n", s.URL, at, s.sample[at])
 		// }
-		return s.sample[at][0]
+		if mixSpec.Channels == s.spec.Channels { // same # channels; easier maths
+			for c := int(0); c < mixSpec.Channels; c++ {
+				out[c] = s.sample[at][c]
+			}
+		} else { // need to map # source channels to # destination channels
+			tc := float64(s.spec.Channels)
+			for c := int(0); c < mixSpec.Channels; c++ {
+				out[c] = s.sample[at][int(math.Floor(tc * float64(c) / mixChannels))]
+			}
+		}
 	}
-	return 0
+	return
 }
 
 // Length of the source audio in Tz

@@ -62,7 +62,7 @@ func TestAPI_AudioCallback(t *testing.T) {
 func testAPISetup() {
 	Configure(bind.AudioSpec{
 		Freq:     44100,
-		Format:   bind.AudioS16LSB,
+		Format:   bind.AudioF32,
 		Channels: 1,
 	})
 }

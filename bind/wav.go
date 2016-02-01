@@ -19,7 +19,7 @@ func nativeLoadWAV(path string) (out [][]float64, spec *AudioSpec) {
 		return
 	}
 	spec = &AudioSpec{
-		Channels: fmt.NumChannels,
+		Channels: int(fmt.NumChannels),
 	}
 	for {
 		samples, err := reader.ReadSamples()

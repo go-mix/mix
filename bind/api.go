@@ -3,12 +3,12 @@ package bind
 
 // OpenAudio begins streaming to the bound output audio interface, via a callback function
 func OpenAudio(spec *AudioSpec) {
-	sdl2OpenAudio(spec)
+	portaudioSetup(spec)
 }
 
 // SetMixNextOutputFunc to stream mix output from go-atomix
 func SetMixNextOutput(fn mixNextOutputFunc) {
-	mixNextOutput = fn
+	mixNextOutputSample = fn
 }
 
 // LoadWAV into a buffer
@@ -23,7 +23,7 @@ func LoadWAV(file string) ([][]float64, *AudioSpec) {
 
 // Teardown to close all hardware bindings
 func Teardown() {
-	sdl2Teardown()
+	portaudioTeardown()
 }
 
 // UseWAV to select the WAV file interface
@@ -38,9 +38,9 @@ func UsePlayback(opt OptPlayback) {
 
 // AudioSpec represents the frequency, format, # channels and sample rate of any audio I/O
 type AudioSpec struct {
-	Freq     int32
+	Freq     float64
 	Format   AudioFormat
-	Channels uint16
+	Channels int
 }
 
 //type WavFormat struct {
@@ -61,29 +61,17 @@ const AudioU8 AudioFormat = 1
 // AudioS8 is integer signed 8-bit
 const AudioS8 AudioFormat = 2
 
-// AudioU16LSB is integer unsigned 16-bit, least-significant-bit order
-const AudioU16LSB AudioFormat = 16
+// AudioU16 is integer unsigned 16-bit
+const AudioU16 AudioFormat = 16
 
-// AudioS16LSB is integer signed 16-bit, least-significant-bit order
-const AudioS16LSB AudioFormat = 17
+// AudioS16 is integer signed 16-bit
+const AudioS16 AudioFormat = 17
 
-// AudioU16MSB is integer unsigned 16-bit, most-significant-bit order
-const AudioU16MSB AudioFormat = 18
+// AudioF32 is floating-point 32-bit
+const AudioF32 AudioFormat = 32
 
-// AudioS16MSB is integer signed 16-bit, most-significant-bit order
-const AudioS16MSB AudioFormat = 19
-
-// AudioS32LSB is integer signed 32-bit, least-significant-bit order
-const AudioS32LSB AudioFormat = 32
-
-// AudioS32MSB is integer signed 32-bit, most-significant-bit order
-const AudioS32MSB AudioFormat = 33
-
-// AudioF32LSB is floating-point 32-bit, least-significant-bit order
-const AudioF32LSB AudioFormat = 35
-
-// AudioF32MSB is floating-point 32-bit, most-significant-bit order
-const AudioF32MSB AudioFormat = 36
+// AudioF64 is floating-point 64-bit
+const AudioF64 AudioFormat = 64
 
 // OptWAV represents a WAV I/O option
 type OptWAV uint8
@@ -104,10 +92,16 @@ const OptPlaybackSDL OptPlayback = 2
  *
  private below here */
 
-type mixNextOutputFunc func (byteSize int) []byte
+type mixNextOutputFunc func () []float64
 
 var (
-	mixNextOutput mixNextOutputFunc
+	mixNextOutputSample mixNextOutputFunc
 	useWAV = OptWAVGo
 	usePlayback = OptPlaybackSDL
 )
+
+func noErr(err error) {
+	if err != nil {
+		panic(err)
+	}
+}

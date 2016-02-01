@@ -23,8 +23,8 @@ type Fire struct {
 	BeginTz Tz
 	EndTz   Tz
 	Source  string
-	Volume  float64
-	Pan     float64
+	Volume  float64 // 0 to 1
+	Pan     float64 // -1 to +1
 	/* playback */
 	nowTz Tz
 	state fireStateEnum
