@@ -8,7 +8,7 @@ import (
 )
 
 // VERSION # of this go-atomix source code
-const VERSION = "0.0.2"
+const VERSION = "0.0.3"
 
 // Debug ON/OFF (ripples down to all sub-modules)
 func Debug(isOn bool) {
