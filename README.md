@@ -2,7 +2,9 @@
 
 [![Build Status](https://travis-ci.org/outrightmental/go-atomix.svg?branch=master)](https://travis-ci.org/outrightmental/go-atomix)
 
-#### Sequence-based Go-native audio mixer for Music apps
+#### Go-native audio mixer for Music apps
+
+See `example/808.go`:
 
     package main
     
@@ -11,15 +13,16 @@
       "github.com/outrightmental/go-atomix"
       "github.com/outrightmental/go-atomix/bind"
       "os"
+      "math/rand"
       "time"
     )
     
     var (
-      sampleHz   = float64(44100)
+      sampleHz   = float64(48000)
       spec = bind.AudioSpec{
         Freq:     sampleHz,
         Format:   bind.AudioF32,
-        Channels: 1,
+        Channels: 2,
         }
       bpm        = 120
       step       = time.Minute / time.Duration(bpm*4)
@@ -64,7 +67,7 @@
       t := 1 * time.Second // padding before music
       for n := 0; n < loops; n++ {
         for s := 0; s < len(pattern); s++ {
-          atomix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, 0)
+          atomix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, rand.Float64() * 2 - 1)
         }
         t += time.Duration(len(pattern)) * step
       }
@@ -74,7 +77,6 @@
       fmt.Printf("Atomix, pid:%v, spec:%v\n", os.Getpid(), spec)
       time.Sleep(t + 1*time.Second) // wait until music + 1 second
     }
-
 
 ### What?
 
