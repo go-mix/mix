@@ -9,9 +9,9 @@ before_install:
   - sudo apt-get update -qq
 
 install:
-  - sudo apt-get install cmake libsdl2-dev
+  - sudo apt-get install cmake portaudio19-dev
+  - go get github.com/gordonklaus/portaudio
+  - go get github.com/Sirupsen/logrus
   - go get github.com/stretchr/testify/assert
   - go get github.com/stretchr/testify/mock
-  - go get github.com/veandco/go-sdl2/sdl
-  - go get github.com/Sirupsen/logrus
   - go get github.com/youpy/go-wav

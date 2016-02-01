@@ -1,3 +1,7 @@
 # Example use of Atomix
 
+May need to install PortAudio, e.g. (Ubuntu):
+
+    sudo apt-get install portaudio19-dev
+
 Copyright 2015 Outright Mental, Inc.

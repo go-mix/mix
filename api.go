@@ -38,7 +38,7 @@ func Cleanup() {
 	mixCleanup()
 }
 
-// Spec for the mixer, which may include callback functions, e.g. go-sdl2
+// Spec for the mixer, which may include callback functions, e.g. portaudio
 func Spec() *bind.AudioSpec {
 	return mixSpec
 }

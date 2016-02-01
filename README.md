@@ -15,10 +15,10 @@
     )
     
     var (
-      sampleHz   = int32(44100)
+      sampleHz   = float64(44100)
       spec = bind.AudioSpec{
         Freq:     sampleHz,
-        Format:   bind.AudioF32LSB,
+        Format:   bind.AudioF32,
         Channels: 1,
         }
       bpm        = 120
@@ -71,7 +71,7 @@
     
       atomix.OpenAudio()
     
-      fmt.Printf("SDL OpenAudio > Atomix, pid:%v, spec:%v\n", os.Getpid(), spec)
+      fmt.Printf("Atomix, pid:%v, spec:%v\n", os.Getpid(), spec)
       time.Sleep(t + 1*time.Second) // wait until music + 1 second
     }
 
@@ -82,11 +82,9 @@ Game audio mixers are designed to play audio spontaneously, but when the timing 
 
 Read the API documentation at [godoc.org/github.com/outrightmental/go-atomix](https://godoc.org/github.com/outrightmental/go-atomix)
 
-**Atomix** seeks to solve the problem of audio mixing on top of bare SDL, specifically for the purpose of the playback of sequences where audio files and their playback timing is known in advance.
+**Atomix** seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance.
  
-Though it is called via C bindings by the SDL audio callback, atomix stores and mixes audio in native Go `[]float64` and natively implements Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression" (details below)
-
-Built on **[go-sdl2](https://github.com/veandco/go-sdl2)** - Go bindings for the C++ library "Simple DirectMedia Layer" **[SDL 2.0](https://www.libsdl.org/)**
+Atomix stores and mixes audio in native Go `[]float64` and natively implements Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression" (details below)
 
 Author: [Charney Kaye](http://w.charney.io)
 
@@ -96,9 +94,9 @@ Best efforts will be made to preserve each API version in a release tag that can
 
 ### Why?
 
-Even after selecting a hardware interface library such as [C++ SDL 2.0](https://www.libsdl.org/) via [go-sdl2](https://github.com/veandco/go-sdl2), there remains a critical design problem to be solved.
+Even after selecting a hardware interface library such as [PortAudio](http://www.portaudio.com/) or [C++ SDL 2.0](https://www.libsdl.org/), there remains a critical design problem to be solved.
 
-This design is a **music application mixer**. Most available options are geared towards Game development, including the proprietary [SDL_mixer](https://www.libsdl.org/projects/SDL_mixer/) project for which the go-sdl2 team [has also implemented bindings](https://github.com/veandco/go-sdl2/blob/master/sdl_mixer/sdl_mixer.go).
+This design is a **music application mixer**. Most available options are geared towards Game development.
 
 Game audio mixers offer playback timing accuracy +/- 2 milliseconds. But that's totally unacceptable for music, specifically sequence-based sample playback.
 
@@ -106,7 +104,7 @@ The design pattern particular to Game design is that the timing of the audio is 
 
 In the field of Music development, often the timing is known in advance, e.g. a ***sequencer**, the composition of music by specifying exactly how, when and which audio files will be played relative to the beginning of playback.
 
-Ergo, **atomix** seeks to solve the problem of audio mixing on top of bare SDL, specifically for the purpose of the playback of sequences where audio files and their playback timing is known in advance. It seeks to do this with the absolute minimal logical overhead on top of SDL.
+Ergo, **atomix** seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance. It seeks to do this with the absolute minimal logical overhead on top of the audio interface.
 
 Atomix takes maximum advantage of Go by storing and mixing audio in native Go `[]float64` and natively implementing Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression"
 
@@ -122,4 +120,4 @@ Insipired by the theory paper "Mixing two digital audio streams with on the fly 
 
 ### Usage
 
-There's an example implementation of **go-sdl2** + **go-atomix** included in the `example/` folder in this repository.
+There's an example implementation of **go-atomix** included in the `example/` folder in this repository.
