@@ -7,6 +7,7 @@ import (
 	"github.com/outrightmental/go-atomix"
 	"github.com/outrightmental/go-atomix/bind"
 	"os"
+	"math/rand"
 	"time"
 )
 
@@ -15,11 +16,11 @@ var (
 	spec = bind.AudioSpec{
 		Freq:     sampleHz,
 		Format:   bind.AudioF32,
-		Channels: 1,
+		Channels: 2,
 		}
 	bpm        = 120
 	step       = time.Minute / time.Duration(bpm*4)
-	loops      = 1
+	loops      = 16
 	prefix     = "assets/sounds/percussion/808/"
 	kick1      = "kick1.wav"
 	kick2      = "kick2.wav"
@@ -60,7 +61,7 @@ func main() {
 	t := 1 * time.Second // padding before music
 	for n := 0; n < loops; n++ {
 		for s := 0; s < len(pattern); s++ {
-			atomix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, 0)
+			atomix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, rand.Float64() * 2 - 1)
 		}
 		t += time.Duration(len(pattern)) * step
 	}

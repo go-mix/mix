@@ -5,20 +5,17 @@ import (
 	"github.com/gordonklaus/portaudio"
 )
 
-type portaudioOutput struct {
-	*portaudio.Stream
-	spec *AudioSpec
-}
+var portaudioStream *portaudio.Stream
 
-var output portaudioOutput
+var portaudioSpec *AudioSpec
 
 func portaudioSetup(spec *AudioSpec) {
 	var err error
 	portaudio.Initialize()
-	output := portaudioOutput{spec: spec}
-	output.Stream, err = portaudio.OpenDefaultStream(0, spec.Channels, spec.Freq, 0, output.processAudio)
+	portaudioSpec = spec
+	portaudioStream, err = portaudio.OpenDefaultStream(0, spec.Channels, spec.Freq, 0, portaudioStreamCallback)
 	noErr(err)
-	noErr(output.Start())
+	noErr(portaudioStream.Start())
 }
 
 func portaudioTeardown() {
@@ -27,11 +24,11 @@ func portaudioTeardown() {
 	portaudio.Terminate()
 }
 
-func (o *portaudioOutput) processAudio(out [][]float32) {
+func portaudioStreamCallback(out [][]float32) {
 	var sample []float64
 	for s := range out[0] {
 		sample = mixNextOutputSample()
-		for c := 0; c < o.spec.Channels; c++ {
+		for c := 0; c < portaudioSpec.Channels; c++ {
 			out[c][s] = float32(sample[c])
 		}
 	}
