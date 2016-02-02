@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/outrightmental/go-atomix.svg?branch=master)](https://travis-ci.org/outrightmental/go-atomix)
 
+http://gopkg.in/outrightmental/go-atomix.v0
+
 #### Go-native audio mixer for Music apps
 
 See `example/808.go`:
@@ -90,9 +92,9 @@ Atomix stores and mixes audio in native Go `[]float64` and natively implements P
 
 Author: [Charney Kaye](http://w.charney.io)
 
-***NOTICE: THIS PROJECT IS IN ALPHA STAGE, AND THE API MAY BE SUBJECT TO CHANGE.***
+#### NOTICE: THIS PROJECT IS IN ALPHA STAGE, AND THE API MAY BE SUBJECT TO CHANGE.
 
-Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. [http://gopkg.in](http://gopkg.in) 
+Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. **[gopkg.in/outrightmental/go-atomix.v0](http://gopkg.in/outrightmental/go-atomix.v0)** 
 
 ### Why?
 
