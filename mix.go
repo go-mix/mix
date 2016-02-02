@@ -86,7 +86,7 @@ func mixTeardown() {
 }
 
 func mixNextSample() []float64 {
-	sample := make([]float64,mixSpec.Channels)
+	sample := make([]float64, mixSpec.Channels)
 	var fireSample []float64
 	// TODO: #FIXME need a more efficient method of iterating active fires; range fires hogs CPU with >100 fires
 	// TODO: #FIXME ^ really this is a serious processor bottleneck. Find a method to avoid iterating over all these inactive fires every sample!
@@ -102,7 +102,7 @@ func mixNextSample() []float64 {
 	// 	Debugf("*Mixer.nextSample at %+v: %+v\n", nowTz, sample)
 	// }
 	mixNowTz++
-	out := make([]float64,mixSpec.Channels)
+	out := make([]float64, mixSpec.Channels)
 	for c := 0; c < mixSpec.Channels; c++ {
 		out[c] = mixLogarithmicRangeCompression(sample[c])
 	}
@@ -160,9 +160,9 @@ func mixVolume(channel float64, volume float64, pan float64) float64 {
 	if pan == 0 {
 		return volume
 	} else if pan < 0 {
-		return math.Max(0, 1 + pan * channel / mixChannels)
+		return math.Max(0, 1+pan*channel/mixChannels)
 	} else { // pan > 0
-		return math.Max(0, 1 - pan * channel / mixChannels)
+		return math.Max(0, 1-pan*channel/mixChannels)
 	}
 }
 

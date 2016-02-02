@@ -107,7 +107,7 @@ func TestMixer_mixVolume(t *testing.T) {
 	assert.Equal(t, float64(.5), mixVolume(1, .5, 1))
 	mixChannels = 3
 	assert.Equal(t, float64(1), mixVolume(0, 1, 0))
-	assert.Equal(t, float64(0.6666666666666667), mixVolume(1, 1,  -1))
+	assert.Equal(t, float64(0.6666666666666667), mixVolume(1, 1, -1))
 	assert.Equal(t, float64(0.6666666666666667), mixVolume(2, .5, -.5))
 	assert.Equal(t, float64(0.6666666666666667), mixVolume(1, .5, 1))
 	mixChannels = 4
@@ -116,7 +116,6 @@ func TestMixer_mixVolume(t *testing.T) {
 	assert.Equal(t, float64(.75), mixVolume(2, .5, .5))
 	assert.Equal(t, float64(.625), mixVolume(3, .5, -.5))
 }
-
 
 // TODO: test atomix.GetSpec()
 

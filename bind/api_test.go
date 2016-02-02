@@ -2,8 +2,8 @@
 package bind
 
 import (
-	"testing"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestAPI(t *testing.T) {
@@ -16,6 +16,6 @@ func TestAPI_UseWAV(t *testing.T) {
 }
 
 func TestAPI_UsePlayback(t *testing.T) {
-	UsePlayback(OptPlaybackPortAudio)
-	assert.Equal(t, OptPlaybackPortAudio, usePlayback)
+	UsePlayback(OptPlaybackPortaudio)
+	assert.Equal(t, OptPlaybackPortaudio, usePlayback)
 }
