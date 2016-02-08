@@ -24,7 +24,7 @@ func portaudioTeardown() {
 func portaudioStreamCallback(out [][]float32) {
 	var sample []float64
 	for s := range out[0] {
-		sample = outputCallbackSample()
+		sample = outputCallbackMixNextSample()
 		for c := 0; c < outputSpec.Channels; c++ {
 			out[c][s] = float32(sample[c])
 		}

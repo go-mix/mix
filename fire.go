@@ -3,7 +3,7 @@ package atomix
 
 // NewFire to represent a single audio source playing at a specific time in the future.
 func NewFire(source string, beginTz Tz, endTz Tz, volume float64, pan float64) *Fire {
-	// Debugf("NewFire(%v, %v, %v, %v, %v)\n", source, beginTz, endTz, volume, pan)
+	// mixDebugf("NewFire(%v, %v, %v, %v, %v)\n", source, beginTz, endTz, volume, pan)
 	s := &Fire{
 		/* setup */
 		Source:  source,
@@ -32,7 +32,7 @@ type Fire struct {
 
 // At the series of Tz it's playing for, return the series of Tz corresponding to source audio.
 func (f *Fire) At(at Tz) (t Tz) {
-	//	Debugf("*Fire[%s].At(%v vs %v)\n", f.Source, at, f.BeginTz)
+	//	mixDebugf("*Fire[%s].At(%v vs %v)\n", f.Source, at, f.BeginTz)
 	switch f.state {
 	case fireStateReady:
 		if at >= f.BeginTz {

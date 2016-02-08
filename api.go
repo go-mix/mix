@@ -24,7 +24,7 @@ func Configure(spec bind.AudioSpec) {
 	} else if spec.Channels == 0 {
 		panic("Must specify Channels")
 	}
-	bind.SetMixNextOutput(mixNextSample)
+	bind.SetMixNextSample(mixNextSample)
 	mixSetSpec(spec)
 }
 

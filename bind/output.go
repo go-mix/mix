@@ -10,13 +10,13 @@ var (
 	useWAV               = OptWAVGo
 	usePlayback          = OptPlaybackSDL
 	outputSpec           *AudioSpec
-	outputCallbackSample outputCallbackFunc
+	outputCallbackMixNextSample outputCallbackMixNextSampleFunc
 )
 
-type outputCallbackFunc func() []float64
+type outputCallbackMixNextSampleFunc func() []float64
 
 func outputNextBytes() (out []byte) {
-	in := outputCallbackSample()
+	in := outputCallbackMixNextSample()
 	for ch := 0; ch < outputSpec.Channels; ch++ {
 		switch outputSpec.Format {
 		case AudioU8:

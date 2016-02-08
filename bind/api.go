@@ -13,8 +13,8 @@ func OpenAudio(spec *AudioSpec) {
 }
 
 // SetMixNextOutputFunc to stream mix output from go-atomix
-func SetMixNextOutput(fn outputCallbackFunc) {
-	outputCallbackSample = fn
+func SetMixNextSample(fn outputCallbackMixNextSampleFunc) {
+	outputCallbackMixNextSample = fn
 }
 
 // LoadWAV into a buffer

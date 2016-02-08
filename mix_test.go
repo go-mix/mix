@@ -37,7 +37,7 @@ func TestMixer_Debug(t *testing.T) {
 }
 
 func TestMixer_Debugf(t *testing.T) {
-	// TODO: Test Mixer Debugf
+	// TODO: Test Mixer mixDebugf
 }
 
 func TestMixer_Start(t *testing.T) {

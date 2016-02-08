@@ -54,7 +54,6 @@ func sdlFormat(fmt AudioFormat) sdl.AudioFormat {
 }
 
 func sdlNextOutput(byteSize int) (out []byte) {
-	out = make([]byte, byteSize)
 	for len(out) < byteSize {
 		out = append(out, outputNextBytes()...)
 	}

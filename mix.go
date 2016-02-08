@@ -98,9 +98,7 @@ func mixNextSample() []float64 {
 			}
 		}
 	}
-	// if sample != 0 {
-	// 	Debugf("*Mixer.nextSample at %+v: %+v\n", nowTz, sample)
-	// }
+//	mixDebugf("*Mixer.nextSample %+v\n", sample)
 	mixNowTz++
 	out := make([]float64, mixSpec.Channels)
 	for c := 0; c < mixSpec.Channels; c++ {
@@ -115,7 +113,7 @@ func mixSourceAt(src string, volume float64, pan float64, at Tz) []float64 {
 		return make([]float64, mixSpec.Channels)
 	}
 	// if at != 0 {
-	// 	Debugf("About to source.SampleAt %v in %v\n", at, s.URL)
+	// 	mixDebugf("About to source.SampleAt %v in %v\n", at, s.URL)
 	// }
 	return s.SampleAt(at, volume, pan)
 }
