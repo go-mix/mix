@@ -28,7 +28,7 @@ func TestAPI_Spec(t *testing.T) {
 
 func TestAPI_SetFire(t *testing.T) {
 	testAPISetup()
-	fire := SetFire("lib/S16.wav", time.Duration(0), 0, 1.0, 0)
+	fire := SetFire("lib/Signed16bitLittleEndian44100HzMono.wav", time.Duration(0), 0, 1.0, 0)
 	assert.NotNil(t, fire)
 }
 

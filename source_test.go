@@ -16,14 +16,35 @@ func TestSource_Base(t *testing.T) {
 }
 
 func TestSource_Load_FAIL(t *testing.T) {
-	// TODO: Test Source loading nonexistent URL results in a graceful failure
+	pathFail := "./lib/ThisShouldFailBecauseItDoesNotExist.wav"
+	defer func(){
+		msg := recover()
+		assert.IsType(t, "", msg)
+		assert.Equal(t, "File not found: " + pathFail, msg)
+	}()
+	Debug(true)
+	testSourceSetup(44100, 1)
+	source := NewSource(pathFail)
+	assert.NotNil(t, source)
 }
 
-func TestSource_Load(t *testing.T) {
+func TestSource_LoadSigned16bitLittleEndian44100HzMono(t *testing.T) {
 	Debug(true)
-	testSourceSetup()
-	source := NewSource("./lib/S16.wav")
+	testSourceSetup(44100, 1)
+	source := NewSource("./lib/Signed16bitLittleEndian44100HzMono.wav")
 	assert.NotNil(t, source)
+}
+
+func TestSource_LoadFloat32bitLittleEndian48000HzEstéreo(t *testing.T) {
+	Debug(true)
+	testSourceSetup(48000, 2)
+	source := NewSource("./lib/Float32bitLittleEndian48000HzEstéreo.wav")
+	assert.NotNil(t, source)
+	// TODO: assert bytes have been loaded, and not silence.
+	for tz := Tz(0); tz < source.Length(); tz++ {
+		smp := source.SampleAt(tz, 1, 0)
+		assert.Equal(t, 2, len(smp))
+	}
 }
 
 func TestSource_Playback(t *testing.T) {
@@ -54,10 +75,10 @@ func TestSource_Teardown(t *testing.T) {
 // Test Components
 //
 
-func testSourceSetup() {
+func testSourceSetup(freq float64, channels int) {
 	Configure(bind.AudioSpec{
-		Freq:     44100,
+		Freq:     freq,
 		Format:   bind.AudioF32,
-		Channels: 1,
+		Channels: channels,
 	})
 }

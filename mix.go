@@ -154,6 +154,8 @@ func mixLogarithmicRangeCompression(i float64) float64 {
 	}
 }
 
+// volume (0 to 1), and pan (-1 to +1)
+// TODO: implicit panning of source channels! e.g. 2 channels is full left, full right.
 func mixVolume(channel float64, volume float64, pan float64) float64 {
 	if pan == 0 {
 		return volume

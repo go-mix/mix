@@ -27,7 +27,7 @@ type Source struct {
 	state  sourceStateEnum
 }
 
-// SampleAt at a specific Tz (currently only mono, uses channel 0)
+// SampleAt at a specific Tz, volume (0 to 1), and pan (-1 to +1)
 func (s *Source) SampleAt(at Tz, volume float64, pan float64) (out []float64) {
 	out = make([]float64, mixSpec.Channels)
 	if at < s.maxTz {

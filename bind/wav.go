@@ -11,6 +11,9 @@ import (
 func nativeLoadWAV(path string) (out [][]float64, spec *AudioSpec) {
 	//	data, sdlSpec := sdl.LoadWAV(file, sdl2Spec(spec))
 	// return data, sdl2Unspec(sdlSpec)
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		panic("File not found: " + path)
+	}
 	file, _ := os.Open(path)
 	reader := wav.NewReader(file)
 	fmt, err := reader.Format()
