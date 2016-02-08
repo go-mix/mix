@@ -32,7 +32,7 @@ func (s *Source) SampleAt(at Tz, volume float64, pan float64) (out []float64) {
 	out = make([]float64, mixSpec.Channels)
 	if at < s.maxTz {
 		// if s.sample[at] != 0 {
-		// 	Debugf("*Source[%v].SampleAt(%v): %v\n", s.URL, at, s.sample[at])
+		// 	mixDebugf("*Source[%v].SampleAt(%v): %v\n", s.URL, at, s.sample[at])
 		// }
 		if mixSpec.Channels == s.spec.Channels { // same # channels; easier maths
 			for c := int(0); c < mixSpec.Channels; c++ {
@@ -41,7 +41,7 @@ func (s *Source) SampleAt(at Tz, volume float64, pan float64) (out []float64) {
 		} else { // need to map # source channels to # destination channels
 			tc := float64(s.spec.Channels)
 			for c := int(0); c < mixSpec.Channels; c++ {
-				out[c] = mixVolume(float64(c), volume, pan) * s.sample[at][int(math.Floor(tc * float64(c) / mixChannels))]
+				out[c] = mixVolume(float64(c), volume, pan) * s.sample[at][int(math.Floor(tc*float64(c)/mixChannels))]
 			}
 		}
 	}

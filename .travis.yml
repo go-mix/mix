@@ -9,9 +9,17 @@ before_install:
   - sudo apt-get update -qq
 
 install:
+  - # Playback: PortAudio
   - sudo apt-get install cmake portaudio19-dev
   - go get github.com/gordonklaus/portaudio
-  - go get github.com/Sirupsen/logrus
+  - # Playback: SDL
+  - sudo apt-get install cmake libsdl2-dev
+  - go get github.com/veandco/go-sdl2/sdl
+  - # WAV loading
+  - go get github.com/youpy/go-wav
+  - # Testing
   - go get github.com/stretchr/testify/assert
   - go get github.com/stretchr/testify/mock
-  - go get github.com/youpy/go-wav
+  - # Logging
+  - go get github.com/Sirupsen/logrus
+
