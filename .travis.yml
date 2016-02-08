@@ -10,8 +10,10 @@ before_install:
 
 install:
   - sudo apt-get install cmake portaudio19-dev
+  - go get github.com/veandco/go-sdl2/sdl
   - go get github.com/gordonklaus/portaudio
   - go get github.com/Sirupsen/logrus
   - go get github.com/stretchr/testify/assert
   - go get github.com/stretchr/testify/mock
   - go get github.com/youpy/go-wav
+
