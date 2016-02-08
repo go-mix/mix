@@ -132,3 +132,6 @@ Or specify options, e.g. using SDL for playback
 
     go run 808.go --playback sdl
 
+To show the help screen:
+
+    go run 808.go --help
