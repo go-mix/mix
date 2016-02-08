@@ -16,7 +16,7 @@ func TestAPI_UseWAV(t *testing.T) {
 }
 
 func TestAPI_UseWAV_Fail(t *testing.T) {
-	defer func(){
+	defer func() {
 		msg := recover()
 		assert.IsType(t, "", msg)
 		assert.Equal(t, "No such WAV: this-will-panic", msg)
@@ -32,7 +32,7 @@ func TestAPI_UsePlayback(t *testing.T) {
 }
 
 func TestAPI_UsePlayback_Fail(t *testing.T) {
-	defer func(){
+	defer func() {
 		msg := recover()
 		assert.IsType(t, "", msg)
 		assert.Equal(t, "No such Playback: this-will-panic", msg)

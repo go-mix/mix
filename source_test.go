@@ -18,10 +18,10 @@ func TestSource_Base(t *testing.T) {
 
 func TestSource_Load_FAIL(t *testing.T) {
 	pathFail := "./lib/ThisShouldFailBecauseItDoesNotExist.wav"
-	defer func(){
+	defer func() {
 		msg := recover()
 		assert.IsType(t, "", msg)
-		assert.Equal(t, "File not found: " + pathFail, msg)
+		assert.Equal(t, "File not found: "+pathFail, msg)
 	}()
 	Debug(true)
 	testSourceSetup(44100, 1)
