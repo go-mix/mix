@@ -2,6 +2,7 @@
 package atomix
 
 import (
+	"math"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -33,6 +34,8 @@ func TestSource_LoadSigned16bitLittleEndian44100HzMono(t *testing.T) {
 	testSourceSetup(44100, 1)
 	source := NewSource("./lib/Signed16bitLittleEndian44100HzMono.wav")
 	assert.NotNil(t, source)
+	totalSoundMovement := testSourceAssertSound(t, source, 1)
+	assert.True(t, totalSoundMovement > .001)
 }
 
 func TestSource_LoadFloat32bitLittleEndian48000HzEstéreo(t *testing.T) {
@@ -40,11 +43,8 @@ func TestSource_LoadFloat32bitLittleEndian48000HzEstéreo(t *testing.T) {
 	testSourceSetup(48000, 2)
 	source := NewSource("./lib/Float32bitLittleEndian48000HzEstéreo.wav")
 	assert.NotNil(t, source)
-	// TODO: assert bytes have been loaded, and not silence.
-	for tz := Tz(0); tz < source.Length(); tz++ {
-		smp := source.SampleAt(tz, 1, 0)
-		assert.Equal(t, 2, len(smp))
-	}
+	totalSoundMovement := testSourceAssertSound(t, source, 2)
+	assert.True(t, totalSoundMovement > .001)
 }
 
 func TestSource_Playback(t *testing.T) {
@@ -81,4 +81,15 @@ func testSourceSetup(freq float64, channels int) {
 		Format:   bind.AudioF32,
 		Channels: channels,
 	})
+}
+
+func testSourceAssertSound(t *testing.T, source *Source, channels int) (totalSoundMovement float64) {
+	for tz := Tz(0); tz < source.Length(); tz++ {
+		smp := source.SampleAt(tz, 1, 0)
+		assert.Equal(t, channels, len(smp))
+		for c := 0; c < channels; c++ {
+			totalSoundMovement += math.Abs(smp[c])
+		}
+	}
+	return
 }
