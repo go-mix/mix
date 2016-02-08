@@ -124,4 +124,11 @@ Insipired by the theory paper "Mixing two digital audio streams with on the fly 
 
 ### Usage
 
-There's an example implementation of **go-atomix** included in the `example/` folder in this repository.
+There's an example implementation of **go-atomix** included in the `example/` folder in this repository. Run it using the defaults:
+
+    go run 808.go
+    
+Or specify options, e.g. using SDL for playback
+
+    go run 808.go --playback sdl
+
