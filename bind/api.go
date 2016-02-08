@@ -38,13 +38,25 @@ func Teardown() {
 }
 
 // UseWAV to select the WAV file interface
-func UseWAV(opt OptWAV) {
-	useWAV = opt
+func UseWAV(opt string) {
+	switch opt {
+	case string(OptWAVGo):
+		useWAV = OptWAVGo
+	default:
+		panic("No such WAV: " + opt)
+	}
 }
 
 // Use to select the playback interface
 func UsePlayback(opt string) {
-	usePlayback = OptPlayback(opt)
+	switch opt {
+	case string(OptPlaybackPortaudio):
+		usePlayback = OptPlaybackPortaudio
+	case string(OptPlaybackSDL):
+		usePlayback = OptPlaybackSDL
+	default:
+		panic("No such Playback: " + opt)
+	}
 }
 
 // AudioSpec represents the frequency, format, # channels and sample rate of any audio I/O
