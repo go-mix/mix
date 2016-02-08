@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	useWAV                      = OptWAVGo
+	useLoader                   = OptLoaderWAV
 	usePlayback                 = OptPlaybackSDL
 	outputSpec                  *AudioSpec
 	outputCallbackMixNextSample outputCallbackMixNextSampleFunc

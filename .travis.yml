@@ -16,7 +16,7 @@ install:
   - sudo apt-get install cmake libsdl2-dev
   - go get github.com/veandco/go-sdl2/sdl
   - # WAV loading
-  - go get github.com/youpy/go-wav
+  - go get github.com/youpy/go-riff
   - # Testing
   - go get github.com/stretchr/testify/assert
   - go get github.com/stretchr/testify/mock

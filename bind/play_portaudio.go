@@ -5,23 +5,23 @@ import (
 	"github.com/gordonklaus/portaudio"
 )
 
-var portaudioStream *portaudio.Stream
+var playPortaudioStream *portaudio.Stream
 
-func portaudioSetup(spec *AudioSpec) {
+func playPortaudioSetup(spec *AudioSpec) {
 	var err error
 	portaudio.Initialize()
-	portaudioStream, err = portaudio.OpenDefaultStream(0, spec.Channels, spec.Freq, 0, portaudioStreamCallback)
+	playPortaudioStream, err = portaudio.OpenDefaultStream(0, spec.Channels, spec.Freq, 0, playPortaudioStreamCallback)
 	noErr(err)
-	noErr(portaudioStream.Start())
+	noErr(playPortaudioStream.Start())
 }
 
-func portaudioTeardown() {
+func playPortaudioTeardown() {
 	//	noErr(output.Stop())
 	//	noErr(output.Close())
 	portaudio.Terminate()
 }
 
-func portaudioStreamCallback(out [][]float32) {
+func playPortaudioStreamCallback(out [][]float32) {
 	var sample []float64
 	for s := range out[0] {
 		sample = outputCallbackMixNextSample()

@@ -16,6 +16,17 @@ func TestSource_Base(t *testing.T) {
 	// TODO: Test Source Base
 }
 
+func TestSource_Load_IntVsFloat(t *testing.T) {
+	Debug(true)
+	testSourceSetup(44100, 1)
+	sourceFloat := NewSource("./lib/Float32bitLittleEndian48000HzEstéreo.wav")
+	assert.NotNil(t, sourceFloat)
+	assert.Equal(t, bind.AudioF32, sourceFloat.Spec().Format)
+	sourceInt := NewSource("./lib/Signed16bitLittleEndian44100HzMono.wav")
+	assert.NotNil(t, sourceInt)
+	assert.Equal(t, bind.AudioS16, sourceInt.Spec().Format)
+}
+
 func TestSource_Load_FAIL(t *testing.T) {
 	pathFail := "./lib/ThisShouldFailBecauseItDoesNotExist.wav"
 	defer func() {

@@ -53,6 +53,11 @@ func (s *Source) Length() Tz {
 	return s.maxTz
 }
 
+// Spec of the source audio
+func (s *Source) Spec() *bind.AudioSpec {
+	return s.spec
+}
+
 // Teardown the source audio and release its memory.
 func (s *Source) Teardown() {
 	s.sample = nil
