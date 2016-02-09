@@ -1,14 +1,19 @@
 // Package bind is for modular binding of atomix to audio interface
 package bind
 
+import (
+	"encoding/binary"
+	"math"
+)
+
 // OpenAudio begins streaming to the bound output audio interface, via a callback function
 func OpenAudio(spec *AudioSpec) {
 	outputSpec = spec
 	switch usePlayback {
 	case OptPlaybackPortaudio:
-		portaudioSetup(spec)
+		playPortaudioSetup(spec)
 	case OptPlaybackSDL:
-		sdlSetup(spec)
+		playSDLSetup(spec)
 	}
 }
 
@@ -19,9 +24,9 @@ func SetMixNextSample(fn outputCallbackMixNextSampleFunc) {
 
 // LoadWAV into a buffer
 func LoadWAV(file string) ([][]float64, *AudioSpec) {
-	switch useWAV {
-	case OptWAVGo:
-		return nativeLoadWAV(file)
+	switch useLoader {
+	case OptLoaderWAV:
+		return LoadNewWAV(file)
 	default:
 		return make([][]float64, 0), &AudioSpec{}
 	}
@@ -31,19 +36,19 @@ func LoadWAV(file string) ([][]float64, *AudioSpec) {
 func Teardown() {
 	switch usePlayback {
 	case OptPlaybackPortaudio:
-		portaudioTeardown()
+		playPortaudioTeardown()
 	case OptPlaybackSDL:
-		sdlTeardown()
+		playSDLTeardown()
 	}
 }
 
-// UseWAV to select the WAV file interface
-func UseWAV(opt string) {
+// UseLoader to select the file loading interface
+func UseLoader(opt string) {
 	switch opt {
-	case string(OptWAVGo):
-		useWAV = OptWAVGo
+	case string(OptLoaderWAV):
+		useLoader = OptLoaderWAV
 	default:
-		panic("No such WAV: " + opt)
+		panic("No such Loader: " + opt)
 	}
 }
 
@@ -66,44 +71,35 @@ type AudioSpec struct {
 	Channels int
 }
 
-//type WavFormat struct {
-//	AudioFormat   uint16
-//	NumChannels   uint16
-//	SampleRate    uint32
-//	ByteRate      uint32
-//	BlockAlign    uint16
-//	BitsPerSample uint16
-//}
-
 // AudioFormat represents the bit allocation for a single sample of audio
-type AudioFormat uint8
+type AudioFormat string
 
 // AudioU8 is unsigned-integer 8-bit sample (per channel)
-const AudioU8 AudioFormat = 1
+const AudioU8 AudioFormat = "U8"
 
 // AudioS8 is signed-integer 8-bit sample (per channel)
-const AudioS8 AudioFormat = 2
+const AudioS8 AudioFormat = "S8"
 
 // AudioU16 is unsigned-integer 16-bit sample (per channel)
-const AudioU16 AudioFormat = 16
+const AudioU16 AudioFormat = "U16"
 
 // AudioS16 is signed-integer 16-bit sample (per channel)
-const AudioS16 AudioFormat = 17
+const AudioS16 AudioFormat = "S16"
 
 // AudioS32 is signed-integer 32-bit sample (per channel)
-const AudioS32 AudioFormat = 32
+const AudioS32 AudioFormat = "S32"
 
 // AudioF32 is floating-point 32-bit sample (per channel)
-const AudioF32 AudioFormat = 33
+const AudioF32 AudioFormat = "F32"
 
 // AudioF64 is floating-point 64-bit sample (per channel)
-const AudioF64 AudioFormat = 64
+const AudioF64 AudioFormat = "F64"
 
-// OptWAV represents a WAV I/O option
-type OptWAV string
+// OptLoader represents a WAV I/O option
+type OptLoader string
 
-// OptWAVGo to use Go-Native WAV file I/O
-const OptWAVGo OptWAV = "native"
+// OptLoadWav to use Go-Native WAV file I/O
+const OptLoaderWAV OptLoader = "wav"
 
 // OptPlayback represents a WAV I/O option
 type OptPlayback string
@@ -122,4 +118,52 @@ func noErr(err error) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func sampleByteU8(sample byte) float64 {
+	return float64(int8(sample))/float64(0x7F) - float64(1)
+}
+
+func sampleByteS8(sample byte) float64 {
+	return float64(int8(sample)) / float64(0x7F)
+}
+
+func sampleBytesU16LSB(sample []byte) float64 {
+	return float64(binary.LittleEndian.Uint16(sample))/float64(0x8000) - float64(1)
+}
+
+func sampleBytesU16MSB(sample []byte) float64 {
+	return float64(binary.BigEndian.Uint16(sample))/float64(0x8000) - float64(1)
+}
+
+func sampleBytesS16LSB(sample []byte) float64 {
+	return float64(int16(binary.LittleEndian.Uint16(sample))) / float64(0x7FFF)
+}
+
+func sampleBytesS16MSB(sample []byte) float64 {
+	return float64(int16(binary.BigEndian.Uint16(sample))) / float64(0x7FFF)
+}
+
+func sampleBytesS32LSB(sample []byte) float64 {
+	return float64(int32(binary.LittleEndian.Uint32(sample))) / float64(0x7FFFFFFF)
+}
+
+func sampleBytesS32MSB(sample []byte) float64 {
+	return float64(int32(binary.BigEndian.Uint32(sample))) / float64(0x7FFFFFFF)
+}
+
+func sampleBytesF32LSB(sample []byte) float64 {
+	return float64(math.Float32frombits(binary.LittleEndian.Uint32(sample)))
+}
+
+func sampleBytesF32MSB(sample []byte) float64 {
+	return float64(math.Float32frombits(binary.BigEndian.Uint32(sample)))
+}
+
+func sampleBytesF64LSB(sample []byte) float64 {
+	return float64(math.Float64frombits(binary.LittleEndian.Uint64(sample)))
+}
+
+func sampleBytesF64MSB(sample []byte) float64 {
+	return float64(math.Float64frombits(binary.BigEndian.Uint64(sample)))
 }
