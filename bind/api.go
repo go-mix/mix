@@ -43,7 +43,12 @@ func Teardown() {
 }
 
 // UseLoader to select the file loading interface
-func UseLoader(opt string) {
+func UseLoader(opt OptLoader) {
+	useLoader = opt
+}
+
+// UseLoaderString to select the file loading interface by string
+func UseLoaderString(opt string) {
 	switch opt {
 	case string(OptLoaderWAV):
 		useLoader = OptLoaderWAV
@@ -52,8 +57,13 @@ func UseLoader(opt string) {
 	}
 }
 
-// Use to select the playback interface
-func UsePlayback(opt string) {
+// UsePlayback to select the playback interface
+func UsePlayback(opt OptPlayback) {
+	usePlayback = opt
+}
+
+// UsePlaybackString to select the playback interface by string
+func UsePlaybackString(opt string) {
 	switch opt {
 	case string(OptPlaybackPortaudio):
 		usePlayback = OptPlaybackPortaudio

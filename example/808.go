@@ -57,7 +57,7 @@ func main() {
 
 	flag.StringVar(&playback, "playback", "portaudio", "output playback binding: sdl, portaudio")
 	flag.Parse()
-	bind.UsePlayback(playback)
+	bind.UsePlaybackString(playback)
 
 	atomix.Debug(true)
 	atomix.Configure(spec)
