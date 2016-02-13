@@ -135,3 +135,17 @@ Or specify options, e.g. using SDL for playback
 To show the help screen:
 
     go run 808.go --help
+
+### Dependencies
+
+#### SDL2
+
+Ubuntu:
+
+    sudo apt-get install libsdl2-dev
+
+#### Portaudio
+
+Ubuntu:
+
+    sudo apt-get install portaudio19-dev
