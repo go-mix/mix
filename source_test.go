@@ -58,7 +58,7 @@ func TestSource_LoadFloat32bitLittleEndian48000HzEstéreo(t *testing.T) {
 	assert.True(t, totalSoundMovement > .001)
 }
 
-func TestSource_Playback(t *testing.T) {
+func TestSource_Output(t *testing.T) {
 	// TODO: Test Source plays audio
 }
 

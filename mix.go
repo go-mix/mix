@@ -21,11 +21,14 @@ var (
 	mixMutex       = &sync.Mutex{}
 	mixStartAtTime time.Time
 	mixNowTz       Tz
+	mixNextCycleTz Tz
+	mixCycleTz     Tz
 	mixTzDur       time.Duration
 	// TODO: implement mixFreq float64
 	mixSource       map[string]*Source
 	mixSourcePrefix string
-	mixFires        []*Fire
+	mixReadyFires   []*Fire
+	mixLiveFires    []*Fire
 	mixSpec         *bind.AudioSpec
 	mixFreq         float64
 	mixChannels     float64
@@ -66,8 +69,13 @@ func mixSetFire(source string, begin time.Duration, sustain time.Duration, volum
 		endTz = beginTz + Tz(sustain.Nanoseconds()/mixTzDur.Nanoseconds())
 	}
 	fire := NewFire(mixSourcePrefix+source, beginTz, endTz, volume, pan)
-	mixFires = append(mixFires, fire)
+	mixReadyFires = append(mixReadyFires, fire)
 	return fire
+}
+
+func mixClearAllFires() {
+	mixReadyFires = make([]*Fire, 0)
+	mixLiveFires = make([]*Fire, 0)
 }
 
 func mixSetSoundsPath(prefix string) {
@@ -79,6 +87,11 @@ func mixSetSpec(s bind.AudioSpec) {
 	mixFreq = float64(s.Freq)
 	mixChannels = float64(s.Channels)
 	mixTzDur = time.Second / time.Duration(mixFreq)
+	mixCycleTz = Tz(mixFreq) // For now, the cycle is always 1 second
+}
+
+func mixFireCount() int {
+	return len(mixLiveFires) + len(mixReadyFires)
 }
 
 func mixTeardown() {
@@ -88,9 +101,7 @@ func mixTeardown() {
 func mixNextSample() []float64 {
 	sample := make([]float64, mixSpec.Channels)
 	var fireSample []float64
-	// TODO: #FIXME need a more efficient method of iterating active fires; range fires hogs CPU with >100 fires
-	// TODO: #FIXME ^ really this is a serious processor bottleneck. Find a method to avoid iterating over all these inactive fires every sample!
-	for _, fire := range mixFires {
+	for _, fire := range mixLiveFires {
 		if fireTz := fire.At(mixNowTz); fireTz > 0 {
 			fireSample = mixSourceAt(fire.Source, fire.Volume, fire.Pan, fireTz)
 			for c := 0; c < mixSpec.Channels; c++ {
@@ -103,6 +114,9 @@ func mixNextSample() []float64 {
 	out := make([]float64, mixSpec.Channels)
 	for c := 0; c < mixSpec.Channels; c++ {
 		out[c] = mixLogarithmicRangeCompression(sample[c])
+	}
+	if mixNowTz > mixNextCycleTz {
+		mixCycle()
 	}
 	return out
 }
@@ -135,13 +149,30 @@ func mixGetSource(source string) *Source {
 	return nil
 }
 
-func mixCleanup() {
-	for i, fire := range mixFires {
-		if !fire.IsAlive() {
-			fire.Teardown()
-			mixFires = append(mixFires[:i], mixFires[i+1:]...)
+func mixCycle() {
+	var fire *Fire
+	// if a fire is near-to-playback, move it to the live fire queue
+	keepReadyFires := make([]*Fire, 0)
+	for _, fire = range mixReadyFires {
+		if fire.BeginTz < mixNowTz + mixCycleTz * 2 { // for now, double a mix cycle is consider near-playback
+			mixLiveFires = append(mixLiveFires, fire)
+		} else {
+			keepReadyFires = append(keepReadyFires, fire)
 		}
 	}
+	mixReadyFires = keepReadyFires
+	// keep only active fires
+	keepLiveFires := make([]*Fire, 0)
+	for _, fire = range mixLiveFires {
+		if fire.IsAlive() {
+			keepLiveFires = append(keepLiveFires, fire)
+		} else {
+			fire.Teardown()
+		}
+	}
+	mixDebugf("[cycle@%d] ready:%d active:%d\n", mixNowTz, len(mixReadyFires), len(mixLiveFires))
+	mixLiveFires = keepLiveFires
+	mixNextCycleTz = mixNowTz + mixCycleTz
 }
 
 func mixLogarithmicRangeCompression(i float64) float64 {

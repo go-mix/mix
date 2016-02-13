@@ -6,20 +6,22 @@ import (
 	"math"
 )
 
-// OpenAudio begins streaming to the bound output audio interface, via a callback function
+// OpenAudio begins streaming to the bound out audio interface, via a callback function
 func OpenAudio(spec *AudioSpec) {
-	outputSpec = spec
-	switch usePlayback {
-	case OptPlaybackPortaudio:
-		playPortaudioSetup(spec)
-	case OptPlaybackSDL:
-		playSDLSetup(spec)
+	outSpec = spec
+	switch useOutput {
+	case OptOutputPortaudio:
+		outPortaudioSetup(spec)
+	case OptOutputSDL:
+		outSDLSetup(spec)
+	case OptOutputNull:
+		outNullSetup(spec)
 	}
 }
 
-// SetMixNextOutputFunc to stream mix output from go-atomix
-func SetMixNextSample(fn outputCallbackMixNextSampleFunc) {
-	outputCallbackMixNextSample = fn
+// SetMixNextOutFunc to stream mix out from go-atomix
+func SetMixNextSample(fn outCallbackMixNextSampleFunc) {
+	outCallbackMixNextSample = fn
 }
 
 // LoadWAV into a buffer
@@ -34,11 +36,13 @@ func LoadWAV(file string) ([][]float64, *AudioSpec) {
 
 // Teardown to close all hardware bindings
 func Teardown() {
-	switch usePlayback {
-	case OptPlaybackPortaudio:
-		playPortaudioTeardown()
-	case OptPlaybackSDL:
-		playSDLTeardown()
+	switch useOutput {
+	case OptOutputNull:
+		// do nothing
+	case OptOutputPortaudio:
+		outPortaudioTeardown()
+	case OptOutputSDL:
+		outSDLTeardown()
 	}
 }
 
@@ -57,20 +61,22 @@ func UseLoaderString(opt string) {
 	}
 }
 
-// UsePlayback to select the playback interface
-func UsePlayback(opt OptPlayback) {
-	usePlayback = opt
+// UseOutput to select the outback interface
+func UseOutput(opt OptOutput) {
+	useOutput = opt
 }
 
-// UsePlaybackString to select the playback interface by string
-func UsePlaybackString(opt string) {
+// UseOutputString to select the outback interface by string
+func UseOutputString(opt string) {
 	switch opt {
-	case string(OptPlaybackPortaudio):
-		usePlayback = OptPlaybackPortaudio
-	case string(OptPlaybackSDL):
-		usePlayback = OptPlaybackSDL
+	case string(OptOutputPortaudio):
+		useOutput = OptOutputPortaudio
+	case string(OptOutputSDL):
+		useOutput = OptOutputSDL
+	case string(OptOutputNull):
+		useOutput = OptOutputNull
 	default:
-		panic("No such Playback: " + opt)
+		panic("No such Output: " + opt)
 	}
 }
 
@@ -111,14 +117,17 @@ type OptLoader string
 // OptLoadWav to use Go-Native WAV file I/O
 const OptLoaderWAV OptLoader = "wav"
 
-// OptPlayback represents a WAV I/O option
-type OptPlayback string
+// OptOutput represents a WAV I/O option
+type OptOutput string
 
-// OptPlaybackPortAudio to use Go-Native WAV file I/O
-const OptPlaybackPortaudio OptPlayback = "portaudio"
+// OptOutputNull for benchmarking/profiling, because those tools are unable to sample to C-go callback tree
+const OptOutputNull OptOutput = "null"
 
-// OptPlaybackSDL to use SDL for WAV file I/O
-const OptPlaybackSDL OptPlayback = "sdl"
+// OptOutputPortAudio to use Go-Native WAV file I/O
+const OptOutputPortaudio OptOutput = "portaudio"
+
+// OptOutputSDL to use SDL for WAV file I/O
+const OptOutputSDL OptOutput = "sdl"
 
 /*
  *

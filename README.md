@@ -12,11 +12,12 @@ See `example/808.go`:
     
     import (
       "fmt"
-      "github.com/outrightmental/go-atomix"
-      "github.com/outrightmental/go-atomix/bind"
       "os"
       "math/rand"
       "time"
+      
+      "github.com/outrightmental/go-atomix"
+      "github.com/outrightmental/go-atomix/bind"
     )
     
     var (
@@ -57,10 +58,7 @@ See `example/808.go`:
     )
     
     func main() {
-      defer func() {
-        atomix.Teardown()
-      }()
-    
+      defer atomix.Teardown()    
       atomix.Debug(true)
       atomix.Configure(spec)
       atomix.SetSoundsPath(prefix)
@@ -77,8 +75,14 @@ See `example/808.go`:
       atomix.OpenAudio()
     
       fmt.Printf("Atomix, pid:%v, spec:%v\n", os.Getpid(), spec)
-      time.Sleep(t + 1*time.Second) // wait until music + 1 second
+      for atomix.FireCount() > 0 {
+        time.Sleep(1 * time.Second)
+      }
     }
+
+Run the above from the root of the project with:
+
+    make example
 
 ### What?
 
@@ -116,7 +120,7 @@ Atomix takes maximum advantage of Go by storing and mixing audio in native Go `[
 
 To the Atomix API, time is specified as a time.Duration-since-epoch, where the epoch is the moment that atomix.Start() was called.
 
-Internally, time is tracked as samples-since-epoch at the master output playback frequency (e.g. 48000 Hz). This is most efficient because source audio is pre-converted to the master output playback frequency, and all audio maths are performed in terms of samples.
+Internally, time is tracked as samples-since-epoch at the master out playback frequency (e.g. 48000 Hz). This is most efficient because source audio is pre-converted to the master out playback frequency, and all audio maths are performed in terms of samples.
 
 ### The Mixing Algorithm
 
