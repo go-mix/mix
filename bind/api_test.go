@@ -29,27 +29,27 @@ func TestAPI_UseWAVString_Fail(t *testing.T) {
 	UseLoaderString("this-will-panic")
 }
 
-func TestAPI_UsePlayback(t *testing.T) {
-	UsePlayback(OptPlaybackPortaudio)
-	assert.Equal(t, OptPlaybackPortaudio, usePlayback)
-	UsePlayback(OptPlaybackSDL)
-	assert.Equal(t, OptPlaybackSDL, usePlayback)
+func TestAPI_UseOutput(t *testing.T) {
+	UseOutput(OptOutputPortaudio)
+	assert.Equal(t, OptOutputPortaudio, useOutput)
+	UseOutput(OptOutputSDL)
+	assert.Equal(t, OptOutputSDL, useOutput)
 }
 
-func TestAPI_UsePlaybackString(t *testing.T) {
-	UsePlaybackString("portaudio")
-	assert.Equal(t, OptPlaybackPortaudio, usePlayback)
-	UsePlaybackString("sdl")
-	assert.Equal(t, OptPlaybackSDL, usePlayback)
+func TestAPI_UseOutputString(t *testing.T) {
+	UseOutputString("portaudio")
+	assert.Equal(t, OptOutputPortaudio, useOutput)
+	UseOutputString("sdl")
+	assert.Equal(t, OptOutputSDL, useOutput)
 }
 
-func TestAPI_UsePlaybackString_Fail(t *testing.T) {
+func TestAPI_UseOutputString_Fail(t *testing.T) {
 	defer func() {
 		msg := recover()
 		assert.IsType(t, "", msg)
-		assert.Equal(t, "No such Playback: this-will-panic", msg)
+		assert.Equal(t, "No such Output: this-will-panic", msg)
 	}()
-	UsePlaybackString("this-will-panic")
+	UseOutputString("this-will-panic")
 }
 
 func TestAPI_noErr(t *testing.T) {

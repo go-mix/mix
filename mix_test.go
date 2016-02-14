@@ -60,8 +60,8 @@ func TestMixer_SetSoundsPath(t *testing.T) {
 	// TODO: Test Mixer SetSoundsPath
 }
 
-func TestMixer_NextOutput(t *testing.T) {
-	// TODO: Test Mixer NextOutput
+func TestMixer_NextOut(t *testing.T) {
+	// TODO: Test Mixer NextOut
 }
 
 func TestMixer_SourceLength(t *testing.T) {
@@ -90,6 +90,10 @@ func TestMixer_getSpec(t *testing.T) {
 
 func TestMixer_prepareSource(t *testing.T) {
 	// TODO: Test Mixer prepareSource
+}
+
+func TestMixer_mixCleanup(t *testing.T) {
+	// TODO: Test
 }
 
 func TestMixer_getSource(t *testing.T) {

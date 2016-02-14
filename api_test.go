@@ -32,6 +32,23 @@ func TestAPI_SetFire(t *testing.T) {
 	assert.NotNil(t, fire)
 }
 
+func TestAPI_FireCount(t *testing.T) {
+	testAPISetup()
+	assert.Equal(t, 0, mixFireCount())
+	SetFire("lib/Signed16bitLittleEndian44100HzMono.wav", time.Duration(0), 0, 1.0, 0)
+	assert.Equal(t, 1, mixFireCount())
+	SetFire("lib/Signed16bitLittleEndian44100HzMono.wav", time.Duration(0), 0, 1.0, 0)
+	assert.Equal(t, 2, mixFireCount())
+	// TODO: assert count drains during back to 0 as a result of playback
+}
+
+func TestAPI_ClearAllFires(t *testing.T) {
+	testAPISetup()
+	SetFire("lib/Signed16bitLittleEndian44100HzMono.wav", time.Duration(0), 0, 1.0, 0)
+	ClearAllFires()
+	assert.Equal(t, 0, mixFireCount())
+}
+
 func TestAPI_SetSoundsPath(t *testing.T) {
 	// TODO: Test API SetSoundsPath
 }
@@ -60,6 +77,7 @@ func TestAPI_AudioCallback(t *testing.T) {
 //
 
 func testAPISetup() {
+	ClearAllFires()
 	Configure(bind.AudioSpec{
 		Freq:     44100,
 		Format:   bind.AudioF32,
