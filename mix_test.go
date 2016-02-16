@@ -96,6 +96,17 @@ func TestMixer_mixCleanup(t *testing.T) {
 	// TODO: Test
 }
 
+func TestMixer_mixSetSpec(t *testing.T) {
+	// TODO: Test success passing in a bind.AudioSpec
+	// TODO: Test sets the default mixCycleDurTz
+}
+
+func TestMixer_mixSetCycleDuration(t *testing.T) {
+	// TODO: Test
+	// TODO: Test panic if cycle duration set before audiospec
+	// TODO: Test mixSetSpec sets the default mixCycleDurTz
+}
+
 func TestMixer_getSource(t *testing.T) {
 	// TODO: Test Mixer getSource
 }

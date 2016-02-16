@@ -17,13 +17,7 @@ func Debug(isOn bool) {
 
 // Configure the mixer frequency, format, channels & sample rate.
 func Configure(spec bind.AudioSpec) {
-	if spec.Freq == 0 {
-		panic("Must specify Frequency")
-	} else if spec.Format == "" {
-		panic("Must specify Format")
-	} else if spec.Channels == 0 {
-		panic("Must specify Channels")
-	}
+	spec.Validate()
 	bind.SetMixNextSample(mixNextSample)
 	mixSetSpec(spec)
 }
@@ -56,6 +50,11 @@ func ClearAllFires() {
 // SetSoundsPath prefix
 func SetSoundsPath(prefix string) {
 	mixSetSoundsPath(prefix)
+}
+
+// Set the duration between "mix cycles", wherein garbage collection is performed.
+func SetMixCycleDuration(d time.Duration) {
+	mixSetCycleDuration(d)
 }
 
 // Start the mixer now

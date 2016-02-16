@@ -22,7 +22,7 @@ var (
 	mixStartAtTime time.Time
 	mixNowTz       Tz
 	mixNextCycleTz Tz
-	mixCycleTz     Tz
+	mixCycleDurTz     Tz
 	mixTzDur       time.Duration
 	// TODO: implement mixFreq float64
 	mixSource       map[string]*Source
@@ -87,7 +87,14 @@ func mixSetSpec(s bind.AudioSpec) {
 	mixFreq = float64(s.Freq)
 	mixChannels = float64(s.Channels)
 	mixTzDur = time.Second / time.Duration(mixFreq)
-	mixCycleTz = Tz(mixFreq) // For now, the cycle is always 1 second
+	mixSetCycleDuration(1*time.Second) // Set the default
+}
+
+func mixSetCycleDuration(d time.Duration) {
+	if mixFreq == 0 {
+		panic("Must specify mixing frequency before setting cycle duration!")
+	}
+	mixCycleDurTz = Tz((d / time.Second) * time.Duration(mixFreq))
 }
 
 func mixFireCount() int {
@@ -154,7 +161,7 @@ func mixCycle() {
 	// if a fire is near-to-playback, move it to the live fire queue
 	keepReadyFires := make([]*Fire, 0)
 	for _, fire = range mixReadyFires {
-		if fire.BeginTz < mixNowTz + mixCycleTz * 2 { // for now, double a mix cycle is consider near-playback
+		if fire.BeginTz < mixNowTz + mixCycleDurTz * 2 { // for now, double a mix cycle is consider near-playback
 			mixLiveFires = append(mixLiveFires, fire)
 		} else {
 			keepReadyFires = append(keepReadyFires, fire)
@@ -172,7 +179,7 @@ func mixCycle() {
 	}
 	mixDebugf("[cycle@%d] ready:%d active:%d\n", mixNowTz, len(mixReadyFires), len(mixLiveFires))
 	mixLiveFires = keepLiveFires
-	mixNextCycleTz = mixNowTz + mixCycleTz
+	mixNextCycleTz = mixNowTz + mixCycleDurTz
 }
 
 func mixLogarithmicRangeCompression(i float64) float64 {
