@@ -1,7 +1,7 @@
 all: test
 TESTS := expr unrecognised
 
-.PHONY: test export profile release fmt example
+.PHONY: test profile fmt example clean cover
 
 fmt:
 	go fmt ./...
@@ -14,3 +14,10 @@ example:
 
 profile:
 	cd example && go get -v && go run 808.go --profile cpu
+
+clean:
+	rm *.out bind/*.out
+
+cover: # test coverage
+	go test -coverprofile cover.out && go tool cover -html=cover.out
+	cd bind && go test -coverprofile cover.out && go tool cover -html=cover.out
