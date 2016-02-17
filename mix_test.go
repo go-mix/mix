@@ -132,6 +132,11 @@ func TestMixer_mixVolume(t *testing.T) {
 	assert.Equal(t, float64(.625), mixVolume(3, .5, -.5))
 }
 
+func TestMixer_mixCycle(t *testing.T) {
+	// TODO: Test garbage collection of unused sources
+	// TODO: Test garbage collection of unused fires
+}
+
 // TODO: test atomix.GetSpec()
 
 // TODO: test atomix.Debug(true) and atomix.Debug(false)
