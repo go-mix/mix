@@ -156,11 +156,20 @@ func mixGetSource(source string) *Source {
 	return nil
 }
 
+// TODO:
+// Make a new empty map[string]*Source, e.g. keepSource
+// While iterating over the ready & active fires (see issues #11 and #18; implemented as of pull #29) copy any used *Source to the new keepSource
+// Replace the mixSource with keepSource
 func mixCycle() {
+	mixMutex.Lock()
+	defer mixMutex.Unlock()
 	var fire *Fire
+	// for garbage collection of unused sources:
+	keepSource := make(map[string]*Source)
 	// if a fire is near-to-playback, move it to the live fire queue
 	keepReadyFires := make([]*Fire, 0)
 	for _, fire = range mixReadyFires {
+		keepSource[fire.Source] = mixSource[fire.Source]
 		if fire.BeginTz < mixNowTz + mixCycleDurTz * 2 { // for now, double a mix cycle is consider near-playback
 			mixLiveFires = append(mixLiveFires, fire)
 		} else {
@@ -172,14 +181,18 @@ func mixCycle() {
 	keepLiveFires := make([]*Fire, 0)
 	for _, fire = range mixLiveFires {
 		if fire.IsAlive() {
+			keepSource[fire.Source] = mixSource[fire.Source]
 			keepLiveFires = append(keepLiveFires, fire)
 		} else {
 			fire.Teardown()
 		}
 	}
-	mixDebugf("[cycle@%d] ready:%d active:%d\n", mixNowTz, len(mixReadyFires), len(mixLiveFires))
 	mixLiveFires = keepLiveFires
+	mixSource = keepSource
 	mixNextCycleTz = mixNowTz + mixCycleDurTz
+	if isDebug {
+		mixDebugf("[cycle@%d] readyFires:%d activeFires:%d mixSource:%d\n", mixNowTz, len(mixReadyFires), len(mixLiveFires), len(mixSource))
+	}
 }
 
 func mixLogarithmicRangeCompression(i float64) float64 {
