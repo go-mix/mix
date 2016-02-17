@@ -4,10 +4,10 @@ package atomix
 import (
 	"time"
 
-	"github.com/outrightmental/go-atomix/bind"
+	"github.com/outrightmental/ontomix/bind"
 )
 
-// VERSION # of this go-atomix source code
+// VERSION # of this ontomix source code
 const VERSION = "0.0.3"
 
 // Debug ON/OFF (ripples down to all sub-modules)

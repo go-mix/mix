@@ -19,7 +19,7 @@ func OpenAudio(spec *AudioSpec) {
 	}
 }
 
-// SetMixNextOutFunc to stream mix out from go-atomix
+// SetMixNextOutFunc to stream mix out from ontomix
 func SetMixNextSample(fn outCallbackMixNextSampleFunc) {
 	outCallbackMixNextSample = fn
 }

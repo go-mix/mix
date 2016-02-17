@@ -1,8 +1,8 @@
-# Atomix 
+# Ontomix 
 
-[![Build Status](https://travis-ci.org/outrightmental/go-atomix.svg?branch=master)](https://travis-ci.org/outrightmental/go-atomix)
+[![Build Status](https://travis-ci.org/outrightmental/ontomix.svg?branch=master)](https://travis-ci.org/outrightmental/ontomix)
 
-http://gopkg.in/outrightmental/go-atomix.v0
+http://gopkg.in/outrightmental/ontomix.v0
 
 #### Go-native audio mixer for Music apps
 
@@ -16,8 +16,8 @@ See `example/808.go`:
       "math/rand"
       "time"
       
-      "github.com/outrightmental/go-atomix"
-      "github.com/outrightmental/go-atomix/bind"
+      "github.com/outrightmental/ontomix"
+      "github.com/outrightmental/ontomix/bind"
     )
     
     var (
@@ -74,7 +74,7 @@ See `example/808.go`:
     
       atomix.OpenAudio()
     
-      fmt.Printf("Atomix, pid:%v, spec:%v\n", os.Getpid(), spec)
+      fmt.Printf("Ontomix, pid:%v, spec:%v\n", os.Getpid(), spec)
       for atomix.FireCount() > 0 {
         time.Sleep(1 * time.Second)
       }
@@ -88,17 +88,17 @@ Run the above from the root of the project with:
 
 Game audio mixers are designed to play audio spontaneously, but when the timing is known in advance (e.g. sequence-based music apps) there is a demand for much greater accuracy in playback timing.
 
-Read the API documentation at [godoc.org/github.com/outrightmental/go-atomix](https://godoc.org/github.com/outrightmental/go-atomix)
+Read the API documentation at [godoc.org/github.com/outrightmental/ontomix](https://godoc.org/github.com/outrightmental/ontomix)
 
-**Atomix** seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance.
+**Ontomix** seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance.
  
-Atomix stores and mixes audio in native Go `[]float64` and natively implements Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression" (details below)
+Ontomix stores and mixes audio in native Go `[]float64` and natively implements Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression" (details below)
 
 Author: [Charney Kaye](http://w.charney.io)
 
 #### NOTICE: THIS PROJECT IS IN ALPHA STAGE, AND THE API MAY BE SUBJECT TO CHANGE.
 
-Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. **[gopkg.in/outrightmental/go-atomix.v0](http://gopkg.in/outrightmental/go-atomix.v0)** 
+Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. **[gopkg.in/outrightmental/ontomix.v0](http://gopkg.in/outrightmental/ontomix.v0)** 
 
 ### Why?
 
@@ -114,11 +114,11 @@ In the field of Music development, often the timing is known in advance, e.g. a 
 
 Ergo, **atomix** seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance. It seeks to do this with the absolute minimal logical overhead on top of the audio interface.
 
-Atomix takes maximum advantage of Go by storing and mixing audio in native Go `[]float64` and natively implementing Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression"
+Ontomix takes maximum advantage of Go by storing and mixing audio in native Go `[]float64` and natively implementing Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression"
 
 ### Time
 
-To the Atomix API, time is specified as a time.Duration-since-epoch, where the epoch is the moment that atomix.Start() was called.
+To the Ontomix API, time is specified as a time.Duration-since-epoch, where the epoch is the moment that atomix.Start() was called.
 
 Internally, time is tracked as samples-since-epoch at the master out playback frequency (e.g. 48000 Hz). This is most efficient because source audio is pre-converted to the master out playback frequency, and all audio maths are performed in terms of samples.
 
@@ -128,7 +128,7 @@ Insipired by the theory paper "Mixing two digital audio streams with on the fly 
 
 ### Usage
 
-There's an example implementation of **go-atomix** included in the `example/` folder in this repository. Run it using the defaults:
+There's an example implementation of **ontomix** included in the `example/` folder in this repository. Run it using the defaults:
 
     go run 808.go
     

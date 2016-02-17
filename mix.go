@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/outrightmental/go-atomix/bind"
+	"github.com/outrightmental/ontomix/bind"
 )
 
 // Tz is the unit of measurement of samples-over-time, e.g. for 48000Hz playback there are 48,000 Tz in 1 second.

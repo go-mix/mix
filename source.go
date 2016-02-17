@@ -2,7 +2,7 @@
 package atomix
 
 import (
-	"github.com/outrightmental/go-atomix/bind"
+	"github.com/outrightmental/ontomix/bind"
 	"math"
 )
 

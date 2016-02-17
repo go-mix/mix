@@ -11,8 +11,8 @@ import (
 
 	"gopkg.in/pkg/profile.v1"
 
-	"github.com/outrightmental/go-atomix"
-	"github.com/outrightmental/go-atomix/bind"
+	"github.com/outrightmental/ontomix"
+	"github.com/outrightmental/ontomix/bind"
 )
 
 var (
@@ -90,7 +90,7 @@ func main() {
 
 	atomix.OpenAudio()
 
-	fmt.Printf("Atomix, pid:%v, playback:%v, spec:%v\n", os.Getpid(), playback, spec)
+	fmt.Printf("Ontomix, pid:%v, playback:%v, spec:%v\n", os.Getpid(), playback, spec)
 	for atomix.FireCount() > 0 {
 		time.Sleep(1 * time.Second)
 	}
