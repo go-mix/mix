@@ -1,4 +1,4 @@
-// Package bind is for modular binding of atomix to audio interface
+// Package bind is for modular binding of ontomix to audio interface
 package bind
 
 /*

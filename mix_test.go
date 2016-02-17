@@ -1,5 +1,5 @@
-// Package atomix is a sequence-based Go-native audio mixer
-package atomix
+// Package ontomix is a sequence-based Go-native audio mixer
+package ontomix
 
 import (
 	"testing"
@@ -137,11 +137,11 @@ func TestMixer_mixCycle(t *testing.T) {
 	// TODO: Test garbage collection of unused fires
 }
 
-// TODO: test atomix.GetSpec()
+// TODO: test ontomix.GetSpec()
 
-// TODO: test atomix.Debug(true) and atomix.Debug(false)
+// TODO: test ontomix.Debug(true) and ontomix.Debug(false)
 
-// TODO: test atomix.Play("filename", time, duration, volume)
+// TODO: test ontomix.Play("filename", time, duration, volume)
 
 // TODO: test sources are queued and loaded properly
 

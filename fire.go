@@ -1,5 +1,5 @@
-// Package atomix is a sequence-based Go-native audio mixer
-package atomix
+// Package ontomix is a sequence-based Go-native audio mixer
+package ontomix
 
 // NewFire to represent a single audio source playing at a specific time in the future.
 func NewFire(source string, beginTz Tz, endTz Tz, volume float64, pan float64) *Fire {
