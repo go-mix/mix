@@ -1,5 +1,5 @@
-// Package atomix is a sequence-based Go-native audio mixer
-package atomix
+// Package ontomix is a sequence-based Go-native audio mixer
+package ontomix
 
 import (
 	"time"
