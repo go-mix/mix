@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/outrightmental/go-atomix/bind"
+	"github.com/outrightmental/ontomix/bind"
 )
 
 func TestAPI_Debug(t *testing.T) {
