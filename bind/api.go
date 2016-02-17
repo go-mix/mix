@@ -87,6 +87,22 @@ type AudioSpec struct {
 	Channels int
 }
 
+// Validate these specs
+func (spec *AudioSpec) Validate() {
+	if spec.Freq == 0 {
+		panic("Must specify Frequency")
+	}
+	if spec.Freq < 0 {
+		panic("Must specify a mixing frequency greater than zero.")
+	}
+	if spec.Format == "" {
+		panic("Must specify Format")
+	}
+	if spec.Channels == 0 {
+		panic("Must specify Channels")
+	}
+}
+
 // AudioFormat represents the bit allocation for a single sample of audio
 type AudioFormat string
 
