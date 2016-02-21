@@ -108,7 +108,7 @@ Game audio mixers offer playback timing accuracy +/- 2 milliseconds. But that's 
 
 The design pattern particular to Game design is that the timing of the audio is not know in advance- the timing that really matterns is that which is assembled in near-real-time in response to user interaction.
 
-In the field of Music development, often the timing is known in advance, e.g. a ***sequencer**, the composition of music by specifying exactly how, when and which audio files will be played relative to the beginning of playback.
+In the field of Music development, often the timing is known in advance, e.g. a **sequencer**, the composition of music by specifying exactly how, when and which audio files will be played relative to the beginning of playback.
 
 Ergo, **ontomix** seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance. It seeks to do this with the absolute minimal logical overhead on top of the audio interface.
 
