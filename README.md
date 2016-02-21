@@ -30,7 +30,7 @@ See `example/808.go`:
       bpm        = 120
       step       = time.Minute / time.Duration(bpm*4)
       loops      = 16
-      prefix     = "assets/sounds/percussion/808/"
+      prefix     = "sound/808/"
       kick1      = "kick1.wav"
       kick2      = "kick2.wav"
       marac      = "maracas.wav"
@@ -64,15 +64,13 @@ See `example/808.go`:
       ontomix.SetSoundsPath(prefix)
       ontomix.StartAt(time.Now().Add(1 * time.Second))
     
-      t := 1 * time.Second // padding before music
+      t := 2 * time.Second // padding before music
       for n := 0; n < loops; n++ {
         for s := 0; s < len(pattern); s++ {
           ontomix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, rand.Float64() * 2 - 1)
         }
         t += time.Duration(len(pattern)) * step
       }
-    
-      ontomix.OpenAudio()
     
       fmt.Printf("Ontomix, pid:%v, spec:%v\n", os.Getpid(), spec)
       for ontomix.FireCount() > 0 {

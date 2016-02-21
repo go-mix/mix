@@ -20,6 +20,7 @@ func Configure(spec bind.AudioSpec) {
 	spec.Validate()
 	bind.SetMixNextSample(mixNextSample)
 	mixSetSpec(spec)
+	bind.OpenAudio(mixSpec)
 }
 
 // Teardown everything and release all memory.
@@ -70,9 +71,4 @@ func StartAt(t time.Time) {
 // GetStartTime the mixer was started at
 func GetStartTime() time.Time {
 	return mixGetStartTime()
-}
-
-// OpenAudio begins streaming to the bound out audio interface, via a callback function
-func OpenAudio() {
-	bind.OpenAudio(mixSpec)
 }

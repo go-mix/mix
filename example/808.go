@@ -88,8 +88,6 @@ func main() {
 		t += time.Duration(len(pattern)) * step
 	}
 
-	ontomix.OpenAudio()
-
 	fmt.Printf("Ontomix, pid:%v, playback:%v, spec:%v\n", os.Getpid(), playback, spec)
 	for ontomix.FireCount() > 0 {
 		time.Sleep(1 * time.Second)
