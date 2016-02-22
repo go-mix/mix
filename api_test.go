@@ -25,10 +25,10 @@ func TestAPI_Configure_FailureFreqNotGreaterThanZero(t *testing.T) {
 		assert.Equal(t, "Must specify a mixing frequency greater than zero.", msg)
 	}()
 	Configure(bind.AudioSpec{
-		Freq: -100,
-		Format: bind.AudioS16,
+		Freq:     -100,
+		Format:   bind.AudioS16,
 		Channels: 2,
-		})
+	})
 }
 
 func TestAPI_Teardown(t *testing.T) {
@@ -70,7 +70,7 @@ func TestAPI_SetSoundsPath(t *testing.T) {
 func TestAPI_SetMixCycleDuration(t *testing.T) {
 	testAPISetup()
 	mixFreq = 100
-	SetMixCycleDuration(2*time.Second)
+	SetMixCycleDuration(2 * time.Second)
 	assert.Equal(t, Tz(200), mixCycleDurTz)
 }
 
@@ -82,7 +82,7 @@ func TestAPI_SetMixCycleDuration_FailWithoutSettingFrequencyFirst(t *testing.T) 
 		assert.IsType(t, "", msg)
 		assert.Equal(t, "Must specify mixing frequency before setting cycle duration!", msg)
 	}()
-	SetMixCycleDuration(5*time.Second)
+	SetMixCycleDuration(5 * time.Second)
 }
 
 func TestAPI_Start(t *testing.T) {

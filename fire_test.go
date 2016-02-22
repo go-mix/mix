@@ -2,8 +2,9 @@
 package ontomix
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestFire_Base(t *testing.T) {

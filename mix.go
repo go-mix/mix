@@ -22,7 +22,7 @@ var (
 	mixStartAtTime time.Time
 	mixNowTz       Tz
 	mixNextCycleTz Tz
-	mixCycleDurTz     Tz
+	mixCycleDurTz  Tz
 	mixTzDur       time.Duration
 	// TODO: implement mixFreq float64
 	mixSource       map[string]*Source
@@ -87,7 +87,7 @@ func mixSetSpec(s bind.AudioSpec) {
 	mixFreq = float64(s.Freq)
 	mixChannels = float64(s.Channels)
 	mixTzDur = time.Second / time.Duration(mixFreq)
-	mixSetCycleDuration(1*time.Second) // Set the default
+	mixSetCycleDuration(1 * time.Second) // Set the default
 }
 
 func mixSetCycleDuration(d time.Duration) {
@@ -170,7 +170,7 @@ func mixCycle() {
 	keepReadyFires := make([]*Fire, 0)
 	for _, fire = range mixReadyFires {
 		keepSource[fire.Source] = mixSource[fire.Source]
-		if fire.BeginTz < mixNowTz + mixCycleDurTz * 2 { // for now, double a mix cycle is consider near-playback
+		if fire.BeginTz < mixNowTz+mixCycleDurTz*2 { // for now, double a mix cycle is consider near-playback
 			mixLiveFires = append(mixLiveFires, fire)
 		} else {
 			keepReadyFires = append(keepReadyFires, fire)
