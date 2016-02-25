@@ -59,6 +59,7 @@ See `example/808.go`:
     
     func main() {
       defer ontomix.Teardown()    
+      
       ontomix.Debug(true)
       ontomix.Configure(spec)
       ontomix.SetSoundsPath(prefix)
