@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/outrightmental/ontomix/bind"
+	"gopkg.in/ontomix.v0/bind"
 )
 
 //

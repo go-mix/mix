@@ -2,7 +2,7 @@
 package ontomix
 
 import (
-	"github.com/outrightmental/ontomix/bind"
+	"gopkg.in/ontomix.v0/bind"
 	"math"
 )
 

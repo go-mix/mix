@@ -1,8 +1,8 @@
 # Ontomix 
 
-[![Build Status](https://travis-ci.org/outrightmental/ontomix.svg?branch=master)](https://travis-ci.org/outrightmental/ontomix)
+[![Build Status](https://travis-ci.org/go-ontomix/ontomix.svg?branch=master)](https://travis-ci.org/go-ontomix/ontomix)
 
-http://gopkg.in/outrightmental/ontomix.v0
+http://gopkg.in/go-ontomix/ontomix.v0
 
 #### Go-native audio mixer for Music apps
 
@@ -16,8 +16,8 @@ See `example/808.go`:
       "math/rand"
       "time"
       
-      "github.com/outrightmental/ontomix"
-      "github.com/outrightmental/ontomix/bind"
+      "gopkg.in/ontomix.v0"
+      "gopkg.in/ontomix.v0/bind"
     )
     
     var (
@@ -86,7 +86,7 @@ Run the above from the root of the project with:
 
 Game audio mixers are designed to play audio spontaneously, but when the timing is known in advance (e.g. sequence-based music apps) there is a demand for much greater accuracy in playback timing.
 
-Read the API documentation at [godoc.org/github.com/outrightmental/ontomix](https://godoc.org/github.com/outrightmental/ontomix)
+Read the API documentation at [godoc.org/gopkg.in/ontomix.v0](https://godoc.org/gopkg.in/ontomix.v0)
 
 **Ontomix** seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance.
  
@@ -96,7 +96,7 @@ Author: [Charney Kaye](http://w.charney.io)
 
 #### NOTICE: THIS PROJECT IS IN ALPHA STAGE, AND THE API MAY BE SUBJECT TO CHANGE.
 
-Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. **[gopkg.in/outrightmental/ontomix.v0](http://gopkg.in/outrightmental/ontomix.v0)** 
+Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. **[gopkg.in/go-ontomix/ontomix.v0](http://gopkg.in/go-ontomix/ontomix.v0)** 
 
 ### Why?
 

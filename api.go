@@ -4,7 +4,7 @@ package ontomix
 import (
 	"time"
 
-	"github.com/outrightmental/ontomix/bind"
+	"gopkg.in/ontomix.v0/bind"
 )
 
 // VERSION # of this ontomix source code
