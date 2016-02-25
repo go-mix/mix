@@ -1,6 +1,6 @@
 # Ontomix 
 
-[![Build Status](https://travis-ci.org/go-ontomix/ontomix.svg?branch=master)](https://travis-ci.org/go-ontomix/ontomix)
+[![Build Status](https://travis-ci.org/go-ontomix/ontomix.svg?branch=master)](https://travis-ci.org/go-ontomix/ontomix) [![GoDoc](https://godoc.org/gopkg.in/ontomix.v0?status.svg)](https://godoc.org/gopkg.in/ontomix.v0)
 
 http://gopkg.in/ontomix.v0
 
