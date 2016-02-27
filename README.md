@@ -151,7 +151,7 @@ Mac OS X:
 
     brew install sdl2
 
-See also: ["Setting up SDL" by Lazy Foo' Productions](http://lazyfoo.net/SDL_tutorials/lesson01/index.php) which has instructions for Windows.
+More details for these platforms, and Windows instructions are available in ["Setting up SDL" by Lazy Foo' Productions](http://lazyfoo.net/SDL_tutorials/lesson01/index.php) 
 
 #### Portaudio
 
@@ -163,4 +163,4 @@ Mac OS X:
 
     brew install portaudio
     
-See also: ["Building and Installing PortAudio on Windows" by GNU Radio](https://gnuradio.org/redmine/projects/gnuradio/wiki/PortAudioInstall).
+Windows: ["Building and Installing PortAudio on Windows" by GNU Radio](https://gnuradio.org/redmine/projects/gnuradio/wiki/PortAudioInstall).
