@@ -151,7 +151,7 @@ Mac OS X:
 
     brew install sdl2
 
-More details for these platforms, and Windows instructions are available in ["Setting up SDL" by Lazy Foo' Productions](http://lazyfoo.net/SDL_tutorials/lesson01/index.php) 
+More details for Linux, Mac and Windows: ["Setting up SDL" by Lazy Foo' Productions](http://lazyfoo.net/SDL_tutorials/lesson01/index.php) 
 
 #### Portaudio
 
