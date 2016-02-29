@@ -6,7 +6,7 @@ http://gopkg.in/ontomix.v0
 
 #### Go-native audio mixer for Music apps
 
-See `example/808.go`:
+See `example/808`:
 
     package main
     
@@ -127,7 +127,7 @@ Insipired by the theory paper "Mixing two digital audio streams with on the fly 
 
 ### Usage
 
-There's an example implementation of **ontomix** included in the `example/` folder in this repository. Run it using the defaults:
+There's an example implementation of **ontomix** included in the `example/808` folder in this repository. Run it using the defaults:
 
     go run 808.go
     
