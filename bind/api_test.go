@@ -30,15 +30,15 @@ func TestAPI_UseWAVString_Fail(t *testing.T) {
 }
 
 func TestAPI_UseOutput(t *testing.T) {
-	UseOutput(OptOutputPortaudio)
-	assert.Equal(t, OptOutputPortaudio, useOutput)
+	UseOutput(OptOutputPortAudio)
+	assert.Equal(t, OptOutputPortAudio, useOutput)
 	UseOutput(OptOutputSDL)
 	assert.Equal(t, OptOutputSDL, useOutput)
 }
 
 func TestAPI_UseOutputString(t *testing.T) {
 	UseOutputString("portaudio")
-	assert.Equal(t, OptOutputPortaudio, useOutput)
+	assert.Equal(t, OptOutputPortAudio, useOutput)
 	UseOutputString("sdl")
 	assert.Equal(t, OptOutputSDL, useOutput)
 }

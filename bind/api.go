@@ -10,7 +10,7 @@ import (
 func OpenAudio(spec *AudioSpec) {
 	outSpec = spec
 	switch useOutput {
-	case OptOutputPortaudio:
+	case OptOutputPortAudio:
 		outPortaudioSetup(spec)
 	case OptOutputSDL:
 		outSDLSetup(spec)
@@ -39,7 +39,7 @@ func Teardown() {
 	switch useOutput {
 	case OptOutputNull:
 		// do nothing
-	case OptOutputPortaudio:
+	case OptOutputPortAudio:
 		outPortaudioTeardown()
 	case OptOutputSDL:
 		outSDLTeardown()
@@ -69,8 +69,8 @@ func UseOutput(opt OptOutput) {
 // UseOutputString to select the outback interface by string
 func UseOutputString(opt string) {
 	switch opt {
-	case string(OptOutputPortaudio):
-		useOutput = OptOutputPortaudio
+	case string(OptOutputPortAudio):
+		useOutput = OptOutputPortAudio
 	case string(OptOutputSDL):
 		useOutput = OptOutputSDL
 	case string(OptOutputNull):
@@ -140,7 +140,7 @@ type OptOutput string
 const OptOutputNull OptOutput = "null"
 
 // OptOutputPortAudio to use Go-Native WAV file I/O
-const OptOutputPortaudio OptOutput = "portaudio"
+const OptOutputPortAudio OptOutput = "portaudio"
 
 // OptOutputSDL to use SDL for WAV file I/O
 const OptOutputSDL OptOutput = "sdl"
