@@ -10,10 +10,10 @@ test:
 	go get -v ./... && go test ./...
 
 example:
-	cd example && go get -v && go run 808.go
+	cd example/808 && go get -v && go run 808.go
 
 profile:
-	cd example && go get -v && go run 808.go --profile cpu
+	cd example/808 && go get -v && go run 808.go --profile cpu
 
 clean:
 	rm *.out bind/*.out
