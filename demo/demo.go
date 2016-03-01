@@ -28,7 +28,7 @@ var (
 	bpm     = 120
 	step    = time.Minute / time.Duration(bpm*4)
 	loops   = 16
-	prefix  = "../_sound/808/"
+	prefix  = "_sound/808/"
 	kick1   = "kick1.wav"
 	kick2   = "kick2.wav"
 	marac   = "maracas.wav"

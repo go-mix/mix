@@ -1,7 +1,7 @@
 all: test
 TESTS := expr unrecognised
 
-.PHONY: test profile fmt example clean cover
+.PHONY: test profile fmt demo clean cover
 
 fmt:
 	go fmt ./...
@@ -9,11 +9,11 @@ fmt:
 test:
 	go get -v ./... && go test ./...
 
-example:
-	cd example/808 && go get -v && go run 808.go
+demo:
+	cd demo && go get -v && go run demo.go
 
 profile:
-	cd example/808 && go get -v && go run 808.go --profile cpu
+	cd demo && go get -v && go run demo.go --profile cpu
 
 clean:
 	rm *.out bind/*.out
