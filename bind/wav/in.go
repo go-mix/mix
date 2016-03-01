@@ -1,5 +1,5 @@
 // Package bind has native Go WAV I/O
-package bind
+package wav
 
 import (
 	"bufio"
@@ -9,9 +9,12 @@ import (
 	"os"
 
 	riff "github.com/youpy/go-riff"
+
+	"gopkg.in/ontomix.v0/bind/sample"
+	"gopkg.in/ontomix.v0/bind/spec"
 )
 
-func LoadNewWAV(path string) (out [][]float64, spec *AudioSpec) {
+func LoadNewWAV(path string) (out [][]float64, specs *spec.AudioSpec) {
 	//	data, sdlSpec := sdl.LoadWAV(file, sdl2Spec(spec))
 	// return data, sdl2Unspec(sdlSpec)
 	if _, err := os.Stat(path); os.IsNotExist(err) {
@@ -24,7 +27,7 @@ func LoadNewWAV(path string) (out [][]float64, spec *AudioSpec) {
 	if err != nil {
 		return
 	}
-	spec = &AudioSpec{
+	specs = &spec.AudioSpec{
 		Freq:     float64(format.SampleRate),
 		Format:   audio,
 		Channels: int(format.NumChannels),
@@ -49,11 +52,11 @@ type loadWAV struct {
 	riffReader *riff.Reader
 	riffChunk  *riff.RIFFChunk
 	format     *loadWAVFormat
-	audio      AudioFormat
+	audio      spec.AudioFormat
 	*loadWAVData
 }
 
-func (r *loadWAV) Open() (format *loadWAVFormat, audio AudioFormat, err error) {
+func (r *loadWAV) Open() (format *loadWAVFormat, audio spec.AudioFormat, err error) {
 	if r.format == nil {
 		format, audio, err = r.openAndParse()
 		if err != nil {
@@ -124,29 +127,29 @@ func (r *loadWAV) readSamplesIntoBuffer(p []byte) (n int, err error) {
 	return r.loadWAVData.Read(p)
 }
 
-func (r *loadWAV) sampleFromBytes(audio AudioFormat, bytes []byte) float64 {
+func (r *loadWAV) sampleFromBytes(audio spec.AudioFormat, bytes []byte) float64 {
 	// TODO: big-endian or little-endian?
 	switch audio {
-	case AudioU8:
-		return sampleByteU8(bytes[0])
-	case AudioS8:
-		return sampleByteS8(bytes[0])
-	case AudioU16:
-		return sampleBytesU16LSB(bytes)
-	case AudioS16:
-		return sampleBytesS16LSB(bytes)
-	case AudioS32:
-		return sampleBytesS32LSB(bytes)
-	case AudioF32:
-		return sampleBytesF32LSB(bytes)
-	case AudioF64:
-		return sampleBytesF64LSB(bytes)
+	case spec.AudioU8:
+		return sample.FromByteU8(bytes[0])
+	case spec.AudioS8:
+		return sample.FromByteS8(bytes[0])
+	case spec.AudioU16:
+		return sample.FromBytesU16LSB(bytes)
+	case spec.AudioS16:
+		return sample.FromBytesS16LSB(bytes)
+	case spec.AudioS32:
+		return sample.FromBytesS32LSB(bytes)
+	case spec.AudioF32:
+		return sample.FromBytesF32LSB(bytes)
+	case spec.AudioF64:
+		return sample.FromBytesF64LSB(bytes)
 	default:
 		panic("Unhandled format!")
 	}
 }
 
-func (r *loadWAV) openAndParse() (format *loadWAVFormat, audio AudioFormat, err error) {
+func (r *loadWAV) openAndParse() (format *loadWAVFormat, audio spec.AudioFormat, err error) {
 	var riffChunk *riff.RIFFChunk
 
 	format = new(loadWAVFormat)
@@ -174,18 +177,18 @@ func (r *loadWAV) openAndParse() (format *loadWAVFormat, audio AudioFormat, err 
 			case loadWAVAudioLinearPCM: // Linear PCM
 				switch format.BitsPerSample {
 				case 8:
-					audio = AudioS8
+					audio = spec.AudioS8
 				case 16:
-					audio = AudioS16
+					audio = spec.AudioS16
 				default:
 					panic("Unhandled Linear PCM bitrate")
 				}
 			case loadWAVAudioIEEEFloat: // IEEE Float
 				switch format.BitsPerSample {
 				case 32:
-					audio = AudioF32
+					audio = spec.AudioF32
 				case 64:
-					audio = AudioF64
+					audio = spec.AudioF64
 				default:
 					panic("Unhandled IEEE Float bitrate")
 				}

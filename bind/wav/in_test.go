@@ -1,5 +1,5 @@
 // Package bind has native Go WAV I/O
-package bind
+package wav
 
 import (
 	//	"github.com/stretchr/testify/assert"

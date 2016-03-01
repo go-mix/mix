@@ -13,16 +13,16 @@ import (
 
 	"gopkg.in/ontomix.v0"
 	"gopkg.in/ontomix.v0/bind"
+	"gopkg.in/ontomix.v0/bind/spec"
 )
 
 var (
-	out         bool
-	playback    string
+	out         string
 	profileMode string
 	sampleHz    = float64(48000)
-	spec        = bind.AudioSpec{
+	specs       = spec.AudioSpec{
 		Freq:     sampleHz,
-		Format:   bind.AudioF32,
+		Format:   spec.AudioF32,
 		Channels: 2,
 	}
 	bpm     = 120
@@ -57,14 +57,13 @@ var (
 
 func main() {
 	// command-line arguments
-	flag.BoolVar(&out, "out", false, "stdout to byte stream (e.g. >file or |aplay)")
-	flag.StringVar(&playback, "playback", "sdl", "out playback binding [sdl, portaudio, null]")
+	flag.StringVar(&out, "out", "sdl", "playback binding [sdl, portaudio, null] _OR_ [wav] for direct stdout (e.g. >file or |aplay)")
 	flag.StringVar(&profileMode, "profile", "", "enable profiling [cpu, mem, block]")
 	flag.Parse()
 
 	// CPU/Memory/Block profiling
 	if len(profileMode) > 0 {
-		playback = "null"
+		out = "null" // TODO: evaluate whether profiling is actually working
 		switch profileMode {
 		case "cpu":
 			defer profile.Start(profile.CPUProfile).Stop()
@@ -78,9 +77,9 @@ func main() {
 	}
 
 	// configure ontomix
-	bind.UseOutputString(playback)
+	bind.UseOutputString(out)
 	defer ontomix.Teardown()
-	ontomix.Configure(spec)
+	ontomix.Configure(specs)
 	ontomix.SetSoundsPath(prefix)
 
 	// setup the music
@@ -94,14 +93,14 @@ func main() {
 	t += 2 * time.Second // buffer after music
 
 	//
-	if out {
+	if bind.IsDirectOutput() {
 		ontomix.OutputBegin()
 		ontomix.OutputContinueTo(t)
 		ontomix.OutputClose()
 	} else {
 		ontomix.Debug(true)
 		ontomix.StartAt(time.Now().Add(1 * time.Second))
-		fmt.Printf("Ontomix: 808 Example - pid:%v playback:%v spec:%v\n", os.Getpid(), playback, spec)
+		fmt.Printf("Ontomix: 808 Example - pid:%v playback:%v spec:%v\n", os.Getpid(), out, specs)
 		for ontomix.FireCount() > 0 {
 			time.Sleep(1 * time.Second)
 		}
