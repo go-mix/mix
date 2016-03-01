@@ -1,4 +1,77 @@
-// Package ontomix is a sequence-based Go-native audio mixer
+// Package ontomix is a sequence-based Go-native audio mixer.
+//
+// See `demo/demo.go`:
+//
+//      package main
+//
+//      import (
+//        "fmt"
+//        "os"
+//        "math/rand"
+//        "time"
+//
+//        "github.com/go-ontomix/ontomix"
+//        "github.com/go-ontomix/ontomix/bind"
+//      )
+//
+//      var (
+//        sampleHz   = float64(48000)
+//        spec = bind.AudioSpec{
+//          Freq:     sampleHz,
+//          Format:   bind.AudioF32,
+//          Channels: 2,
+//          }
+//        bpm        = 120
+//        step       = time.Minute / time.Duration(bpm*4)
+//        loops      = 16
+//        prefix     = "sound/808/"
+//        kick1      = "kick1.wav"
+//        kick2      = "kick2.wav"
+//        marac      = "maracas.wav"
+//        snare      = "snare.wav"
+//        hitom      = "hightom.wav"
+//        clhat      = "cl_hihat.wav"
+//        pattern    = []string{
+//          kick2,
+//          marac,
+//          clhat,
+//          marac,
+//          snare,
+//          marac,
+//          clhat,
+//          kick2,
+//          marac,
+//          marac,
+//          hitom,
+//          marac,
+//          snare,
+//          kick1,
+//          clhat,
+//          marac,
+//        }
+//      )
+//
+//      func main() {
+//        defer ontomix.Teardown()
+//
+//        ontomix.Debug(true)
+//        ontomix.Configure(spec)
+//        ontomix.SetSoundsPath(prefix)
+//        ontomix.StartAt(time.Now().Add(1 * time.Second))
+//
+//        t := 2 * time.Second // padding before music
+//        for n := 0; n < loops; n++ {
+//          for s := 0; s < len(pattern); s++ {
+//            ontomix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, rand.Float64() * 2 - 1)
+//          }
+//          t += time.Duration(len(pattern)) * step
+//        }
+//
+//        fmt.Printf("Ontomix, pid:%v, spec:%v\n", os.Getpid(), spec)
+//        for ontomix.FireCount() > 0 {
+//          time.Sleep(1 * time.Second)
+//        }
+//      }
 package ontomix
 
 import (
