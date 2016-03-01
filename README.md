@@ -13,7 +13,6 @@ See `demo/demo.go`:
     import (
       "fmt"
       "os"
-      "math/rand"
       "time"
       
       "github.com/go-ontomix/ontomix"
@@ -68,7 +67,7 @@ See `demo/demo.go`:
       t := 2 * time.Second // padding before music
       for n := 0; n < loops; n++ {
         for s := 0; s < len(pattern); s++ {
-          ontomix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, rand.Float64() * 2 - 1)
+          ontomix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, 0)
         }
         t += time.Duration(len(pattern)) * step
       }
