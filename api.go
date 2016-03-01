@@ -72,3 +72,20 @@ func StartAt(t time.Time) {
 func GetStartTime() time.Time {
 	return mixGetStartTime()
 }
+
+// OutputBegin to output WAV opener as []byte via stdout
+func OutputBegin() {
+	mixOutputBegin()
+}
+
+// OutputBegin to  mix and output as []byte via stdout, up to a specified duration-since-start
+func OutputContinueTo(t time.Duration) {
+	mixOutputContinueTo(t)
+}
+
+// OutputBegin to output WAV closer as []byte via stdout
+func OutputClose() {
+	mixOutputClose()
+}
+
+

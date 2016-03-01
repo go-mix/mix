@@ -190,8 +190,8 @@ func mixCycle() {
 	mixLiveFires = keepLiveFires
 	mixSource = keepSource
 	mixNextCycleTz = mixNowTz + mixCycleDurTz
-	if isDebug {
-		mixDebugf("[cycle@%d] readyFires:%d activeFires:%d mixSource:%d\n", mixNowTz, len(mixReadyFires), len(mixLiveFires), len(mixSource))
+	if isDebug && len(mixSource) > 0 {
+		mixDebugf("ontomix [%dz] ready:%d active:%d mix:%d\n", mixNowTz, len(mixReadyFires), len(mixLiveFires), len(mixSource))
 	}
 }
 
@@ -216,6 +216,22 @@ func mixVolume(channel float64, volume float64, pan float64) float64 {
 		return math.Max(0, 1-pan*channel/mixChannels)
 	}
 }
+
+//
+func mixOutputBegin() {
+
+}
+
+//
+func mixOutputContinueTo(t time.Duration) {
+
+}
+
+//
+func mixOutputClose() {
+
+}
+
 
 func init() {
 	mixSource = make(map[string]*Source, 0)
