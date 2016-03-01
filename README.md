@@ -1,12 +1,12 @@
 # Ontomix 
 
-[![Build Status](https://travis-ci.org/go-ontomix/ontomix.svg?branch=master)](https://travis-ci.org/go-ontomix/ontomix) [![GoDoc](https://godoc.org/gopkg.in/ontomix.v0?status.svg)](https://godoc.org/gopkg.in/ontomix.v0)
+[![Build Status](https://travis-ci.org/go-ontomix/ontomix.svg?branch=master)](https://travis-ci.org/go-ontomix/ontomix) [![GoDoc](https://godoc.org/github.com/go-ontomix/ontomix?status.svg)](https://godoc.org/github.com/go-ontomix/ontomix)
 
-http://gopkg.in/ontomix.v0
+https://gopkg.in/ontomix.v0
 
 #### Go-native audio mixer for Music apps
 
-See `example/808.go`:
+See `example/808`:
 
     package main
     
@@ -16,8 +16,8 @@ See `example/808.go`:
       "math/rand"
       "time"
       
-      "gopkg.in/ontomix.v0"
-      "gopkg.in/ontomix.v0/bind"
+      "github.com/go-ontomix/ontomix"
+      "github.com/go-ontomix/ontomix/bind"
     )
     
     var (
@@ -87,7 +87,7 @@ Run the above from the root of the project with:
 
 Game audio mixers are designed to play audio spontaneously, but when the timing is known in advance (e.g. sequence-based music apps) there is a demand for much greater accuracy in playback timing.
 
-Read the API documentation at [godoc.org/gopkg.in/ontomix.v0](https://godoc.org/gopkg.in/ontomix.v0)
+Read the API documentation at [godoc.org/github.com/go-ontomix/ontomix](https://godoc.org/github.com/go-ontomix/ontomix)
 
 **Ontomix** seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance.
  
@@ -97,7 +97,7 @@ Author: [Charney Kaye](http://w.charney.io)
 
 #### NOTICE: THIS PROJECT IS IN ALPHA STAGE, AND THE API MAY BE SUBJECT TO CHANGE.
 
-Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. **[gopkg.in/ontomix.v0](http://gopkg.in/ontomix.v0)** 
+Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. **[github.com/go-ontomix/ontomix](http://github.com/go-ontomix/ontomix)** 
 
 ### Why?
 
@@ -107,7 +107,7 @@ This design is a **music application mixer**. Most available options are geared 
 
 Game audio mixers offer playback timing accuracy +/- 2 milliseconds. But that's totally unacceptable for music, specifically sequence-based sample playback.
 
-The design pattern particular to Game design is that the timing of the audio is not know in advance- the timing that really matterns is that which is assembled in near-real-time in response to user interaction.
+The design pattern particular to Game design is that the timing of the audio is not know in advance- the timing that really matters is that which is assembled in near-real-time in response to user interaction.
 
 In the field of Music development, often the timing is known in advance, e.g. a **sequencer**, the composition of music by specifying exactly how, when and which audio files will be played relative to the beginning of playback.
 
@@ -123,11 +123,11 @@ Internally, time is tracked as samples-since-epoch at the master out playback fr
 
 ### The Mixing Algorithm
 
-Insipired by the theory paper "Mixing two digital audio streams with on the fly Loudness Normalization by Logarithmic Dynamic Range Compression" by Paul Vögler, 2012-04-20. A .PDF has been included [here](docs/LogarithmicDynamicRangeCompression-PaulVogler.pdf), from the paper originally published [here](http://www.voegler.eu/pub/audio/digital-audio-mixing-and-normalization.html).
+Inspired by the theory paper "Mixing two digital audio streams with on the fly Loudness Normalization by Logarithmic Dynamic Range Compression" by Paul Vögler, 2012-04-20. A .PDF has been included [here](docs/LogarithmicDynamicRangeCompression-PaulVogler.pdf), from the paper originally published [here](http://www.voegler.eu/pub/audio/digital-audio-mixing-and-normalization.html).
 
 ### Usage
 
-There's an example implementation of **ontomix** included in the `example/` folder in this repository. Run it using the defaults:
+There's an example implementation of **ontomix** included in the `example/808` folder in this repository. Run it using the defaults:
 
     go run 808.go
     

@@ -1,9 +1,15 @@
-// Package ontomix is a sequence-based Go-native audio mixer
-package ontomix
+// Package fire model an audio source playing at a specific time
+package fire
 
-// NewFire to represent a single audio source playing at a specific time in the future.
-func NewFire(source string, beginTz Tz, endTz Tz, volume float64, pan float64) *Fire {
-	// mixDebugf("NewFire(%v, %v, %v, %v, %v)\n", source, beginTz, endTz, volume, pan)
+import (
+	"github.com/go-ontomix/ontomix/bind/spec"
+
+	"github.com/go-ontomix/ontomix/lib/source"
+)
+
+// New Fire to represent a single audio source playing at a specific time in the future.
+func New(source string, beginTz spec.Tz, endTz spec.Tz, volume float64, pan float64) *Fire {
+	// debug.Printf("NewFire(%v, %v, %v, %v, %v)\n", source, beginTz, endTz, volume, pan)
 	s := &Fire{
 		/* setup */
 		Source:  source,
@@ -20,19 +26,19 @@ func NewFire(source string, beginTz Tz, endTz Tz, volume float64, pan float64) *
 // Fire represents a single audio source playing at a specific time in the future.
 type Fire struct {
 	/* setup */
-	BeginTz Tz
-	EndTz   Tz
+	BeginTz spec.Tz
+	EndTz   spec.Tz
 	Source  string
 	Volume  float64 // 0 to 1
 	Pan     float64 // -1 to +1
 	/* playback */
-	nowTz Tz
+	nowTz spec.Tz
 	state fireStateEnum
 }
 
 // At the series of Tz it's playing for, return the series of Tz corresponding to source audio.
-func (f *Fire) At(at Tz) (t Tz) {
-	//	mixDebugf("*Fire[%s].At(%v vs %v)\n", f.Source, at, f.BeginTz)
+func (f *Fire) At(at spec.Tz) (t spec.Tz) {
+	//	debug.Printf("*Fire[%s].At(%v vs %v)\n", f.Source, at, f.BeginTz)
 	switch f.state {
 	case fireStateReady:
 		if at >= f.BeginTz {
@@ -74,10 +80,6 @@ func (f *Fire) Teardown() {
  *
  private */
 
-func (f *Fire) sourceLength() Tz {
-	return mixSourceLength(f.Source)
-}
-
 type fireStateEnum uint
 
 const (
@@ -86,3 +88,7 @@ const (
 	// it is assumed that all alive states are < SOURCE_FINISHED
 	fireStateDone fireStateEnum = 6
 )
+
+func (f *Fire) sourceLength() spec.Tz {
+	return source.Get(f.Source).Length()
+}

@@ -2,8 +2,11 @@
 package bind
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	"github.com/go-ontomix/ontomix/bind/opt"
 )
 
 func TestAPI(t *testing.T) {
@@ -11,13 +14,13 @@ func TestAPI(t *testing.T) {
 }
 
 func TestAPI_UseWAV(t *testing.T) {
-	UseLoader(OptLoaderWAV)
-	assert.Equal(t, OptLoaderWAV, useLoader)
+	UseLoader(opt.InputWAV)
+	assert.Equal(t, opt.InputWAV, useLoader)
 }
 
 func TestAPI_UseWAVString(t *testing.T) {
 	UseLoaderString("wav")
-	assert.Equal(t, OptLoaderWAV, useLoader)
+	assert.Equal(t, opt.InputWAV, useLoader)
 }
 
 func TestAPI_UseWAVString_Fail(t *testing.T) {
@@ -30,17 +33,17 @@ func TestAPI_UseWAVString_Fail(t *testing.T) {
 }
 
 func TestAPI_UseOutput(t *testing.T) {
-	UseOutput(OptOutputPortAudio)
-	assert.Equal(t, OptOutputPortAudio, useOutput)
-	UseOutput(OptOutputSDL)
-	assert.Equal(t, OptOutputSDL, useOutput)
+	UseOutput(opt.OutputPortAudio)
+	assert.Equal(t, opt.OutputPortAudio, useOutput)
+	UseOutput(opt.OutputSDL)
+	assert.Equal(t, opt.OutputSDL, useOutput)
 }
 
 func TestAPI_UseOutputString(t *testing.T) {
 	UseOutputString("portaudio")
-	assert.Equal(t, OptOutputPortAudio, useOutput)
+	assert.Equal(t, opt.OutputPortAudio, useOutput)
 	UseOutputString("sdl")
-	assert.Equal(t, OptOutputSDL, useOutput)
+	assert.Equal(t, opt.OutputSDL, useOutput)
 }
 
 func TestAPI_UseOutputString_Fail(t *testing.T) {
@@ -53,53 +56,5 @@ func TestAPI_UseOutputString_Fail(t *testing.T) {
 }
 
 func TestAPI_noErr(t *testing.T) {
-	//TODO: Test
-}
-
-func TestAPI_sampleByteU8(t *testing.T) {
-	//TODO: Test
-}
-
-func TestAPI_sampleByteS8(t *testing.T) {
-	//TODO: Test
-}
-
-func TestAPI_sampleBytesU16LSB(t *testing.T) {
-	//TODO: Test
-}
-
-func TestAPI_sampleBytesU16MSB(t *testing.T) {
-	//TODO: Test
-}
-
-func TestAPI_sampleBytesS16LSB(t *testing.T) {
-	//TODO: Test
-}
-
-func TestAPI_sampleBytesS16MSB(t *testing.T) {
-	//TODO: Test
-}
-
-func TestAPI_sampleBytesS32LSB(t *testing.T) {
-	//TODO: Test
-}
-
-func TestAPI_sampleBytesS32MSB(t *testing.T) {
-	//TODO: Test
-}
-
-func TestAPI_sampleBytesF32LSB(t *testing.T) {
-	//TODO: Test
-}
-
-func TestAPI_sampleBytesF32MSB(t *testing.T) {
-	//TODO: Test
-}
-
-func TestAPI_sampleBytesF64LSB(t *testing.T) {
-	//TODO: Test
-}
-
-func TestAPI_sampleBytesF64MSB(t *testing.T) {
 	//TODO: Test
 }

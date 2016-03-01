@@ -1,42 +1,62 @@
-// Package bind is for modular binding of ontomix to audio interface
-package bind
+// Package sample models an audio sample
+package sample
 
 import (
 	"encoding/binary"
 	"math"
+
+	"github.com/go-ontomix/ontomix/bind/spec"
 )
 
-var (
-	useLoader                = OptLoaderWAV
-	useOutput                = OptOutputSDL
-	outSpec                  *AudioSpec
-	outCallbackMixNextSample outCallbackMixNextSampleFunc
-)
+// OutNextCallbackFunc to stream mix out from ontomix
+type OutNextCallbackFunc func() []float64
 
-type outCallbackMixNextSampleFunc func() []float64
+func ConfigureOutput(s spec.AudioSpec) {
+	outSpec = &s
+}
 
-func outNextSample() (out []byte) {
-	in := outCallbackMixNextSample()
+// SetOutNextCallback to set streaming callback function
+func SetOutputCallback(fn OutNextCallbackFunc) {
+	outNextCallback = fn
+}
+
+// OutNext to mix the next sample for all channels, in []float64
+func OutNext() []float64 {
+	return outNextCallback()
+}
+
+// OutNextBytes to mix the next sample for all channels, in bytes
+func OutNextBytes() (out []byte) {
+	in := outNextCallback()
 	for ch := 0; ch < outSpec.Channels; ch++ {
 		switch outSpec.Format {
-		case AudioU8:
+		case spec.AudioU8:
 			out = append(out, outByteU8(in[ch]))
-		case AudioS8:
+		case spec.AudioS8:
 			out = append(out, outByteS8(in[ch]))
-		case AudioS16:
+		case spec.AudioS16:
 			out = append(out, outBytesS16LSB(in[ch])...)
-		case AudioU16:
+		case spec.AudioU16:
 			out = append(out, outBytesU16LSB(in[ch])...)
-		case AudioS32:
+		case spec.AudioS32:
 			out = append(out, outBytesS32LSB(in[ch])...)
-		case AudioF32:
+		case spec.AudioF32:
 			out = append(out, outBytesF32LSB(in[ch])...)
-		case AudioF64:
+		case spec.AudioF64:
 			out = append(out, outBytesF64LSB(in[ch])...)
 		}
 	}
 	return
 }
+
+/*
+ *
+ private */
+
+var (
+	outSpec         *spec.AudioSpec
+	outNextCallback OutNextCallbackFunc
+)
 
 func outByteU8(sample float64) byte {
 	return byte(outUint8(sample))

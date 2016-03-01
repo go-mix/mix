@@ -1,12 +1,13 @@
-// Package ontomix is a sequence-based Go-native audio mixer
-package ontomix
+// Package mix combines sources into an output audio stream
+package mix
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
-	"gopkg.in/ontomix.v0/bind"
+	"github.com/go-ontomix/ontomix/bind/spec"
+	"time"
 )
 
 //
@@ -14,9 +15,9 @@ import (
 //
 
 func TestMixer_Base(t *testing.T) {
-	Configure(bind.AudioSpec{
+	Configure(spec.AudioSpec{
 		Freq:     44100,
-		Format:   bind.AudioU16,
+		Format:   spec.AudioU16,
 		Channels: 2,
 	})
 	assert.NotNil(t, Spec())
@@ -24,7 +25,7 @@ func TestMixer_Base(t *testing.T) {
 
 func TestMixer_RequiresProperAudioSpec(t *testing.T) {
 	assert.Panics(t, func() {
-		Configure(bind.AudioSpec{})
+		Configure(spec.AudioSpec{})
 	})
 }
 
@@ -37,7 +38,7 @@ func TestMixer_Debug(t *testing.T) {
 }
 
 func TestMixer_Debugf(t *testing.T) {
-	// TODO: Test Mixer mixDebugf
+	// TODO: Test Mixer debug.Printf
 }
 
 func TestMixer_Start(t *testing.T) {
@@ -62,10 +63,6 @@ func TestMixer_SetSoundsPath(t *testing.T) {
 
 func TestMixer_NextOut(t *testing.T) {
 	// TODO: Test Mixer NextOut
-}
-
-func TestMixer_SourceLength(t *testing.T) {
-	// TODO: Test Mixer SourceLength
 }
 
 func TestMixer_Teardown(t *testing.T) {
@@ -101,35 +98,18 @@ func TestMixer_mixSetSpec(t *testing.T) {
 	// TODO: Test sets the default mixCycleDurTz
 }
 
-func TestMixer_mixSetCycleDuration(t *testing.T) {
-	// TODO: Test
-	// TODO: Test panic if cycle duration set before audiospec
-	// TODO: Test mixSetSpec sets the default mixCycleDurTz
+func TestSetCycleDuration(t *testing.T) {
+	masterFreq = 0 // simulates never having set a mix frequency
+	defer func() {
+		msg := recover()
+		assert.IsType(t, "", msg)
+		assert.Equal(t, "Must specify mixing frequency before setting cycle duration!", msg)
+	}()
+	SetCycleDuration(5 * time.Second)
 }
 
 func TestMixer_getSource(t *testing.T) {
 	// TODO: Test Mixer getSource
-}
-
-func TestMixer_mixVolume(t *testing.T) {
-	mixChannels = 1
-	assert.Equal(t, float64(0), mixVolume(0, 0, 0))
-	assert.Equal(t, float64(1), mixVolume(0, 1, .5))
-	mixChannels = 2
-	assert.Equal(t, float64(1), mixVolume(0, 1, -.5))
-	assert.Equal(t, float64(.75), mixVolume(1, 1, .5))
-	assert.Equal(t, float64(.5), mixVolume(0, .5, 0))
-	assert.Equal(t, float64(.5), mixVolume(1, .5, 1))
-	mixChannels = 3
-	assert.Equal(t, float64(1), mixVolume(0, 1, 0))
-	assert.Equal(t, float64(0.6666666666666667), mixVolume(1, 1, -1))
-	assert.Equal(t, float64(0.6666666666666667), mixVolume(2, .5, -.5))
-	assert.Equal(t, float64(0.6666666666666667), mixVolume(1, .5, 1))
-	mixChannels = 4
-	assert.Equal(t, float64(1), mixVolume(0, 1, -1))
-	assert.Equal(t, float64(1), mixVolume(1, 1, 0))
-	assert.Equal(t, float64(.75), mixVolume(2, .5, .5))
-	assert.Equal(t, float64(.625), mixVolume(3, .5, -.5))
 }
 
 func TestMixer_mixCycle(t *testing.T) {
@@ -149,6 +129,6 @@ func TestMixer_mixCycle(t *testing.T) {
 
 // TODO: test different timing of ^
 
-// TODO: test different audio format / bitrate / samples of ^
+// TODO: test different audio format / bit rate / samples of ^
 
 // TODO: test buffer properly reported to AudioCallback

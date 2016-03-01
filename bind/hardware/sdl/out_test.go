@@ -1,11 +1,11 @@
-// Package bind is for modular binding of ontomix to audio interface
-package bind
+// Package sdl is for modular binding of ontomix to audio interface via SDL2
+package sdl
 
 import (
 	"testing"
 )
 
-func TestOutSDL_outSDLSetup(t *testing.T) {
+func TestSetup(t *testing.T) {
 	// TODO
 }
 

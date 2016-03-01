@@ -1,4 +1,5 @@
-package bind
+// Package sample models an audio sample
+package sample
 
 import (
 	"testing"

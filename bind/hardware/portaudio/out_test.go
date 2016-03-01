@@ -1,5 +1,5 @@
-// Package bind is for modular binding of ontomix to audio interface
-package bind
+// Package portaudio is for modular binding of ontomix to audio interface via PortAudio
+package portaudio
 
 import (
 	"testing"
@@ -9,7 +9,7 @@ func TestOutPortaudio_outPortaudioStream(t *testing.T) {
 	// TODO
 }
 
-func TestOutPortaudio_outPortaudioSetup(t *testing.T) {
+func TestSetup(t *testing.T) {
 	// TODO
 }
 
