@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"gopkg.in/ontomix.v0/bind/opt"
+	"github.com/go-ontomix/ontomix/bind/opt"
 )
 
 func TestAPI(t *testing.T) {

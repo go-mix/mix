@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"gopkg.in/ontomix.v0/bind/spec"
+	"github.com/go-ontomix/ontomix/bind/spec"
 )
 
 func TestBase(t *testing.T) {

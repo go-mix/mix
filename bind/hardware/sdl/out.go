@@ -14,8 +14,8 @@ import (
 
 	"github.com/veandco/go-sdl2/sdl"
 
-	"gopkg.in/ontomix.v0/bind/sample"
-	"gopkg.in/ontomix.v0/bind/spec"
+	"github.com/go-ontomix/ontomix/bind/sample"
+	"github.com/go-ontomix/ontomix/bind/spec"
 )
 
 func ConfigureOutput(s spec.AudioSpec) {

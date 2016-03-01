@@ -4,12 +4,12 @@ package ontomix
 import (
 	"time"
 
-	"gopkg.in/ontomix.v0/bind"
-	"gopkg.in/ontomix.v0/bind/debug"
-	"gopkg.in/ontomix.v0/bind/spec"
+	"github.com/go-ontomix/ontomix/bind"
+	"github.com/go-ontomix/ontomix/bind/debug"
+	"github.com/go-ontomix/ontomix/bind/spec"
 
-	"gopkg.in/ontomix.v0/lib/fire"
-	"gopkg.in/ontomix.v0/lib/mix"
+	"github.com/go-ontomix/ontomix/lib/fire"
+	"github.com/go-ontomix/ontomix/lib/mix"
 )
 
 // VERSION # of this ontomix source code

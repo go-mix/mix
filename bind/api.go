@@ -2,13 +2,13 @@
 package bind
 
 import (
-	"gopkg.in/ontomix.v0/bind/hardware/null"
-	"gopkg.in/ontomix.v0/bind/hardware/portaudio"
-	"gopkg.in/ontomix.v0/bind/hardware/sdl"
-	"gopkg.in/ontomix.v0/bind/opt"
-	"gopkg.in/ontomix.v0/bind/sample"
-	"gopkg.in/ontomix.v0/bind/spec"
-	"gopkg.in/ontomix.v0/bind/wav"
+	"github.com/go-ontomix/ontomix/bind/hardware/null"
+	"github.com/go-ontomix/ontomix/bind/hardware/portaudio"
+	"github.com/go-ontomix/ontomix/bind/hardware/sdl"
+	"github.com/go-ontomix/ontomix/bind/opt"
+	"github.com/go-ontomix/ontomix/bind/sample"
+	"github.com/go-ontomix/ontomix/bind/spec"
+	"github.com/go-ontomix/ontomix/bind/wav"
 )
 
 // Configure begins streaming to the bound out audio interface, via a callback function

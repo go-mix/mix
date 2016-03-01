@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"gopkg.in/ontomix.v0/bind/spec"
-	"gopkg.in/ontomix.v0/lib/mix"
+	"github.com/go-ontomix/ontomix/bind/spec"
+	"github.com/go-ontomix/ontomix/lib/mix"
 )
 
 func TestDebug(t *testing.T) {

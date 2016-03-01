@@ -1,7 +1,7 @@
 package wav
 
 import (
-	"gopkg.in/ontomix.v0/bind/spec"
+	"github.com/go-ontomix/ontomix/bind/spec"
 )
 
 var (

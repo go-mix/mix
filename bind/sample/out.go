@@ -5,7 +5,7 @@ import (
 	"encoding/binary"
 	"math"
 
-	"gopkg.in/ontomix.v0/bind/spec"
+	"github.com/go-ontomix/ontomix/bind/spec"
 )
 
 // OutNextCallbackFunc to stream mix out from ontomix
