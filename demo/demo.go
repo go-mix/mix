@@ -28,7 +28,7 @@ var (
 	bpm     = 120
 	step    = time.Minute / time.Duration(bpm*4)
 	loops   = 16
-	prefix  = "_sound/808/"
+	prefix  = "sound/808/"
 	kick1   = "kick1.wav"
 	kick2   = "kick2.wav"
 	marac   = "maracas.wav"
@@ -86,7 +86,8 @@ func main() {
 	t := 1 * time.Second // buffer before music
 	for n := 0; n < loops; n++ {
 		for s := 0; s < len(pattern); s++ {
-			ontomix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, rand.Float64()*2-1)
+			ontomix.SetFire(
+				pattern[s], t+time.Duration(s)*step, 0, 1.0, rand.Float64()*2-1)
 		}
 		t += time.Duration(len(pattern)) * step
 	}
