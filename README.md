@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/go-ontomix/ontomix.svg?branch=master)](https://travis-ci.org/go-ontomix/ontomix) [![GoDoc](https://godoc.org/github.com/go-ontomix/ontomix?status.svg)](https://godoc.org/github.com/go-ontomix/ontomix)
 
-https://gopkg.in/ontomix.v0
+https://github.com/go-ontomix/ontomix
 
 #### Go-native audio mixer for Music apps
 
