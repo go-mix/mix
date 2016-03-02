@@ -34,7 +34,7 @@ var (
 )
 
 func outPortaudioStreamCallback(out [][]float32) {
-	var smp []float64
+	var smp []sample.Value
 	for s := range out[0] {
 		smp = sample.OutNext()
 		for c := 0; c < outSpec.Channels; c++ {

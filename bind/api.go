@@ -35,13 +35,23 @@ func SetOutputCallback(fn sample.OutNextCallbackFunc) {
 	sample.SetOutputCallback(fn)
 }
 
+// WriteOutput using the configured writer.
+func WriteOutput(numSamples spec.Tz) {
+	switch useOutput {
+	case opt.OutputWAV:
+		wav.WriteSamples(numSamples)
+	case opt.OutputNull:
+		// do nothing
+	}
+}
+
 // LoadWAV into a buffer
-func LoadWAV(file string) ([][]float64, *spec.AudioSpec) {
+func LoadWAV(file string) ([]sample.Sample, *spec.AudioSpec) {
 	switch useLoader {
 	case opt.InputWAV:
-		return wav.LoadNewWAV(file)
+		return wav.Load(file)
 	default:
-		return make([][]float64, 0), &spec.AudioSpec{}
+		return make([]sample.Sample, 0), &spec.AudioSpec{}
 	}
 }
 
@@ -53,7 +63,7 @@ func Teardown() {
 	case opt.OutputSDL:
 		sdl.TeardownOutput()
 	case opt.OutputWAV:
-		sdl.TeardownOutput()
+		wav.TeardownOutput()
 	case opt.OutputNull:
 		// do nothing
 	}

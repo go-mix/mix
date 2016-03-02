@@ -1,0 +1,3 @@
+# Test writes temporary files
+tmp/
+*.tmp

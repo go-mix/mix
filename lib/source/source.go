@@ -7,6 +7,7 @@ import (
 	"github.com/go-ontomix/ontomix/bind"
 	"github.com/go-ontomix/ontomix/bind/debug"
 	"github.com/go-ontomix/ontomix/bind/spec"
+	"github.com/go-ontomix/ontomix/bind/sample"
 )
 
 func Configure(s spec.AudioSpec) {
@@ -29,27 +30,27 @@ func New(URL string) *Source {
 type Source struct {
 	URL string
 	// private
-	sample    [][]float64
+	sample    []sample.Sample
 	maxTz     spec.Tz
 	audioSpec *spec.AudioSpec
 	state     stateEnum
 }
 
 // SampleAt at a specific Tz, volume (0 to 1), and pan (-1 to +1)
-func (s *Source) SampleAt(at spec.Tz, vol float64, pan float64) (out []float64) {
-	out = make([]float64, masterSpec.Channels)
+func (s *Source) SampleAt(at spec.Tz, vol float64, pan float64) (out []sample.Value) {
+	out = make([]sample.Value, masterSpec.Channels)
 	if at < s.maxTz {
 		// if s.sample[at] != 0 {
 		// 	debug.Printf("*Source[%v].SampleAt(%v): %v\n", s.URL, at, s.sample[at])
 		// }
 		if masterSpec.Channels == s.audioSpec.Channels { // same # channels; easier maths
 			for c := int(0); c < masterSpec.Channels; c++ {
-				out[c] = volume(float64(c), vol, pan) * s.sample[at][c]
+				out[c] = volume(float64(c), vol, pan) * s.sample[at].Values[c]
 			}
 		} else { // need to map # source channels to # destination channels
 			tc := float64(s.audioSpec.Channels)
 			for c := int(0); c < masterSpec.Channels; c++ {
-				out[c] = volume(float64(c), vol, pan) * s.sample[at][int(math.Floor(tc*float64(c)/masterChannelsFloat))]
+				out[c] = volume(float64(c), vol, pan) * s.sample[at].Values[int(math.Floor(tc*float64(c)/masterChannelsFloat))]
 			}
 		}
 	}
@@ -104,12 +105,12 @@ func (s *Source) load() {
 
 // volume (0 to 1), and pan (-1 to +1)
 // TODO: ensure implicit panning of source channels! e.g. 2 channels is full left, full right.
-func volume(channel float64, volume float64, pan float64) float64 {
+func volume(channel float64, volume float64, pan float64) sample.Value {
 	if pan == 0 {
-		return volume
+		return sample.Value(volume)
 	} else if pan < 0 {
-		return math.Max(0, 1+pan*channel/masterChannelsFloat)
+		return sample.Value(math.Max(0, 1+pan*channel/masterChannelsFloat))
 	} else { // pan > 0
-		return math.Max(0, 1-pan*channel/masterChannelsFloat)
+		return sample.Value(math.Max(0, 1-pan*channel/masterChannelsFloat))
 	}
 }

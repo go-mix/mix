@@ -10,25 +10,27 @@ import (
 	"github.com/go-ontomix/ontomix/bind/debug"
 	"github.com/go-ontomix/ontomix/lib/fire"
 	"github.com/go-ontomix/ontomix/lib/source"
+	"github.com/go-ontomix/ontomix/bind/sample"
+"github.com/go-ontomix/ontomix/bind"
 )
 
 // NextSample returns the next sample mixed in all channels
-func NextSample() []float64 {
-	sample := make([]float64, masterSpec.Channels)
-	var fireSample []float64
+func NextSample() []sample.Value {
+	smp := make([]sample.Value, masterSpec.Channels)
+	var fireSample []sample.Value
 	for _, fire := range mixLiveFires {
 		if fireTz := fire.At(mixNowTz); fireTz > 0 {
 			fireSample = mixSourceAt(fire.Source, fire.Volume, fire.Pan, fireTz)
 			for c := 0; c < masterSpec.Channels; c++ {
-				sample[c] += fireSample[c]
+				smp[c] += fireSample[c]
 			}
 		}
 	}
 	//	debug.Printf("*Mixer.nextSample %+v\n", sample)
 	mixNowTz++
-	out := make([]float64, masterSpec.Channels)
+	out := make([]sample.Value, masterSpec.Channels)
 	for c := 0; c < masterSpec.Channels; c++ {
-		out[c] = mixLogarithmicRangeCompression(sample[c])
+		out[c] = mixLogarithmicRangeCompression(smp[c])
 	}
 	if mixNowTz > mixNextCycleTz {
 		mixCycle()
@@ -106,14 +108,11 @@ func GetCycleDurationTz() spec.Tz {
 	return masterCycleDurTz
 }
 
-// OutputBegin to output WAV opener as []byte via stdout
-func OutputBegin() {
-
-}
-
 // OutputBegin to  mix and output as []byte via stdout, up to a specified duration-since-start
 func OutputContinueTo(t time.Duration) {
-
+	delta := spec.Tz(masterFreq * float64((t) / time.Second)) - mixNowTz
+	bind.WriteOutput(delta)
+	mixNowTz += delta
 }
 
 // OutputBegin to output WAV closer as []byte via stdout
@@ -143,10 +142,10 @@ func init() {
 	mixStartAtTime = time.Now().Add(0xFFFF * time.Hour) // this gets reset by Start() or StartAt()
 }
 
-func mixSourceAt(src string, volume float64, pan float64, at spec.Tz) []float64 {
+func mixSourceAt(src string, volume float64, pan float64, at spec.Tz) []sample.Value {
 	s := mixGetSource(src)
 	if s == nil {
-		return make([]float64, masterSpec.Channels)
+		return make([]sample.Value, masterSpec.Channels)
 	}
 	// if at != 0 {
 	// 	debug.Printf("About to source.SampleAt %v in %v\n", at, s.URL)
@@ -199,12 +198,12 @@ func mixCycle() {
 	}
 }
 
-func mixLogarithmicRangeCompression(i float64) float64 {
+func mixLogarithmicRangeCompression(i sample.Value) sample.Value {
 	if i < -1 {
-		return -math.Log(-i-0.85)/14 - 0.75
+		return sample.Value(-math.Log(-float64(i)-0.85)/14 - 0.75)
 	} else if i > 1 {
-		return math.Log(i-0.85)/14 + 0.75
+		return sample.Value(math.Log(float64(i)-0.85)/14 + 0.75)
 	} else {
-		return i / 1.61803398875
+		return sample.Value(i / 1.61803398875)
 	}
 }
