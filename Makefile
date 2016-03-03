@@ -12,6 +12,9 @@ test:
 demo:
 	cd demo && go get -v && go run demo.go
 
+demo.wav:
+	cd demo && go get -v && go run demo.go -out wav > demo-output.wav
+
 profile:
 	cd demo && go get -v && go run demo.go --profile cpu
 

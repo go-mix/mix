@@ -27,7 +27,7 @@ var (
 	}
 	bpm     = 120
 	step    = time.Minute / time.Duration(bpm*4)
-	loops   = 16
+	loops   = 4
 	prefix  = "sound/808/"
 	kick1   = "kick1.wav"
 	kick2   = "kick2.wav"
@@ -95,7 +95,6 @@ func main() {
 
 	//
 	if bind.IsDirectOutput() {
-		ontomix.OutputBegin()
 		ontomix.OutputContinueTo(t)
 		ontomix.OutputClose()
 	} else {

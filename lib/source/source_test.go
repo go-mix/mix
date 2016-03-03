@@ -2,13 +2,13 @@
 package source
 
 import (
-	"math"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
 	"github.com/go-ontomix/ontomix/bind/debug"
 	"github.com/go-ontomix/ontomix/bind/spec"
+	"github.com/go-ontomix/ontomix/bind/sample"
 )
 
 // TODO: test multi-channel source audio files
@@ -85,23 +85,23 @@ func TestTeardown(t *testing.T) {
 
 func TestMixer_mixVolume(t *testing.T) {
 	masterChannelsFloat = 1
-	assert.Equal(t, float64(0), volume(0, 0, 0))
-	assert.Equal(t, float64(1), volume(0, 1, .5))
+	assert.Equal(t, sample.Value(0), volume(0, 0, 0))
+	assert.Equal(t, sample.Value(1), volume(0, 1, .5))
 	masterChannelsFloat = 2
-	assert.Equal(t, float64(1), volume(0, 1, -.5))
-	assert.Equal(t, float64(.75), volume(1, 1, .5))
-	assert.Equal(t, float64(.5), volume(0, .5, 0))
-	assert.Equal(t, float64(.5), volume(1, .5, 1))
+	assert.Equal(t, sample.Value(1), volume(0, 1, -.5))
+	assert.Equal(t, sample.Value(.75), volume(1, 1, .5))
+	assert.Equal(t, sample.Value(.5), volume(0, .5, 0))
+	assert.Equal(t, sample.Value(.5), volume(1, .5, 1))
 	masterChannelsFloat = 3
-	assert.Equal(t, float64(1), volume(0, 1, 0))
-	assert.Equal(t, float64(0.6666666666666667), volume(1, 1, -1))
-	assert.Equal(t, float64(0.6666666666666667), volume(2, .5, -.5))
-	assert.Equal(t, float64(0.6666666666666667), volume(1, .5, 1))
+	assert.Equal(t, sample.Value(1), volume(0, 1, 0))
+	assert.Equal(t, sample.Value(0.6666666666666667), volume(1, 1, -1))
+	assert.Equal(t, sample.Value(0.6666666666666667), volume(2, .5, -.5))
+	assert.Equal(t, sample.Value(0.6666666666666667), volume(1, .5, 1))
 	masterChannelsFloat = 4
-	assert.Equal(t, float64(1), volume(0, 1, -1))
-	assert.Equal(t, float64(1), volume(1, 1, 0))
-	assert.Equal(t, float64(.75), volume(2, .5, .5))
-	assert.Equal(t, float64(.625), volume(3, .5, -.5))
+	assert.Equal(t, sample.Value(1), volume(0, 1, -1))
+	assert.Equal(t, sample.Value(1), volume(1, 1, 0))
+	assert.Equal(t, sample.Value(.75), volume(2, .5, .5))
+	assert.Equal(t, sample.Value(.625), volume(3, .5, -.5))
 }
 
 /*
@@ -116,12 +116,12 @@ func testSourceSetup(freq float64, channels int) {
 	})
 }
 
-func testSourceAssertSound(t *testing.T, source *Source, channels int) (totalSoundMovement float64) {
+func testSourceAssertSound(t *testing.T, source *Source, channels int) (totalSoundMovement sample.Value) {
 	for tz := spec.Tz(0); tz < source.Length(); tz++ {
 		smp := source.SampleAt(tz, 1, 0)
 		assert.Equal(t, channels, len(smp))
 		for c := 0; c < channels; c++ {
-			totalSoundMovement += math.Abs(smp[c])
+			totalSoundMovement += smp[c].Abs()
 		}
 	}
 	return
