@@ -13,6 +13,10 @@ func TestGet(t *testing.T) {
 	// TODO: test Get a source from storage
 }
 
+func TestGetLength(t *testing.T) {
+	// TODO: test Get a source from storage
+}
+
 func TestPrune(t *testing.T) {
 	// TODO: test Prune to keep only the sources in this list
 }

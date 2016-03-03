@@ -90,5 +90,5 @@ const (
 )
 
 func (f *Fire) sourceLength() spec.Tz {
-	return source.Get(f.Source).Length()
+	return source.GetLength(f.Source)
 }

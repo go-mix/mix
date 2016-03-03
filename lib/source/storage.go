@@ -3,6 +3,7 @@ package source
 
 import (
 	"sync"
+"github.com/go-ontomix/ontomix/bind/spec"
 )
 
 // Prepare a source by ensuring it is stored in memory.
@@ -22,6 +23,15 @@ func Get(src string) *Source {
 		return storage[src]
 	} else {
 		return nil
+	}
+}
+
+func GetLength(src string) spec.Tz {
+	source := Get(src)
+	if source != nil {
+		return source.Length()
+	} else {
+		return spec.Tz(0)
 	}
 }
 
