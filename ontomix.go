@@ -86,33 +86,29 @@
 //
 // Game audio mixers are designed to play audio spontaneously, but when the timing is known in advance (e.g. sequence-based music apps) there is a demand for much greater accuracy in playback timing.
 //
-// Read the API documentation at [godoc.org/github.com/go-ontomix/ontomix](https://godoc.org/github.com/go-ontomix/ontomix)
+// Read the API documentation at https://godoc.org/github.com/go-ontomix/ontomix
 //
-// **Ontomix** seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance.
+// Ontomix seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance.
 //
 // Ontomix stores and mixes audio in native Go `[]float64` and natively implements Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression" (details below)
 //
-// Author: [Charney Kaye](http://w.charney.io)
-//
-// NOTICE: THIS PROJECT IS IN ALPHA STAGE, AND THE API MAY BE SUBJECT TO CHANGE
-//
-// Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. **[github.com/go-ontomix/ontomix](http://github.com/go-ontomix/ontomix)**
+// Author: Charney Kaye <hiya@charney.io>
 //
 // Why
 //
-// Even after selecting a hardware interface library such as [PortAudio](http://www.portaudio.com/) or [C++ SDL 2.0](https://www.libsdl.org/), there remains a critical design problem to be solved.
+// Even after selecting a hardware interface library such as http://www.portaudio.com/ or https://www.libsdl.org/, there remains a critical design problem to be solved.
 //
-// This design is a **music application mixer**. Most available options are geared towards Game development.
+// This design is a music application mixer. Most available options are geared towards Game development.
 //
 // Game audio mixers offer playback timing accuracy +/- 2 milliseconds. But that's totally unacceptable for music, specifically sequence-based sample playback.
 //
 // The design pattern particular to Game design is that the timing of the audio is not know in advance- the timing that really matters is that which is assembled in near-real-time in response to user interaction.
 //
-// In the field of Music development, often the timing is known in advance, e.g. a **sequencer**, the composition of music by specifying exactly how, when and which audio files will be played relative to the beginning of playback.
+// In the field of Music development, often the timing is known in advance, e.g. a sequencer, the composition of music by specifying exactly how, when and which audio files will be played relative to the beginning of playback.
 //
-// Ergo, **ontomix** seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance. It seeks to do this with the absolute minimal logical overhead on top of the audio interface.
+// Ergo, ontomix seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance. It seeks to do this with the absolute minimal logical overhead on top of the audio interface.
 //
-// Ontomix takes maximum advantage of Go by storing and mixing audio in native Go `[]float64` and natively implementing Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression"
+// Ontomix takes maximum advantage of Go by storing and mixing audio in native Go `[]float64` and natively implementing Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression" (see The Mixing Algorithm below)
 //
 // Time
 //
@@ -122,11 +118,11 @@
 //
 // The Mixing Algorithm
 //
-// Inspired by the theory paper "Mixing two digital audio streams with on the fly Loudness Normalization by Logarithmic Dynamic Range Compression" by Paul Vögler, 2012-04-20. A .PDF has been included [here](docs/LogarithmicDynamicRangeCompression-PaulVogler.pdf), from the paper originally published [here](http://www.voegler.eu/pub/audio/digital-audio-mixing-and-normalization.html).
+// Inspired by the theory paper "Mixing two digital audio streams with on the fly Loudness Normalization by Logarithmic Dynamic Range Compression" by Paul Vögler, 2012-04-20. This paper is published at http://www.voegler.eu/pub/audio/digital-audio-mixing-and-normalization.html.
 //
 // Usage
 //
-// There's a demo implementation of **ontomix** included in the `demo/` folder in this repository. Run it using the defaults:
+// There's a demo implementation of ontomix included in the `demo/` folder in this repository. Run it using the defaults:
 //
 //     go run 808.go
 //
@@ -150,7 +146,7 @@
 //
 //     brew install sdl2
 //
-// More details for Linux, Mac and Windows: ["Setting up SDL" by Lazy Foo' Productions](http://lazyfoo.net/SDL_tutorials/lesson01/index.php)
+// More details for Linux, Mac and Windows: http://lazyfoo.net/SDL_tutorials/lesson01/index.php
 //
 // Portaudio
 //
@@ -162,7 +158,11 @@
 //
 //     brew install portaudio
 //
-// Windows: ["Building and Installing PortAudio on Windows" by GNU Radio](https://gnuradio.org/redmine/projects/gnuradio/wiki/PortAudioInstall).
+// Windows: https://gnuradio.org/redmine/projects/gnuradio/wiki/PortAudioInstall.
+//
+// This project is in Alpha and the API is subject to change
+//
+// Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. http://github.com/go-ontomix/ontomix
 //
 package ontomix
 
