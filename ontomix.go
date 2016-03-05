@@ -244,6 +244,11 @@ func GetStartTime() time.Time {
 	return mix.GetStartTime()
 }
 
+// GetNowAt returns current mix position
+func GetNowAt() time.Duration {
+	return mix.GetNowAt()
+}
+
 // OutputBegin to mix and output as []byte via stdout, up to a specified duration-since-start
 func OutputContinueTo(t time.Duration) {
 	mix.OutputContinueTo(t)

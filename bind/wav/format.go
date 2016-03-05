@@ -2,8 +2,8 @@
 package wav
 
 import (
-	"io"
 	"github.com/go-ontomix/ontomix/bind/spec"
+	"io"
 )
 
 // the Format struct must be in the exact order according
@@ -47,7 +47,7 @@ func FormatFromSpec(s *spec.AudioSpec) Format {
 	format.NumChannels = uint16(s.Channels)
 	format.SampleRate = uint32(s.Freq)
 	if format.ByteRate == 0 {
-		format.ByteRate = format.SampleRate * uint32(format.NumChannels * format.BitsPerSample / 8)
+		format.ByteRate = format.SampleRate * uint32(format.NumChannels*format.BitsPerSample/8)
 	}
 	if format.BlockAlign == 0 {
 		format.BlockAlign = format.NumChannels * format.BitsPerSample / 8
@@ -67,4 +67,3 @@ const (
 	AudioFormatLinearPCM SampleFormat = 0x0001
 	AudioFormatIEEEFloat SampleFormat = 0x0003
 )
-

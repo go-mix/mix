@@ -7,11 +7,11 @@ import (
 
 	"github.com/go-ontomix/ontomix/bind/spec"
 
+	"github.com/go-ontomix/ontomix/bind"
 	"github.com/go-ontomix/ontomix/bind/debug"
+	"github.com/go-ontomix/ontomix/bind/sample"
 	"github.com/go-ontomix/ontomix/lib/fire"
 	"github.com/go-ontomix/ontomix/lib/source"
-	"github.com/go-ontomix/ontomix/bind/sample"
-"github.com/go-ontomix/ontomix/bind"
 )
 
 // NextSample returns the next sample mixed in all channels
@@ -19,7 +19,7 @@ func NextSample() []sample.Value {
 	smp := make([]sample.Value, masterSpec.Channels)
 	var fireSample []sample.Value
 	for _, fire := range mixLiveFires {
-		if fireTz := fire.At(mixNowTz); fireTz > 0 {
+		if fireTz := fire.At(nowTz); fireTz > 0 {
 			fireSample = mixSourceAt(fire.Source, fire.Volume, fire.Pan, fireTz)
 			for c := 0; c < masterSpec.Channels; c++ {
 				smp[c] += fireSample[c]
@@ -27,12 +27,12 @@ func NextSample() []sample.Value {
 		}
 	}
 	//	debug.Printf("*Mixer.nextSample %+v\n", sample)
-	mixNowTz++
+	nowTz++
 	out := make([]sample.Value, masterSpec.Channels)
 	for c := 0; c < masterSpec.Channels; c++ {
 		out[c] = mixLogarithmicRangeCompression(smp[c])
 	}
-	if mixNowTz > mixNextCycleTz {
+	if nowTz > nextCycleTz {
 		mixCycle()
 	}
 	return out
@@ -76,12 +76,17 @@ func FireCount() int {
 
 // StartAt to specify what time to begin mixing.
 func StartAt(t time.Time) {
-	mixStartAtTime = t
+	startAtTime = t
 }
 
 // GetStartTime returns the time mixing began.
 func GetStartTime() time.Time {
-	return mixStartAtTime
+	return startAtTime
+}
+
+// GetNowAt returns current mix position
+func GetNowAt() time.Duration {
+	return time.Duration(nowTz) * masterTzDur
 }
 
 // ClearAllFires to remove all ready & live fires.
@@ -110,14 +115,14 @@ func GetCycleDurationTz() spec.Tz {
 
 // OutputBegin to  mix and output as []byte via stdout, up to a specified duration-since-start
 func OutputContinueTo(t time.Duration) {
-	delta := spec.Tz(masterFreq * float64((t) / time.Second)) - mixNowTz
+	delta := spec.Tz(masterFreq*float64((t)/time.Second)) - nowTz
 	bind.WriteOutput(delta)
-	mixNowTz += delta
+	nowTz += delta
 }
 
 // OutputBegin to output WAV closer as []byte via stdout
 func OutputClose() {
-
+	// nothing to do
 }
 
 /*
@@ -125,9 +130,9 @@ func OutputClose() {
  private */
 
 var (
-	mixStartAtTime   time.Time
-	mixNowTz         spec.Tz
-	mixNextCycleTz   spec.Tz
+	startAtTime      time.Time
+	nowTz            spec.Tz
+	nextCycleTz      spec.Tz
 	masterCycleDurTz spec.Tz
 	masterTzDur      time.Duration
 	// TODO: implement mixFreq float64
@@ -139,7 +144,7 @@ var (
 )
 
 func init() {
-	mixStartAtTime = time.Now().Add(0xFFFF * time.Hour) // this gets reset by Start() or StartAt()
+	startAtTime = time.Now().Add(0xFFFF * time.Hour) // this gets reset by Start() or StartAt()
 }
 
 func mixSourceAt(src string, volume float64, pan float64, at spec.Tz) []sample.Value {
@@ -173,7 +178,7 @@ func mixCycle() {
 	keepReadyFires := make([]*fire.Fire, 0)
 	for _, f = range mixReadyFires {
 		keepSource[f.Source] = true
-		if f.BeginTz < mixNowTz+masterCycleDurTz*2 { // for now, double a mix cycle is consider near-playback
+		if f.BeginTz < nowTz+masterCycleDurTz*2 { // for now, double a mix cycle is consider near-playback
 			mixLiveFires = append(mixLiveFires, f)
 		} else {
 			keepReadyFires = append(keepReadyFires, f)
@@ -192,9 +197,9 @@ func mixCycle() {
 	}
 	mixLiveFires = keepLiveFires
 	source.Prune(keepSource)
-	mixNextCycleTz = mixNowTz + masterCycleDurTz
+	nextCycleTz = nowTz + masterCycleDurTz
 	if debug.Active() && source.Count() > 0 {
-		debug.Printf("ontomix [%dz] fire-ready:%d fire-active:%d sources:%d\n", mixNowTz, len(mixReadyFires), len(mixLiveFires), source.Count())
+		debug.Printf("ontomix [%dz] fire-ready:%d fire-active:%d sources:%d\n", nowTz, len(mixReadyFires), len(mixLiveFires), source.Count())
 	}
 }
 

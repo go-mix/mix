@@ -2,8 +2,8 @@
 package source
 
 import (
+	"github.com/go-ontomix/ontomix/bind/spec"
 	"sync"
-"github.com/go-ontomix/ontomix/bind/spec"
 )
 
 // Prepare a source by ensuring it is stored in memory.
