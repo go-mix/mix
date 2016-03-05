@@ -6,8 +6,8 @@ import (
 
 	"github.com/go-ontomix/ontomix/bind"
 	"github.com/go-ontomix/ontomix/bind/debug"
-	"github.com/go-ontomix/ontomix/bind/spec"
 	"github.com/go-ontomix/ontomix/bind/sample"
+	"github.com/go-ontomix/ontomix/bind/spec"
 )
 
 func Configure(s spec.AudioSpec) {

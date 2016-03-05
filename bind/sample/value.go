@@ -117,4 +117,3 @@ func ValueOfBytesF64LSB(sample []byte) Value {
 //func ValueOfBytesF64MSB(sample []byte) Value {
 //	return Value(math.Float64frombits(binary.BigEndian.Uint64(sample)))
 //}
-

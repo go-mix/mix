@@ -2,11 +2,11 @@
 package wav
 
 import (
-	"os"
 	"io"
+	"os"
 
-	"github.com/go-ontomix/ontomix/bind/spec"
 	"github.com/go-ontomix/ontomix/bind/sample"
+	"github.com/go-ontomix/ontomix/bind/spec"
 )
 
 // Load a WAV file into memory
@@ -39,4 +39,3 @@ func Load(path string) (out []sample.Sample, specs *spec.AudioSpec) {
 /*
  *
  private */
-

@@ -8,9 +8,9 @@ import (
 
 	riff "github.com/youpy/go-riff"
 
+	"fmt"
 	"github.com/go-ontomix/ontomix/bind/sample"
 	"github.com/go-ontomix/ontomix/bind/spec"
-	"fmt"
 )
 
 type Reader struct {
@@ -18,8 +18,8 @@ type Reader struct {
 	AudioFormat spec.AudioFormat
 	*Data
 	// private
-	riffReader  *riff.Reader
-	riffChunk   *riff.RIFFChunk
+	riffReader *riff.Reader
+	riffChunk  *riff.RIFFChunk
 }
 
 func NewReader(file riff.RIFFReader) (reader *Reader, err error) {

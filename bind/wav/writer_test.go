@@ -18,7 +18,6 @@ func TestTeardownOutput(t *testing.T) {
 	// TODO
 }
 
-
 func TestWrite(t *testing.T) {
 	//outfile, err := ioutil.TempFile("/tmp", "outfile")
 	//if err != nil {

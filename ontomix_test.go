@@ -95,6 +95,10 @@ func TestGetStartTime(t *testing.T) {
 	assert.Equal(t, startExpect, startActual)
 }
 
+func TestGetNowAt(t *testing.T) {
+	// TODO
+}
+
 func TestAudioCallback(t *testing.T) {
 	// TODO: Test API AudioCallback
 }

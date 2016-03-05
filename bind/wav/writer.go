@@ -8,15 +8,15 @@ import (
 
 	riff "github.com/youpy/go-riff"
 
-	"github.com/go-ontomix/ontomix/bind/spec"
 	"github.com/go-ontomix/ontomix/bind/sample"
+	"github.com/go-ontomix/ontomix/bind/spec"
 	"os"
 	"time"
 )
 
 func ConfigureOutput(s spec.AudioSpec) {
 	outputSpec = &s
-	writer = NewWriter(stdout, 1 * time.Minute, FormatFromSpec(outputSpec))
+	writer = NewWriter(stdout, 1*time.Minute, FormatFromSpec(outputSpec))
 	// TODO: create a new writer to stdout
 }
 
@@ -30,7 +30,7 @@ type Writer struct {
 }
 
 func NewWriter(w io.Writer, length time.Duration, format Format) (writer *Writer) {
-	dataSize := uint32(float64(length / time.Second) * float64(format.SampleRate)) * uint32(format.BlockAlign)
+	dataSize := uint32(float64(length/time.Second)*float64(format.SampleRate)) * uint32(format.BlockAlign)
 	riffSize := 4 + 8 + 16 + 8 + dataSize
 	riffWriter := riff.NewWriter(w, []byte("WAVE"), riffSize)
 
@@ -55,7 +55,7 @@ func WriteSamples(numSamples spec.Tz) (err error) {
  private */
 
 var (
-	stdout = os.NewFile(uintptr(syscall.Stdout), "/dev/stdout")
-	writer *Writer
+	stdout     = os.NewFile(uintptr(syscall.Stdout), "/dev/stdout")
+	writer     *Writer
 	outputSpec *spec.AudioSpec
 )
