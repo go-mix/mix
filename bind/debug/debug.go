@@ -2,7 +2,8 @@
 package debug
 
 import (
-	"fmt"
+	"log"
+	"os"
 )
 
 // Debug ON/OFF (ripples down to all sub-modules)
@@ -13,7 +14,7 @@ func Configure(active bool) {
 // Printf only when debug is active
 func Printf(format string, args ...interface{}) {
 	if isActive {
-		fmt.Printf(format, args...)
+		logger.Printf(format, args...)
 	}
 }
 
@@ -28,4 +29,9 @@ func Active() bool {
 
 var (
 	isActive bool
+	logger *log.Logger
 )
+
+func init() {
+	logger = log.New(os.Stderr, "", 0)
+}
