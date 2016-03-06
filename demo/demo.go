@@ -95,6 +95,7 @@ func main() {
 
 	//
 	if bind.IsDirectOutput() {
+		ontomix.Debug(true)
 		ontomix.OutputContinueTo(t)
 		ontomix.OutputClose()
 	} else {
