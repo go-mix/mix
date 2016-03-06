@@ -82,7 +82,7 @@ Play this Demo from the root of the project, using SDL 2.0 for hardware audio pl
 
     make demo
 
-Or export WAV via stdout `> demo/demo-output.wav`:
+Or export WAV via stdout `> demo/output.wav`:
 
     make demo.wav
 

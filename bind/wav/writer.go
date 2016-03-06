@@ -43,7 +43,7 @@ func NewWriter(w io.Writer, length time.Duration, format Format) (writer *Writer
 	return writer
 }
 
-func WriteSamples(numSamples spec.Tz) (err error) {
+func OutputNext(numSamples spec.Tz) (err error) {
 	for n := spec.Tz(0); n < numSamples; n++ {
 		writer.Write(sample.OutNextBytes())
 	}
