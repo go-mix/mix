@@ -27,13 +27,14 @@ var (
 	}
 	bpm     = 120
 	step    = time.Minute / time.Duration(bpm*4)
-	loops   = 4
+	loops   = 8
 	prefix  = "sound/808/"
 	kick1   = "kick1.wav"
 	kick2   = "kick2.wav"
 	marac   = "maracas.wav"
 	snare   = "snare.wav"
 	hitom   = "hightom.wav"
+	lotom   = "tom1.wav"
 	clhat   = "cl_hihat.wav"
 	pattern = []string{
 		kick2,
@@ -91,12 +92,14 @@ func main() {
 		}
 		t += time.Duration(len(pattern)) * step
 	}
-	t += 2 * time.Second // buffer after music
+	t += 5 * time.Second // buffer after music
 
 	//
 	if bind.IsDirectOutput() {
 		ontomix.Debug(true)
-		ontomix.OutputContinueTo(t)
+		for p := time.Duration(0); p <= t; p += t / 4 {
+			ontomix.OutputContinueTo(p)
+		}
 		ontomix.OutputClose()
 	} else {
 		ontomix.Debug(true)

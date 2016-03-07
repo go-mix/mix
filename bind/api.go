@@ -35,11 +35,11 @@ func SetOutputCallback(fn sample.OutNextCallbackFunc) {
 	sample.SetOutputCallback(fn)
 }
 
-// WriteOutput using the configured writer.
-func WriteOutput(numSamples spec.Tz) {
+// OutputNext using the configured writer.
+func OutputNext(numSamples spec.Tz) {
 	switch useOutput {
 	case opt.OutputWAV:
-		wav.WriteSamples(numSamples)
+		wav.OutputNext(numSamples)
 	case opt.OutputNull:
 		// do nothing
 	}

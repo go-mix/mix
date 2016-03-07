@@ -113,11 +113,14 @@ func GetCycleDurationTz() spec.Tz {
 	return masterCycleDurTz
 }
 
-// OutputBegin to  mix and output as []byte via stdout, up to a specified duration-since-start
+// OutputContinueTo to  mix and output as []byte via stdout, up to a specified duration-since-start
 func OutputContinueTo(t time.Duration) {
-	delta := spec.Tz(masterFreq*float64((t)/time.Second)) - nowTz
-	bind.WriteOutput(delta)
-	nowTz += delta
+	deltaDur := t - outputToDur
+	deltaTz := spec.Tz(masterFreq*float64((deltaDur)/time.Second))
+	debug.Printf("mix.OutputContinueTo(%+v) deltaDur:%+v nowTz:%+v deltaTz:%+v begin...", t, deltaDur, nowTz, deltaTz)
+	bind.OutputNext(deltaTz)
+	outputToDur = t
+	debug.Printf("mix.OutputContinueTo(%+v) ...done! nowTz:%+v outputToDur:%+v", t, nowTz, outputToDur)
 }
 
 // OutputBegin to output WAV closer as []byte via stdout
@@ -130,6 +133,7 @@ func OutputClose() {
  private */
 
 var (
+	outputToDur      time.Duration
 	startAtTime      time.Time
 	nowTz            spec.Tz
 	nextCycleTz      spec.Tz
