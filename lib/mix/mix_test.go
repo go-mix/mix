@@ -14,7 +14,7 @@ import (
 // Tests
 //
 
-func TestMixer_Base(t *testing.T) {
+func TestBase(t *testing.T) {
 	Configure(spec.AudioSpec{
 		Freq:     44100,
 		Format:   spec.AudioU16,
@@ -23,77 +23,89 @@ func TestMixer_Base(t *testing.T) {
 	assert.NotNil(t, Spec())
 }
 
-func TestMixer_RequiresProperAudioSpec(t *testing.T) {
+func TestRequiresProperAudioSpec(t *testing.T) {
 	assert.Panics(t, func() {
 		Configure(spec.AudioSpec{})
 	})
 }
 
-func TestMixer_Initialize(t *testing.T) {
+func TestInitialize(t *testing.T) {
 	// TODO: Test Mixer Initialize
 }
 
-func TestMixer_Debug(t *testing.T) {
+func TestDebug(t *testing.T) {
 	// TODO: Test Mixer Debug
 }
 
-func TestMixer_Debugf(t *testing.T) {
+func TestDebugf(t *testing.T) {
 	// TODO: Test Mixer debug.Printf
 }
 
-func TestMixer_Start(t *testing.T) {
+func TestStart(t *testing.T) {
 	// TODO: Test Mixer Start
 }
 
-func TestMixer_StartAt(t *testing.T) {
+func TestStartAt(t *testing.T) {
 	// TODO: Test Mixer StartAt
 }
 
-func TestMixer_GetStartTime(t *testing.T) {
+func TestGetStartTime(t *testing.T) {
 	// TODO: Test Mixer GetStartTime
 }
 
-func TestMixer_SetFire(t *testing.T) {
+func TestSetFire(t *testing.T) {
 	// TODO: Test Mixer SetFire
 }
 
-func TestMixer_SetSoundsPath(t *testing.T) {
+func TestSetSoundsPath(t *testing.T) {
 	// TODO: Test Mixer SetSoundsPath
 }
 
-func TestMixer_NextOut(t *testing.T) {
+func TestNextOut(t *testing.T) {
 	// TODO: Test Mixer NextOut
 }
 
-func TestMixer_Teardown(t *testing.T) {
+func TestTeardown(t *testing.T) {
 	// TODO: Test Mixer Teardown
 }
 
-func TestMixer_nextSample(t *testing.T) {
+func TestNextSample(t *testing.T) {
 	// TODO: Test Mixer nextSample
 }
 
-func TestMixer_sourceAtTz(t *testing.T) {
-	// TODO: Test Mixer sourceAt
-}
-
-func TestMixer_setSpec(t *testing.T) {
-	// TODO: Test Mixer setSpec
-}
-
-func TestMixer_getSpec(t *testing.T) {
-	// TODO: Test Mixer getSpec
-}
-
-func TestMixer_prepareSource(t *testing.T) {
-	// TODO: Test Mixer prepareSource
-}
-
-func TestMixer_mixCleanup(t *testing.T) {
+func TestOutputStart(t *testing.T) {
 	// TODO: Test
 }
 
-func TestMixer_mixSetSpec(t *testing.T) {
+func TestOutputContinueTo(t *testing.T) {
+	// TODO: Test
+}
+
+func TestOutputClose(t *testing.T) {
+	// TODO: Test
+}
+
+func TestSourceAtTz(t *testing.T) {
+	// TODO: Test Mixer sourceAt
+}
+
+func TestSetSpec(t *testing.T) {
+	// TODO: Test Mixer setSpec
+}
+
+func TestGetSpec(t *testing.T) {
+	// TODO: Test Mixer getSpec
+}
+
+func TestPrepareSource(t *testing.T) {
+	// TODO: Test Mixer prepareSource
+}
+
+func TestMixCleanup(t *testing.T) {
+	// TODO: Test
+}
+
+func TestMixSetSpec(t *testing.T) {
 	// TODO: Test success passing in a bind.AudioSpec
 	// TODO: Test sets the default mixCycleDurTz
 }
@@ -108,11 +120,11 @@ func TestSetCycleDuration(t *testing.T) {
 	SetCycleDuration(5 * time.Second)
 }
 
-func TestMixer_getSource(t *testing.T) {
+func TestGetSource(t *testing.T) {
 	// TODO: Test Mixer getSource
 }
 
-func TestMixer_mixCycle(t *testing.T) {
+func TestMixCycle(t *testing.T) {
 	// TODO: Test garbage collection of unused sources
 	// TODO: Test garbage collection of unused fires
 }

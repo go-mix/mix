@@ -249,6 +249,11 @@ func GetNowAt() time.Duration {
 	return mix.GetNowAt()
 }
 
+// OutputStart requires a known length
+func OutputStart(length time.Duration) {
+	mix.OutputStart(length)
+}
+
 // OutputContinueTo output as []byte via stdout, up to a specified duration-since-start
 func OutputContinueTo(t time.Duration) {
 	mix.OutputContinueTo(t)

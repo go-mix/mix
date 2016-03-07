@@ -1,6 +1,10 @@
 // Package spec specifies valid audio formats
 package spec
 
+import (
+	"time"
+)
+
 // Tz is the unit of measurement of samples-over-time, e.g. for 48000Hz playback there are 48,000 Tz in 1 second.
 type Tz uint64
 
@@ -9,6 +13,7 @@ type AudioSpec struct {
 	Freq     float64
 	Format   AudioFormat
 	Channels int
+	Length time.Duration
 }
 
 // Validate these specs

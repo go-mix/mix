@@ -113,6 +113,11 @@ func GetCycleDurationTz() spec.Tz {
 	return masterCycleDurTz
 }
 
+// OutputStart requires a known length
+func OutputStart(length time.Duration) {
+	bind.OutputStart(length)
+}
+
 // OutputContinueTo to  mix and output as []byte via stdout, up to a specified duration-since-start
 func OutputContinueTo(t time.Duration) {
 	deltaDur := t - outputToDur
