@@ -97,6 +97,7 @@ func main() {
 	//
 	if bind.IsDirectOutput() {
 		ontomix.Debug(true)
+		ontomix.OutputStart(t)
 		for p := time.Duration(0); p <= t; p += t / 4 {
 			ontomix.OutputContinueTo(p)
 		}

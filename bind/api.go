@@ -2,6 +2,8 @@
 package bind
 
 import (
+	"time"
+
 	"github.com/go-ontomix/ontomix/bind/hardware/null"
 	"github.com/go-ontomix/ontomix/bind/hardware/portaudio"
 	"github.com/go-ontomix/ontomix/bind/hardware/sdl"
@@ -33,6 +35,16 @@ func IsDirectOutput() bool {
 // SetMixNextOutFunc to stream mix out from ontomix
 func SetOutputCallback(fn sample.OutNextCallbackFunc) {
 	sample.SetOutputCallback(fn)
+}
+
+// OutputStart requires a known length
+func OutputStart(length time.Duration) {
+	switch useOutput {
+	case opt.OutputWAV:
+		wav.OutputStart(length)
+	case opt.OutputNull:
+	// do nothing
+	}
 }
 
 // OutputNext using the configured writer.

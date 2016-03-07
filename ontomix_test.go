@@ -99,6 +99,18 @@ func TestGetNowAt(t *testing.T) {
 	// TODO
 }
 
+func TestOutputStart(t *testing.T) {
+	// TODO: Test
+}
+
+func TestOutputContinueTo(t *testing.T) {
+	// TODO: Test
+}
+
+func TestOutputClose(t *testing.T) {
+	// TODO: Test
+}
+
 func TestAudioCallback(t *testing.T) {
 	// TODO: Test API AudioCallback
 }

@@ -16,8 +16,10 @@ import (
 
 func ConfigureOutput(s spec.AudioSpec) {
 	outputSpec = &s
-	writer = NewWriter(stdout, 1*time.Minute, FormatFromSpec(outputSpec))
-	// TODO: create a new writer to stdout
+}
+
+func OutputStart(length time.Duration) {
+	writer = NewWriter(stdout, FormatFromSpec(outputSpec), length)
 }
 
 func TeardownOutput() {
@@ -29,7 +31,7 @@ type Writer struct {
 	Format *Format
 }
 
-func NewWriter(w io.Writer, length time.Duration, format Format) (writer *Writer) {
+func NewWriter(w io.Writer, format Format, length time.Duration) (writer *Writer) {
 	dataSize := uint32(float64(length/time.Second)*float64(format.SampleRate)) * uint32(format.BlockAlign)
 	riffSize := 4 + 8 + 16 + 8 + dataSize
 	riffWriter := riff.NewWriter(w, []byte("WAVE"), riffSize)
