@@ -164,6 +164,8 @@
 //
 // Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. http://github.com/go-mix/mix
 //
+// Mix in good health!
+//
 package mix
 
 import (
