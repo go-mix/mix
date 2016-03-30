@@ -1,8 +1,8 @@
 # Mix 
 
-[![Build Status](https://travis-ci.org/go-mix/mix.svg?branch=master)](https://travis-ci.org/go-mix/mix) [![GoDoc](https://godoc.org/github.com/go-mix/mix?status.svg)](https://godoc.org/github.com/go-mix/mix) [![codebeat badge](https://codebeat.co/badges/008a2ecc-76ac-4ef5-9baa-6ee99501cacc)](https://codebeat.co/projects/github-com-go-mix-mix)
+[![Build Status](https://travis-ci.org/go-mix/mix.svg?branch=master)](https://travis-ci.org/go-mix/mix) [![GoDoc](https://godoc.org/gopkg.in/mix.v0?status.svg)](https://godoc.org/gopkg.in/mix.v0) [![codebeat badge](https://codebeat.co/badges/008a2ecc-76ac-4ef5-9baa-6ee99501cacc)](https://codebeat.co/projects/github-com-go-mix-mix)
 
-https://github.com/go-mix/mix
+https://gopkg.in/mix.v0
 
 #### Sequence-based Go-native audio mixer for music apps
 
@@ -15,8 +15,8 @@ See `demo/demo.go`:
       "os"
       "time"
       
-      "github.com/go-mix/mix"
-      "github.com/go-mix/mix/bind"
+      "gopkg.in/mix.v0"
+      "gopkg.in/mix.v0/bind"
     )
     
     var (
@@ -90,7 +90,7 @@ Or export WAV via stdout `> demo/output.wav`:
 
 Game audio mixers are designed to play audio spontaneously, but when the timing is known in advance (e.g. sequence-based music apps) there is a demand for much greater accuracy in playback timing.
 
-Read the API documentation at [godoc.org/github.com/go-mix/mix](https://godoc.org/github.com/go-mix/mix)
+Read the API documentation at [godoc.org/gopkg.in/mix.v0](https://godoc.org/gopkg.in/mix.v0)
 
 **Mix** seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance.
  
@@ -100,7 +100,7 @@ Author: [Charney Kaye](http://w.charney.io)
 
 #### NOTICE: THIS PROJECT IS IN ALPHA STAGE, AND THE API MAY BE SUBJECT TO CHANGE.
 
-Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. **[github.com/go-mix/mix](http://github.com/go-mix/mix)** 
+Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. **[gopkg.in/mix.v0](http://gopkg.in/mix.v0)** 
 
 ### Why?
 

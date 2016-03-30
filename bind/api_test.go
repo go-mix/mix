@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/go-mix/mix/bind/opt"
+	"gopkg.in/mix.v0/bind/opt"
 )
 
 func TestAPI(t *testing.T) {

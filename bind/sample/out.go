@@ -2,7 +2,7 @@
 package sample
 
 import (
-	"github.com/go-mix/mix/bind/spec"
+	"gopkg.in/mix.v0/bind/spec"
 )
 
 // OutNextCallbackFunc to stream mix out from mix

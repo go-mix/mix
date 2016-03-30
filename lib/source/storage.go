@@ -2,7 +2,7 @@
 package source
 
 import (
-	"github.com/go-mix/mix/bind/spec"
+	"gopkg.in/mix.v0/bind/spec"
 	"sync"
 )
 

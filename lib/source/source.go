@@ -4,10 +4,10 @@ package source
 import (
 	"math"
 
-	"github.com/go-mix/mix/bind"
-	"github.com/go-mix/mix/bind/debug"
-	"github.com/go-mix/mix/bind/sample"
-	"github.com/go-mix/mix/bind/spec"
+	"gopkg.in/mix.v0/bind"
+	"gopkg.in/mix.v0/bind/debug"
+	"gopkg.in/mix.v0/bind/sample"
+	"gopkg.in/mix.v0/bind/spec"
 )
 
 func Configure(s spec.AudioSpec) {

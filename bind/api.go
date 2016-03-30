@@ -4,13 +4,13 @@ package bind
 import (
 	"time"
 
-	"github.com/go-mix/mix/bind/hardware/null"
-	"github.com/go-mix/mix/bind/hardware/portaudio"
-	"github.com/go-mix/mix/bind/hardware/sdl"
-	"github.com/go-mix/mix/bind/opt"
-	"github.com/go-mix/mix/bind/sample"
-	"github.com/go-mix/mix/bind/spec"
-	"github.com/go-mix/mix/bind/wav"
+	"gopkg.in/mix.v0/bind/hardware/null"
+	"gopkg.in/mix.v0/bind/hardware/portaudio"
+	"gopkg.in/mix.v0/bind/hardware/sdl"
+	"gopkg.in/mix.v0/bind/opt"
+	"gopkg.in/mix.v0/bind/sample"
+	"gopkg.in/mix.v0/bind/spec"
+	"gopkg.in/mix.v0/bind/wav"
 )
 
 // Configure begins streaming to the bound out audio interface, via a callback function

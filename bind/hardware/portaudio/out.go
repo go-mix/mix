@@ -4,8 +4,8 @@ package portaudio
 import (
 	"github.com/gordonklaus/portaudio"
 
-	"github.com/go-mix/mix/bind/sample"
-	"github.com/go-mix/mix/bind/spec"
+	"gopkg.in/mix.v0/bind/sample"
+	"gopkg.in/mix.v0/bind/spec"
 )
 
 var outPortaudioStream *portaudio.Stream

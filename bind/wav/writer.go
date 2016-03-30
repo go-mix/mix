@@ -8,8 +8,8 @@ import (
 
 	riff "github.com/youpy/go-riff"
 
-	"github.com/go-mix/mix/bind/sample"
-	"github.com/go-mix/mix/bind/spec"
+	"gopkg.in/mix.v0/bind/sample"
+	"gopkg.in/mix.v0/bind/spec"
 	"os"
 	"time"
 )
