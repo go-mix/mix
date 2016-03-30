@@ -1,6 +1,6 @@
 # Mix 
 
-[![Build Status](https://travis-ci.org/go-mix/mix.svg?branch=master)](https://travis-ci.org/go-mix/mix) [![GoDoc](https://godoc.org/github.com/go-mix/mix?status.svg)](https://godoc.org/github.com/go-mix/mix)
+[![Build Status](https://travis-ci.org/go-mix/mix.svg?branch=master)](https://travis-ci.org/go-mix/mix) [![GoDoc](https://godoc.org/github.com/go-mix/mix?status.svg)](https://godoc.org/github.com/go-mix/mix) [![codebeat badge](https://codebeat.co/badges/008a2ecc-76ac-4ef5-9baa-6ee99501cacc)](https://codebeat.co/projects/github-com-go-mix-mix)
 
 https://github.com/go-mix/mix
 
