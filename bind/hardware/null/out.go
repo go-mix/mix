@@ -1,9 +1,9 @@
-// Package null is for modular binding of ontomix to a null (mock) audio interface
+// Package null is for modular binding of mix to a null (mock) audio interface
 package null
 
 import (
-	"github.com/go-ontomix/ontomix/bind/sample"
-	"github.com/go-ontomix/ontomix/bind/spec"
+	"github.com/go-mix/mix/bind/sample"
+	"github.com/go-mix/mix/bind/spec"
 )
 
 func ConfigureOutput(s spec.AudioSpec) {

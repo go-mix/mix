@@ -1,5 +1,5 @@
-// Package ontomix is a sequence-based Go-native audio mixer
-package ontomix
+// Package mix is a sequence-based Go-native audio mixer
+package mix
 
 import (
 	"testing"
@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/go-ontomix/ontomix/bind/spec"
-	"github.com/go-ontomix/ontomix/lib/mix"
+	"github.com/go-mix/mix/bind/spec"
+	"github.com/go-mix/mix/lib/mix"
 )
 
 func TestDebug(t *testing.T) {

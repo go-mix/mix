@@ -1,16 +1,16 @@
-// Package bind is for modular binding of ontomix to audio interface
+// Package bind is for modular binding of mix to audio interface
 package bind
 
 import (
 	"time"
 
-	"github.com/go-ontomix/ontomix/bind/hardware/null"
-	"github.com/go-ontomix/ontomix/bind/hardware/portaudio"
-	"github.com/go-ontomix/ontomix/bind/hardware/sdl"
-	"github.com/go-ontomix/ontomix/bind/opt"
-	"github.com/go-ontomix/ontomix/bind/sample"
-	"github.com/go-ontomix/ontomix/bind/spec"
-	"github.com/go-ontomix/ontomix/bind/wav"
+	"github.com/go-mix/mix/bind/hardware/null"
+	"github.com/go-mix/mix/bind/hardware/portaudio"
+	"github.com/go-mix/mix/bind/hardware/sdl"
+	"github.com/go-mix/mix/bind/opt"
+	"github.com/go-mix/mix/bind/sample"
+	"github.com/go-mix/mix/bind/spec"
+	"github.com/go-mix/mix/bind/wav"
 )
 
 // Configure begins streaming to the bound out audio interface, via a callback function
@@ -32,7 +32,7 @@ func IsDirectOutput() bool {
 	return useOutput == opt.OutputWAV
 }
 
-// SetMixNextOutFunc to stream mix out from ontomix
+// SetMixNextOutFunc to stream mix out from mix
 func SetOutputCallback(fn sample.OutNextCallbackFunc) {
 	sample.SetOutputCallback(fn)
 }

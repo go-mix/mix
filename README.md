@@ -1,8 +1,8 @@
-# Ontomix 
+# Mix 
 
-[![Build Status](https://travis-ci.org/go-ontomix/ontomix.svg?branch=master)](https://travis-ci.org/go-ontomix/ontomix) [![GoDoc](https://godoc.org/github.com/go-ontomix/ontomix?status.svg)](https://godoc.org/github.com/go-ontomix/ontomix)
+[![Build Status](https://travis-ci.org/go-mix/mix.svg?branch=master)](https://travis-ci.org/go-mix/mix) [![GoDoc](https://godoc.org/github.com/go-mix/mix?status.svg)](https://godoc.org/github.com/go-mix/mix)
 
-https://github.com/go-ontomix/ontomix
+https://github.com/go-mix/mix
 
 #### Go-native audio mixer for Music apps
 
@@ -15,8 +15,8 @@ See `demo/demo.go`:
       "os"
       "time"
       
-      "github.com/go-ontomix/ontomix"
-      "github.com/go-ontomix/ontomix/bind"
+      "github.com/go-mix/mix"
+      "github.com/go-mix/mix/bind"
     )
     
     var (
@@ -57,23 +57,23 @@ See `demo/demo.go`:
     )
     
     func main() {
-      defer ontomix.Teardown()    
+      defer mix.Teardown()    
       
-      ontomix.Debug(true)
-      ontomix.Configure(spec)
-      ontomix.SetSoundsPath(prefix)
-      ontomix.StartAt(time.Now().Add(1 * time.Second))
+      mix.Debug(true)
+      mix.Configure(spec)
+      mix.SetSoundsPath(prefix)
+      mix.StartAt(time.Now().Add(1 * time.Second))
     
       t := 2 * time.Second // padding before music
       for n := 0; n < loops; n++ {
         for s := 0; s < len(pattern); s++ {
-          ontomix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, 0)
+          mix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, 0)
         }
         t += time.Duration(len(pattern)) * step
       }
     
-      fmt.Printf("Ontomix, pid:%v, spec:%v\n", os.Getpid(), spec)
-      for ontomix.FireCount() > 0 {
+      fmt.Printf("Mix, pid:%v, spec:%v\n", os.Getpid(), spec)
+      for mix.FireCount() > 0 {
         time.Sleep(1 * time.Second)
       }
     }
@@ -90,17 +90,17 @@ Or export WAV via stdout `> demo/output.wav`:
 
 Game audio mixers are designed to play audio spontaneously, but when the timing is known in advance (e.g. sequence-based music apps) there is a demand for much greater accuracy in playback timing.
 
-Read the API documentation at [godoc.org/github.com/go-ontomix/ontomix](https://godoc.org/github.com/go-ontomix/ontomix)
+Read the API documentation at [godoc.org/github.com/go-mix/mix](https://godoc.org/github.com/go-mix/mix)
 
-**Ontomix** seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance.
+**Mix** seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance.
  
-Ontomix stores and mixes audio in native Go `[]float64` and natively implements Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression" (details below)
+Mix stores and mixes audio in native Go `[]float64` and natively implements Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression" (details below)
 
 Author: [Charney Kaye](http://w.charney.io)
 
 #### NOTICE: THIS PROJECT IS IN ALPHA STAGE, AND THE API MAY BE SUBJECT TO CHANGE.
 
-Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. **[github.com/go-ontomix/ontomix](http://github.com/go-ontomix/ontomix)** 
+Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. **[github.com/go-mix/mix](http://github.com/go-mix/mix)** 
 
 ### Why?
 
@@ -114,13 +114,13 @@ The design pattern particular to Game design is that the timing of the audio is 
 
 In the field of Music development, often the timing is known in advance, e.g. a **sequencer**, the composition of music by specifying exactly how, when and which audio files will be played relative to the beginning of playback.
 
-Ergo, **ontomix** seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance. It seeks to do this with the absolute minimal logical overhead on top of the audio interface.
+Ergo, **mix** seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance. It seeks to do this with the absolute minimal logical overhead on top of the audio interface.
 
-Ontomix takes maximum advantage of Go by storing and mixing audio in native Go `[]float64` and natively implementing Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression"
+Mix takes maximum advantage of Go by storing and mixing audio in native Go `[]float64` and natively implementing Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression"
 
 ### Time
 
-To the Ontomix API, time is specified as a time.Duration-since-epoch, where the epoch is the moment that ontomix.Start() was called.
+To the Mix API, time is specified as a time.Duration-since-epoch, where the epoch is the moment that mix.Start() was called.
 
 Internally, time is tracked as samples-since-epoch at the master out playback frequency (e.g. 48000 Hz). This is most efficient because source audio is pre-converted to the master out playback frequency, and all audio maths are performed in terms of samples.
 
@@ -130,7 +130,7 @@ Inspired by the theory paper "Mixing two digital audio streams with on the fly L
 
 ### Usage
 
-There's a demo implementation of **ontomix** included in the `demo/` folder in this repository. Run it using the defaults:
+There's a demo implementation of **mix** included in the `demo/` folder in this repository. Run it using the defaults:
 
     go run 808.go
     

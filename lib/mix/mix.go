@@ -5,13 +5,13 @@ import (
 	"math"
 	"time"
 
-	"github.com/go-ontomix/ontomix/bind/spec"
+	"github.com/go-mix/mix/bind/spec"
 
-	"github.com/go-ontomix/ontomix/bind"
-	"github.com/go-ontomix/ontomix/bind/debug"
-	"github.com/go-ontomix/ontomix/bind/sample"
-	"github.com/go-ontomix/ontomix/lib/fire"
-	"github.com/go-ontomix/ontomix/lib/source"
+	"github.com/go-mix/mix/bind"
+	"github.com/go-mix/mix/bind/debug"
+	"github.com/go-mix/mix/bind/sample"
+	"github.com/go-mix/mix/lib/fire"
+	"github.com/go-mix/mix/lib/source"
 )
 
 // NextSample returns the next sample mixed in all channels
@@ -208,7 +208,7 @@ func mixCycle() {
 	source.Prune(keepSource)
 	nextCycleTz = nowTz + masterCycleDurTz
 	if debug.Active() && source.Count() > 0 {
-		debug.Printf("ontomix [%dz] fire-ready:%d fire-active:%d sources:%d\n", nowTz, len(mixReadyFires), len(mixLiveFires), source.Count())
+		debug.Printf("mix [%dz] fire-ready:%d fire-active:%d sources:%d\n", nowTz, len(mixReadyFires), len(mixLiveFires), source.Count())
 	}
 }
 

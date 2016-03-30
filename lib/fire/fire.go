@@ -2,9 +2,9 @@
 package fire
 
 import (
-	"github.com/go-ontomix/ontomix/bind/spec"
+	"github.com/go-mix/mix/bind/spec"
 
-	"github.com/go-ontomix/ontomix/lib/source"
+	"github.com/go-mix/mix/lib/source"
 )
 
 // New Fire to represent a single audio source playing at a specific time in the future.

@@ -2,7 +2,7 @@
 package source
 
 import (
-	"github.com/go-ontomix/ontomix/bind/spec"
+	"github.com/go-mix/mix/bind/spec"
 	"sync"
 )
 

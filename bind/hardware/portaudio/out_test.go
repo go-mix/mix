@@ -1,4 +1,4 @@
-// Package portaudio is for modular binding of ontomix to audio interface via PortAudio
+// Package portaudio is for modular binding of mix to audio interface via PortAudio
 package portaudio
 
 import (

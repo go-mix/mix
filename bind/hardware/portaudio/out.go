@@ -1,11 +1,11 @@
-// Package portaudio is for modular binding of ontomix to audio interface via PortAudio
+// Package portaudio is for modular binding of mix to audio interface via PortAudio
 package portaudio
 
 import (
 	"github.com/gordonklaus/portaudio"
 
-	"github.com/go-ontomix/ontomix/bind/sample"
-	"github.com/go-ontomix/ontomix/bind/spec"
+	"github.com/go-mix/mix/bind/sample"
+	"github.com/go-mix/mix/bind/spec"
 )
 
 var outPortaudioStream *portaudio.Stream

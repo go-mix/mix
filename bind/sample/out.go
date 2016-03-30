@@ -2,10 +2,10 @@
 package sample
 
 import (
-	"github.com/go-ontomix/ontomix/bind/spec"
+	"github.com/go-mix/mix/bind/spec"
 )
 
-// OutNextCallbackFunc to stream mix out from ontomix
+// OutNextCallbackFunc to stream mix out from mix
 type OutNextCallbackFunc func() []Value
 
 func ConfigureOutput(s spec.AudioSpec) {

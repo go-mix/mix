@@ -1,4 +1,4 @@
-// Package bind is for modular binding of ontomix to audio interface
+// Package bind is for modular binding of mix to audio interface
 package bind
 
 import (
@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/go-ontomix/ontomix/bind/opt"
+	"github.com/go-mix/mix/bind/opt"
 )
 
 func TestAPI(t *testing.T) {

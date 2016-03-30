@@ -11,9 +11,9 @@ import (
 
 	"gopkg.in/pkg/profile.v1"
 
-	"github.com/go-ontomix/ontomix"
-	"github.com/go-ontomix/ontomix/bind"
-	"github.com/go-ontomix/ontomix/bind/spec"
+	"github.com/go-mix/mix"
+	"github.com/go-mix/mix/bind"
+	"github.com/go-mix/mix/bind/spec"
 )
 
 var (
@@ -77,17 +77,17 @@ func main() {
 		}
 	}
 
-	// configure ontomix
+	// configure mix
 	bind.UseOutputString(out)
-	defer ontomix.Teardown()
-	ontomix.Configure(specs)
-	ontomix.SetSoundsPath(prefix)
+	defer mix.Teardown()
+	mix.Configure(specs)
+	mix.SetSoundsPath(prefix)
 
 	// setup the music
 	t := 1 * time.Second // buffer before music
 	for n := 0; n < loops; n++ {
 		for s := 0; s < len(pattern); s++ {
-			ontomix.SetFire(
+			mix.SetFire(
 				pattern[s], t+time.Duration(s)*step, 0, 1.0, rand.Float64()*2-1)
 		}
 		t += time.Duration(len(pattern)) * step
@@ -96,17 +96,17 @@ func main() {
 
 	//
 	if bind.IsDirectOutput() {
-		ontomix.Debug(true)
-		ontomix.OutputStart(t)
+		mix.Debug(true)
+		mix.OutputStart(t)
 		for p := time.Duration(0); p <= t; p += t / 4 {
-			ontomix.OutputContinueTo(p)
+			mix.OutputContinueTo(p)
 		}
-		ontomix.OutputClose()
+		mix.OutputClose()
 	} else {
-		ontomix.Debug(true)
-		ontomix.StartAt(time.Now().Add(1 * time.Second))
-		fmt.Printf("Ontomix: 808 Example - pid:%v playback:%v spec:%v\n", os.Getpid(), out, specs)
-		for ontomix.FireCount() > 0 {
+		mix.Debug(true)
+		mix.StartAt(time.Now().Add(1 * time.Second))
+		fmt.Printf("Mix: 808 Example - pid:%v playback:%v spec:%v\n", os.Getpid(), out, specs)
+		for mix.FireCount() > 0 {
 			time.Sleep(1 * time.Second)
 		}
 	}

@@ -1,4 +1,4 @@
-// Package sdl is for modular binding of ontomix to audio interface via SDL2
+// Package sdl is for modular binding of mix to audio interface via SDL2
 package sdl
 
 import (

@@ -1,4 +1,4 @@
-// Package null is for modular binding of ontomix to a null (mock) audio interface
+// Package null is for modular binding of mix to a null (mock) audio interface
 package null
 
 import (

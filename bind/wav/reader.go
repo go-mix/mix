@@ -9,8 +9,8 @@ import (
 	riff "github.com/youpy/go-riff"
 
 	"fmt"
-	"github.com/go-ontomix/ontomix/bind/sample"
-	"github.com/go-ontomix/ontomix/bind/spec"
+	"github.com/go-mix/mix/bind/sample"
+	"github.com/go-mix/mix/bind/spec"
 )
 
 type Reader struct {

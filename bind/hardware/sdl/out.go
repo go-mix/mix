@@ -1,4 +1,4 @@
-// Package sdl is for modular binding of ontomix to audio interface via SDL2
+// Package sdl is for modular binding of mix to audio interface via SDL2
 package sdl
 
 /*
@@ -14,8 +14,8 @@ import (
 
 	"github.com/veandco/go-sdl2/sdl"
 
-	"github.com/go-ontomix/ontomix/bind/sample"
-	"github.com/go-ontomix/ontomix/bind/spec"
+	"github.com/go-mix/mix/bind/sample"
+	"github.com/go-mix/mix/bind/spec"
 )
 
 func ConfigureOutput(s spec.AudioSpec) {

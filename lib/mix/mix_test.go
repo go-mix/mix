@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/go-ontomix/ontomix/bind/spec"
+	"github.com/go-mix/mix/bind/spec"
 	"time"
 )
 
@@ -129,11 +129,11 @@ func TestMixCycle(t *testing.T) {
 	// TODO: Test garbage collection of unused fires
 }
 
-// TODO: test ontomix.GetSpec()
+// TODO: test mix.GetSpec()
 
-// TODO: test ontomix.Debug(true) and ontomix.Debug(false)
+// TODO: test mix.Debug(true) and mix.Debug(false)
 
-// TODO: test ontomix.Play("filename", time, duration, volume)
+// TODO: test mix.Play("filename", time, duration, volume)
 
 // TODO: test sources are queued and loaded properly
 
