@@ -4,7 +4,7 @@
 
 https://github.com/go-mix/mix
 
-#### Go-native audio mixer for Music apps
+#### Sequence-based Go-native audio mixer for music apps
 
 See `demo/demo.go`:
 

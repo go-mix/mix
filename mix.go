@@ -1,4 +1,4 @@
-// Package mix is a sequence-based Go-native audio mixer.
+// Sequence-based Go-native audio mixer for music apps
 //
 // Go-native audio mixer for Music apps
 //
