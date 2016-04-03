@@ -92,7 +92,14 @@
 //
 // Mix stores and mixes audio in native Go `[]float64` and natively implements Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression" (details below)
 //
-// Author: Charney Kaye <hiya@charney.io>
+// Credit
+//
+// Charney Kaye
+// <hiya@charney.io>
+// http://w.charney.io
+//
+// Outright Mental
+// http://w.outright.io
 //
 // Why
 //
@@ -159,8 +166,6 @@
 //     brew install portaudio
 //
 // Windows: https://gnuradio.org/redmine/projects/gnuradio/wiki/PortAudioInstall.
-//
-// This project is in Alpha and the API is subject to change
 //
 // Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. http://github.com/go-mix/mix
 //

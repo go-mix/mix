@@ -86,6 +86,12 @@ Or export WAV via stdout `> demo/output.wav`:
 
     make demo.wav
 
+##### Credit
+
+[Charney Kaye](http://w.charney.io)
+
+[Outright Mental](http://w.outright.io)
+
 ### What?
 
 Game audio mixers are designed to play audio spontaneously, but when the timing is known in advance (e.g. sequence-based music apps) there is a demand for much greater accuracy in playback timing.
@@ -95,10 +101,6 @@ Read the API documentation at [godoc.org/github.com/go-mix/mix](https://godoc.or
 **Mix** seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance.
  
 Mix stores and mixes audio in native Go `[]float64` and natively implements Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression" (details below)
-
-Author: [Charney Kaye](http://w.charney.io)
-
-#### NOTICE: THIS PROJECT IS IN ALPHA STAGE, AND THE API MAY BE SUBJECT TO CHANGE.
 
 Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. **[github.com/go-mix/mix](http://github.com/go-mix/mix)** 
 
