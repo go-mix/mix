@@ -121,7 +121,7 @@ func OutputStart(length time.Duration) {
 // OutputContinueTo to  mix and output as []byte via stdout, up to a specified duration-since-start
 func OutputContinueTo(t time.Duration) {
 	deltaDur := t - outputToDur
-	deltaTz := spec.Tz(masterFreq*float64((deltaDur)/time.Second))
+	deltaTz := spec.Tz(masterFreq * float64((deltaDur)/time.Second))
 	debug.Printf("mix.OutputContinueTo(%+v) deltaDur:%+v nowTz:%+v deltaTz:%+v begin...", t, deltaDur, nowTz, deltaTz)
 	bind.OutputNext(deltaTz)
 	outputToDur = t

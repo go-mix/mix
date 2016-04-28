@@ -78,7 +78,7 @@ See `demo/demo.go`:
       }
     }
 
-Play this Demo from the root of the project, using SDL 2.0 for hardware audio playback:
+Play this Demo from the root of the project, with no actual audio playback:
 
     make demo
 
@@ -136,36 +136,10 @@ There's a demo implementation of **mix** included in the `demo/` folder in this 
 
     go run 808.go
     
-Or specify options, e.g. using SDL for playback
+Or specify options, e.g. using WAV bytes to stdout for playback (piped to system native `aplay`)
 
-    go run 808.go --playback sdl
+    go run 808.go --playback wav | aplay
 
 To show the help screen:
 
     go run 808.go --help
-
-### Dependencies
-
-#### SDL2
-
-Ubuntu:
-
-    sudo apt-get install libsdl2-dev
-    
-Mac OS X:
-
-    brew install sdl2
-
-More details for Linux, Mac and Windows: ["Setting up SDL" by Lazy Foo' Productions](http://lazyfoo.net/SDL_tutorials/lesson01/index.php) 
-
-#### Portaudio
-
-Ubuntu:
-
-    sudo apt-get install portaudio19-dev
-
-Mac OS X:
-
-    brew install portaudio
-    
-Windows: ["Building and Installing PortAudio on Windows" by GNU Radio](https://gnuradio.org/redmine/projects/gnuradio/wiki/PortAudioInstall).

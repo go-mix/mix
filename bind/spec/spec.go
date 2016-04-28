@@ -13,7 +13,7 @@ type AudioSpec struct {
 	Freq     float64
 	Format   AudioFormat
 	Channels int
-	Length time.Duration
+	Length   time.Duration
 }
 
 // Validate these specs

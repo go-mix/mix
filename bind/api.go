@@ -5,8 +5,6 @@ import (
 	"time"
 
 	"github.com/go-mix/mix/bind/hardware/null"
-	"github.com/go-mix/mix/bind/hardware/portaudio"
-	"github.com/go-mix/mix/bind/hardware/sdl"
 	"github.com/go-mix/mix/bind/opt"
 	"github.com/go-mix/mix/bind/sample"
 	"github.com/go-mix/mix/bind/spec"
@@ -17,10 +15,6 @@ import (
 func Configure(s spec.AudioSpec) {
 	sample.ConfigureOutput(s)
 	switch useOutput {
-	case opt.OutputPortAudio:
-		portaudio.ConfigureOutput(s)
-	case opt.OutputSDL:
-		sdl.ConfigureOutput(s)
 	case opt.OutputWAV:
 		wav.ConfigureOutput(s)
 	case opt.OutputNull:
@@ -43,7 +37,7 @@ func OutputStart(length time.Duration) {
 	case opt.OutputWAV:
 		wav.OutputStart(length)
 	case opt.OutputNull:
-	// do nothing
+		// do nothing
 	}
 }
 
@@ -70,10 +64,6 @@ func LoadWAV(file string) ([]sample.Sample, *spec.AudioSpec) {
 // Teardown to close all hardware bindings
 func Teardown() {
 	switch useOutput {
-	case opt.OutputPortAudio:
-		portaudio.TeardownOutput()
-	case opt.OutputSDL:
-		sdl.TeardownOutput()
 	case opt.OutputWAV:
 		wav.TeardownOutput()
 	case opt.OutputNull:
@@ -104,10 +94,6 @@ func UseOutput(opt opt.Output) {
 // UseOutputString to select the outback interface by string
 func UseOutputString(output string) {
 	switch output {
-	case string(opt.OutputPortAudio):
-		useOutput = opt.OutputPortAudio
-	case string(opt.OutputSDL):
-		useOutput = opt.OutputSDL
 	case string(opt.OutputWAV):
 		useOutput = opt.OutputWAV
 	case string(opt.OutputNull):
@@ -123,5 +109,5 @@ func UseOutputString(output string) {
 
 var (
 	useLoader = opt.InputWAV
-	useOutput = opt.OutputSDL
+	useOutput = opt.OutputNull
 )

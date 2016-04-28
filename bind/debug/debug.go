@@ -29,7 +29,7 @@ func Active() bool {
 
 var (
 	isActive bool
-	logger *log.Logger
+	logger   *log.Logger
 )
 
 func init() {

@@ -58,7 +58,7 @@ var (
 
 func main() {
 	// command-line arguments
-	flag.StringVar(&out, "out", "sdl", "playback binding [sdl, portaudio, null] _OR_ [wav] for direct stdout (e.g. >file or |aplay)")
+	flag.StringVar(&out, "out", "null", "playback binding [null] _OR_ [wav] for direct stdout (e.g. >file or |aplay)")
 	flag.StringVar(&profileMode, "profile", "", "enable profiling [cpu, mem, block]")
 	flag.Parse()
 

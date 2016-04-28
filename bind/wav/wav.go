@@ -11,8 +11,6 @@ import (
 
 // Load a WAV file into memory
 func Load(path string) (out []sample.Sample, specs *spec.AudioSpec) {
-	//	data, sdlSpec := sdl.LoadWAV(file, sdl2Spec(spec))
-	// return data, sdl2Unspec(sdlSpec)
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		panic("File not found: " + path)
 	}

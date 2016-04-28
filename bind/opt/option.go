@@ -13,11 +13,5 @@ type Output string
 // OptOutputNull for benchmarking/profiling, because those tools are unable to sample to C-go callback tree
 const OutputNull Output = "null"
 
-// OptOutputPortAudio to use Portaudio for audio output
-const OutputPortAudio Output = "portaudio"
-
-// OptOutputSDL to use SDL for audio output
-const OutputSDL Output = "sdl"
-
 // OptOutputWAV to use WAV directly for []byte to stdout
 const OutputWAV Output = "wav"
