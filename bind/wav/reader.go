@@ -70,9 +70,9 @@ func (r *Reader) ReadSamples(params ...uint32) (out []sample.Sample, err error) 
 	return
 }
 
-/*
- *
- private */
+//
+// Private
+//
 
 func (r *Reader) readSamplesIntoBuffer(p []byte) (n int, err error) {
 	if r.Data == nil {

@@ -46,9 +46,9 @@ func OutNextBytes() (out []byte) {
 	return
 }
 
-/*
- *
- private */
+//
+// Private
+//
 
 var (
 	outSpec         *spec.AudioSpec

@@ -104,9 +104,9 @@ func TestMixer_mixVolume(t *testing.T) {
 	assert.Equal(t, sample.Value(.625), volume(3, .5, -.5))
 }
 
-/*
- *
- private */
+//
+// Private
+//
 
 func testSourceSetup(freq float64, channels int) {
 	Configure(spec.AudioSpec{

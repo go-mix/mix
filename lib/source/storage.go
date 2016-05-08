@@ -53,9 +53,9 @@ func Count() int {
 	return len(storage)
 }
 
-/*
- *
- private */
+//
+// Private
+//
 
 var (
 	storage      map[string]*Source

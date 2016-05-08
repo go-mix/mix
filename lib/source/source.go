@@ -72,9 +72,9 @@ func (s *Source) Teardown() {
 	s.sample = nil
 }
 
-/*
- *
- private */
+//
+// Private
+//
 
 var (
 	masterChannelsFloat float64

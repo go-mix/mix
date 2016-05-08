@@ -34,6 +34,6 @@ func Load(path string) (out []sample.Sample, specs *spec.AudioSpec) {
 	return
 }
 
-/*
- *
- private */
+//
+// Private
+//

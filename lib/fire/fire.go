@@ -76,9 +76,9 @@ func (f *Fire) Teardown() {
 	// TODO: confirm that all memory of this object is released when its pointer is deleted from the *Mixer.fires slice, else make sure it does get released somehow
 }
 
-/*
- *
- private */
+//
+// Private
+//
 
 type fireStateEnum uint
 

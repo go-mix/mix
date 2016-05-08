@@ -23,9 +23,9 @@ func Active() bool {
 	return isActive
 }
 
-/*
- *
- private */
+//
+// Private
+//
 
 var (
 	isActive bool

@@ -133,9 +133,9 @@ func OutputClose() {
 	// nothing to do
 }
 
-/*
- *
- private */
+//
+// Private
+//
 
 var (
 	outputToDur      time.Duration

@@ -103,9 +103,9 @@ func UseOutputString(output string) {
 	}
 }
 
-/*
- *
- private */
+//
+// Private
+//
 
 var (
 	useLoader = opt.InputWAV

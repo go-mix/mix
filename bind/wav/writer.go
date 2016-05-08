@@ -52,9 +52,9 @@ func OutputNext(numSamples spec.Tz) (err error) {
 	return
 }
 
-/*
- *
- private */
+//
+// Private
+//
 
 var (
 	stdout     = os.NewFile(uintptr(syscall.Stdout), "/dev/stdout")
