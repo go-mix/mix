@@ -148,6 +148,7 @@
 package mix
 
 import (
+	"io"
 	"time"
 
 	"github.com/go-mix/mix/bind"
@@ -231,8 +232,8 @@ func GetNowAt() time.Duration {
 }
 
 // OutputStart requires a known length
-func OutputStart(length time.Duration) {
-	mix.OutputStart(length)
+func OutputStart(length time.Duration, out io.Writer) {
+	mix.OutputStart(length, out)
 }
 
 // OutputContinueTo output as []byte via stdout, up to a specified duration-since-start

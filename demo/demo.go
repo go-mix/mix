@@ -96,8 +96,9 @@ func main() {
 
 	//
 	if bind.IsDirectOutput() {
+		out := os.Stdout
 		mix.Debug(true)
-		mix.OutputStart(t)
+		mix.OutputStart(t, out)
 		for p := time.Duration(0); p <= t; p += t / 4 {
 			mix.OutputContinueTo(p)
 		}
