@@ -57,6 +57,8 @@ func Spec() *spec.AudioSpec {
 func Teardown() {
 	ClearAllFires()
 	outputToDur = time.Duration(0)
+	nextCycleTz = 0
+	nowTz = 0
 }
 
 // SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start), with sustain time.Duration, volume from 0 to 1, and pan from -1 to +1
