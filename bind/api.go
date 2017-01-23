@@ -2,6 +2,7 @@
 package bind
 
 import (
+	"io"
 	"time"
 
 	"github.com/go-mix/mix/bind/hardware/null"
@@ -32,10 +33,10 @@ func SetOutputCallback(fn sample.OutNextCallbackFunc) {
 }
 
 // OutputStart requires a known length
-func OutputStart(length time.Duration) {
+func OutputStart(length time.Duration, out io.Writer) {
 	switch useOutput {
 	case opt.OutputWAV:
-		wav.OutputStart(length)
+		wav.OutputStart(length, out)
 	case opt.OutputNull:
 		// do nothing
 	}

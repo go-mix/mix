@@ -4,22 +4,21 @@ package wav
 import (
 	"encoding/binary"
 	"io"
-	"syscall"
 
 	riff "github.com/youpy/go-riff"
 
+	"time"
+
 	"github.com/go-mix/mix/bind/sample"
 	"github.com/go-mix/mix/bind/spec"
-	"os"
-	"time"
 )
 
 func ConfigureOutput(s spec.AudioSpec) {
 	outputSpec = &s
 }
 
-func OutputStart(length time.Duration) {
-	writer = NewWriter(stdout, FormatFromSpec(outputSpec), length)
+func OutputStart(length time.Duration, out io.Writer) {
+	writer = NewWriter(out, FormatFromSpec(outputSpec), length)
 }
 
 func TeardownOutput() {
@@ -57,7 +56,6 @@ func OutputNext(numSamples spec.Tz) (err error) {
 //
 
 var (
-	stdout     = os.NewFile(uintptr(syscall.Stdout), "/dev/stdout")
 	writer     *Writer
 	outputSpec *spec.AudioSpec
 )

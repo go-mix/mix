@@ -2,6 +2,7 @@
 package mix
 
 import (
+	"io"
 	"math"
 	"time"
 
@@ -54,6 +55,10 @@ func Spec() *spec.AudioSpec {
 
 // Teardown everything and release all memory.
 func Teardown() {
+	ClearAllFires()
+	outputToDur = time.Duration(0)
+	nextCycleTz = 0
+	nowTz = 0
 }
 
 // SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start), with sustain time.Duration, volume from 0 to 1, and pan from -1 to +1
@@ -114,8 +119,8 @@ func GetCycleDurationTz() spec.Tz {
 }
 
 // OutputStart requires a known length
-func OutputStart(length time.Duration) {
-	bind.OutputStart(length)
+func OutputStart(length time.Duration, out io.Writer) {
+	bind.OutputStart(length, out)
 }
 
 // OutputContinueTo to  mix and output as []byte via stdout, up to a specified duration-since-start
