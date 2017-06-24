@@ -8,6 +8,7 @@ import (
 	"github.com/go-mix/mix/bind/hardware/null"
 	"github.com/go-mix/mix/bind/opt"
 	"github.com/go-mix/mix/bind/sample"
+	"github.com/go-mix/mix/bind/sox"
 	"github.com/go-mix/mix/bind/spec"
 	"github.com/go-mix/mix/bind/wav"
 )
@@ -57,6 +58,8 @@ func LoadWAV(file string) ([]sample.Sample, *spec.AudioSpec) {
 	switch useLoader {
 	case opt.InputWAV:
 		return wav.Load(file)
+	case opt.InputSOX:
+		return sox.Load(file)
 	default:
 		return make([]sample.Sample, 0), &spec.AudioSpec{}
 	}
@@ -82,6 +85,8 @@ func UseLoaderString(loader string) {
 	switch loader {
 	case string(opt.InputWAV):
 		useLoader = opt.InputWAV
+	case string(opt.InputSOX):
+		useLoader = opt.InputSOX
 	default:
 		panic("No such Loader: " + loader)
 	}

@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	out         string
+	loader, out string
 	profileMode string
 	sampleHz    = float64(48000)
 	specs       = spec.AudioSpec{
@@ -60,6 +60,7 @@ func main() {
 	// command-line arguments
 	flag.StringVar(&out, "out", "null", "playback binding [null] _OR_ [wav] for direct stdout (e.g. >file or |aplay)")
 	flag.StringVar(&profileMode, "profile", "", "enable profiling [cpu, mem, block]")
+	flag.StringVar(&loader, "loader", "wav", "input loading interface [wav, sox]")
 	flag.Parse()
 
 	// CPU/Memory/Block profiling
@@ -79,6 +80,7 @@ func main() {
 
 	// configure mix
 	bind.UseOutputString(out)
+	bind.UseLoaderString(loader)
 	defer mix.Teardown()
 	mix.Configure(specs)
 	mix.SetSoundsPath(prefix)
