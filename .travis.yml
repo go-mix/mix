@@ -4,16 +4,19 @@ dist: trusty
 go:
   - 1.5
   - 1.6.2
+  - 1.11
 
 install:
-  - # WAV loading
+  -  # WAV loading
   - go get github.com/youpy/go-riff
-  - # SOX bindings
+  -  # SOX bindings
   - sudo apt-get install -y libsox-dev
   - go get github.com/krig/go-sox
-  - # Testing
+  -  # Testing
   - go get github.com/stretchr/testify/assert
   - go get github.com/stretchr/testify/mock
-  - # Logging
+  -  # Logging
   - go get github.com/Sirupsen/logrus
 
+script:
+  - go test ./...
