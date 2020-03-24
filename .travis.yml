@@ -7,16 +7,7 @@ go:
   - 1.11
 
 install:
-  -  # WAV loading
-  - go get github.com/youpy/go-riff
-  -  # SOX bindings
-  - sudo apt-get install -y libsox-dev
-  - go get github.com/krig/go-sox
-  -  # Testing
-  - go get github.com/stretchr/testify/assert
-  - go get github.com/stretchr/testify/mock
-  -  # Logging
-  - go get github.com/Sirupsen/logrus
+  - go get ./...
 
 script:
   - go test ./...
