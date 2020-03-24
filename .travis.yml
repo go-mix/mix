@@ -5,6 +5,7 @@ go:
   - 1.11
 
 install:
+  - sudo apt-get install -y libsox-dev
   - export GO111MODULE="on"
   - go get ./...
 
