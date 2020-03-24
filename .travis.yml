@@ -2,11 +2,10 @@ language: go
 dist: trusty
 
 go:
-  - 1.5
-  - 1.6.2
   - 1.11
 
 install:
+  - export GO111MODULE="on"
   - go get ./...
 
 script:
