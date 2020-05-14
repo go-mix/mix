@@ -88,9 +88,9 @@ Or export WAV via stdout `> demo/output.wav`:
 
 ##### Credit
 
-[Charney Kaye](http://w.charney.io)
+[Charney Kaye](https://charneykaye.com)
 
-[Outright Mental](http://w.outright.io)
+[XJ Music Inc.](https://xj.io)
 
 ### What?
 
