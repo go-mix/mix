@@ -82,6 +82,7 @@
 //
 //     make demo.wav
 //
+//
 // What
 //
 // Game audio mixers are designed to play audio spontaneously, but when the timing is known in advance (e.g. sequence-based music apps) there is a demand for much greater accuracy in playback timing.
@@ -92,14 +93,15 @@
 //
 // Mix stores and mixes audio in native Go `[]float64` and natively implements Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression" (details below)
 //
+//
 // Credit
 //
 // Charney Kaye
-// <hiya@charney.io>
-// http://w.charney.io
+// https://charneykaye.com
 //
-// Outright Mental
-// http://w.outright.io
+// XJ Music Inc.
+// https://xj.io
+//
 //
 // Why
 //
@@ -117,6 +119,7 @@
 //
 // Mix takes maximum advantage of Go by storing and mixing audio in native Go `[]float64` and natively implementing Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression" (see The Mixing Algorithm below)
 //
+//
 // Time
 //
 // To the Mix API, time is specified as a time.Duration-since-epoch, where the epoch is the moment that mix.Start() was called.
@@ -126,6 +129,7 @@
 // The Mixing Algorithm
 //
 // Inspired by the theory paper "Mixing two digital audio streams with on the fly Loudness Normalization by Logarithmic Dynamic Range Compression" by Paul Vögler, 2012-04-20. This paper is published at http://www.voegler.eu/pub/audio/digital-audio-mixing-and-normalization.html.
+//
 //
 // Usage
 //
