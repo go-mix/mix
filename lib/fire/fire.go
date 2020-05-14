@@ -2,9 +2,9 @@
 package fire
 
 import (
-	"github.com/go-mix/mix/bind/spec"
+	"gopkg.in/mix.v0/bind/spec"
 
-	"github.com/go-mix/mix/lib/source"
+	"gopkg.in/mix.v0/lib/source"
 )
 
 // New Fire to represent a single audio source playing at a specific time in the future.

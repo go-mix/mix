@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/go-mix/mix/bind/spec"
-	"github.com/go-mix/mix/lib/mix"
+	"gopkg.in/mix.v0/bind/spec"
+	"gopkg.in/mix.v0/lib/mix"
 )
 
 func TestDebug(t *testing.T) {

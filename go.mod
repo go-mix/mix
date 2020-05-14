@@ -1,4 +1,4 @@
-module github.com/go-mix/mix
+module gopkg.in/mix.v0
 
 go 1.11
 

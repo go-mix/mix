@@ -2,8 +2,8 @@
 package null
 
 import (
-	"github.com/go-mix/mix/bind/sample"
-	"github.com/go-mix/mix/bind/spec"
+	"gopkg.in/mix.v0/bind/sample"
+	"gopkg.in/mix.v0/bind/spec"
 )
 
 func ConfigureOutput(s spec.AudioSpec) {

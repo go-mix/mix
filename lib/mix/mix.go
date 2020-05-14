@@ -6,13 +6,13 @@ import (
 	"math"
 	"time"
 
-	"github.com/go-mix/mix/bind/spec"
+	"gopkg.in/mix.v0/bind/spec"
 
-	"github.com/go-mix/mix/bind"
-	"github.com/go-mix/mix/bind/debug"
-	"github.com/go-mix/mix/bind/sample"
-	"github.com/go-mix/mix/lib/fire"
-	"github.com/go-mix/mix/lib/source"
+	"gopkg.in/mix.v0/bind"
+	"gopkg.in/mix.v0/bind/debug"
+	"gopkg.in/mix.v0/bind/sample"
+	"gopkg.in/mix.v0/lib/fire"
+	"gopkg.in/mix.v0/lib/source"
 )
 
 // NextSample returns the next sample mixed in all channels

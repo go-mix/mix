@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/go-mix/mix/bind/spec"
+	"gopkg.in/mix.v0/bind/spec"
 )
 
 func TestBase(t *testing.T) {

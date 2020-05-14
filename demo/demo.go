@@ -11,9 +11,9 @@ import (
 
 	"gopkg.in/pkg/profile.v1"
 
-	"github.com/go-mix/mix"
-	"github.com/go-mix/mix/bind"
-	"github.com/go-mix/mix/bind/spec"
+	"gopkg.in/mix.v0"
+	"gopkg.in/mix.v0/bind"
+	"gopkg.in/mix.v0/bind/spec"
 )
 
 var (

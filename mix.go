@@ -11,8 +11,8 @@
 //       "os"
 //       "time"
 //
-//       "github.com/go-mix/mix"
-//       "github.com/go-mix/mix/bind"
+//       "gopkg.in/mix.v0"
+//       "gopkg.in/mix.v0/bind"
 //     )
 //
 //     var (
@@ -87,7 +87,7 @@
 //
 // Game audio mixers are designed to play audio spontaneously, but when the timing is known in advance (e.g. sequence-based music apps) there is a demand for much greater accuracy in playback timing.
 //
-// Read the API documentation at https://godoc.org/github.com/go-mix/mix
+// Read the API documentation at https://godoc.org/gopkg.in/mix.v0
 //
 // Mix seeks to solve the problem of audio mixing for the purpose of the playback of sequences where audio files and their playback timing is known in advance.
 //
@@ -145,7 +145,7 @@
 //
 //     go run demo.go --help
 //
-// Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. http://github.com/go-mix/mix
+// Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. http://gopkg.in/mix.v0
 //
 // Mix in good health!
 //
@@ -155,12 +155,12 @@ import (
 	"io"
 	"time"
 
-	"github.com/go-mix/mix/bind"
-	"github.com/go-mix/mix/bind/debug"
-	"github.com/go-mix/mix/bind/spec"
+	"gopkg.in/mix.v0/bind"
+	"gopkg.in/mix.v0/bind/debug"
+	"gopkg.in/mix.v0/bind/spec"
 
-	"github.com/go-mix/mix/lib/fire"
-	"github.com/go-mix/mix/lib/mix"
+	"gopkg.in/mix.v0/lib/fire"
+	"gopkg.in/mix.v0/lib/mix"
 )
 
 // VERSION # of this mix source code
