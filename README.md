@@ -134,12 +134,12 @@ Inspired by the theory paper "Mixing two digital audio streams with on the fly L
 
 There's a demo implementation of **mix** included in the `demo/` folder in this repository. Run it using the defaults:
 
-    go run 808.go
+    cd demo && go get && go run demo.go
     
 Or specify options, e.g. using WAV bytes to stdout for playback (piped to system native `aplay`)
 
-    go run 808.go --playback wav | aplay
+    go run demo.go --out wav | aplay
 
 To show the help screen:
 
-    go run 808.go --help
+    go run demo.go --help
