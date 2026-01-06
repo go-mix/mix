@@ -111,7 +111,9 @@ func (this Value) ToInt32() int32 {
 }
 
 func ValueOfByteU8(sample byte) Value {
-	return Value(sample)/Value(0x80) - Value(1)
+	// U8: 0 = -1.0, 128 = 0.0, 255 = 1.0
+	// Formula: (sample / 127.5) - 1.0
+	return Value(sample)/Value(127.5) - Value(1)
 }
 
 func ValueOfByteS8(sample byte) Value {
@@ -119,7 +121,9 @@ func ValueOfByteS8(sample byte) Value {
 }
 
 func ValueOfBytesU16LSB(sample []byte) Value {
-	return Value(binary.LittleEndian.Uint16(sample))/Value(0x8000) - Value(1)
+	// U16: 0 = -1.0, 32768 = 0.0, 65535 = 1.0
+	// Formula: (value / 32767.5) - 1.0
+	return Value(binary.LittleEndian.Uint16(sample))/Value(32767.5) - Value(1)
 }
 
 //func ValueOfBytesU16MSB(sample []byte) Value {

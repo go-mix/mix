@@ -338,11 +338,11 @@ func valueToBytes(v sample.Value, format spec.AudioFormat) []byte {
 func getTolerance(format spec.AudioFormat) float64 {
 	switch format {
 	case spec.AudioU8:
-		return 1.0 / 128.0 // 8-bit has low precision
+		return 2.0 / 255.0 // 8-bit: 256 values map to range [-1, 1]
 	case spec.AudioS8:
 		return 1.0 / 127.0
 	case spec.AudioU16:
-		return 1.0 / 32768.0
+		return 2.0 / 65535.0 // 16-bit: 65536 values map to range [-1, 1]
 	case spec.AudioS16:
 		return 1.0 / 32767.0
 	case spec.AudioS32:
