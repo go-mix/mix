@@ -96,6 +96,16 @@ func (f *Fire) IsPlaying() bool {
 // Envelope calculates the ADSR envelope multiplier at the current playback position.
 // Returns a value between 0 and 1 that should be multiplied with the volume.
 func (f *Fire) Envelope(at spec.Tz) float64 {
+	// If the fire is done, return 0
+	if f.state == fireStateDone {
+		return 0.0
+	}
+	
+	// If position is before start, return 0
+	if at < f.BeginTz {
+		return 0.0
+	}
+	
 	// If no ADSR is configured, return 1.0 (full volume)
 	if f.Attack == 0 && f.Decay == 0 && f.Release == 0 {
 		return 1.0
@@ -106,9 +116,17 @@ func (f *Fire) Envelope(at spec.Tz) float64 {
 
 	// If we're in the release phase
 	if f.state == fireStateRelease {
+		// Check that we're past the release start time
+		if at < f.releaseTz {
+			// This shouldn't happen, but if it does, use sustain
+			return f.Sustain
+		}
 		positionInRelease := at - f.releaseTz
 		if f.Release > 0 {
-			// Linear fade from sustain level to 0
+			// Linear fade from sustain level to 0, clamped to [0, sustain]
+			if positionInRelease >= f.Release {
+				return 0.0
+			}
 			return f.Sustain * float64(f.Release-positionInRelease) / float64(f.Release)
 		}
 		return 0.0

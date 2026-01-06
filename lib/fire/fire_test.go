@@ -240,3 +240,31 @@ func TestADSR_ReleaseTransition(t *testing.T) {
 	assert.Equal(t, fireStateDone, fire.state)
 	assert.False(t, fire.IsAlive())
 }
+
+func TestADSR_EdgeCases(t *testing.T) {
+	// Test edge cases for envelope calculation
+	src := "sound.wav"
+	bgnTz := spec.Tz(1000)
+	endTz := bgnTz + spec.Tz(200)
+	attack := spec.Tz(50)
+	decay := spec.Tz(50)
+	sustain := 0.7
+	release := spec.Tz(50)
+	fire := New(src, bgnTz, endTz, 1.0, 0, attack, decay, sustain, release)
+	
+	// Before begin time, envelope should be 0
+	assert.Equal(t, 0.0, fire.Envelope(bgnTz-10))
+	assert.Equal(t, 0.0, fire.Envelope(bgnTz-1))
+	
+	// Trigger release
+	fire.At(bgnTz)
+	for i := spec.Tz(1); i <= 200; i++ {
+		fire.At(bgnTz + i)
+	}
+	assert.Equal(t, fireStateRelease, fire.state)
+	
+	// Past end of release, envelope should be 0
+	assert.Equal(t, 0.0, fire.Envelope(endTz+release))
+	assert.Equal(t, 0.0, fire.Envelope(endTz+release+10))
+	assert.Equal(t, 0.0, fire.Envelope(endTz+release+100))
+}
