@@ -60,27 +60,89 @@ func TestLoadFloat32bitLittleEndian48000HzEstéreo(t *testing.T) {
 }
 
 func TestOutput(t *testing.T) {
-	// TODO: Test Source plays audio
+	// Test that source can provide audio samples
+	testSourceSetup(44100, 1)
+	testFile := "testdata/Signed16bitLittleEndian44100HzMono.wav"
+	source := New(testFile)
+	assert.NotNil(t, source)
+	
+	// Should be able to get samples
+	totalMovement := testSourceAssertSound(t, source, 1)
+	assert.True(t, totalMovement > 0, "Audio file should have some non-zero samples")
 }
 
 func TestSampleAt(t *testing.T) {
-	// TODO: Test Source SampleAt
+	testSourceSetup(44100, 2)
+	testFile := "testdata/Float32bitLittleEndian48000HzEstéreo.wav"
+	source := New(testFile)
+	
+	// Test getting sample at beginning
+	smp := source.SampleAt(0, 1.0, 0)
+	assert.Equal(t, 2, len(smp))
+	
+	// Test with volume adjustment
+	smpHalfVol := source.SampleAt(0, 0.5, 0)
+	assert.Equal(t, 2, len(smpHalfVol))
+	
+	// Test with pan
+	smpLeftPan := source.SampleAt(0, 1.0, -1.0)
+	assert.Equal(t, 2, len(smpLeftPan))
+	
+	smpRightPan := source.SampleAt(0, 1.0, 1.0)
+	assert.Equal(t, 2, len(smpRightPan))
+	
+	// Test beyond length should return zeros
+	smpBeyond := source.SampleAt(source.Length()+100, 1.0, 0)
+	assert.Equal(t, 2, len(smpBeyond))
+	assert.Equal(t, sample.Value(0), smpBeyond[0])
+	assert.Equal(t, sample.Value(0), smpBeyond[1])
 }
 
 func TestState(t *testing.T) {
-	// TODO: Test Source State
+	testSourceSetup(44100, 1)
+	testFile := "testdata/Signed16bitLittleEndian44100HzMono.wav"
+	source := New(testFile)
+	
+	// After loading, state should be READY
+	assert.Equal(t, READY, source.state)
 }
 
 func TestStateName(t *testing.T) {
-	// TODO: Test Source StateName
+	// Test that state enum values are as expected
+	assert.Equal(t, stateEnum(0), STAGED)
+	assert.Equal(t, stateEnum(1), LOADING)
+	assert.Equal(t, stateEnum(2), READY)
 }
 
 func TestLength(t *testing.T) {
-	// TODO: Test Source reports length
+	testSourceSetup(44100, 1)
+	testFile := "testdata/Signed16bitLittleEndian44100HzMono.wav"
+	source := New(testFile)
+	
+	// Length should be greater than 0 for a valid audio file
+	length := source.Length()
+	assert.True(t, length > 0, "Source length should be greater than 0")
+	
+	// Length should match maxTz
+	assert.Equal(t, source.maxTz, length)
 }
 
 func TestTeardown(t *testing.T) {
-	// TODO: Test Source Teardown
+	testSourceSetup(44100, 1)
+	testFile := "testdata/Signed16bitLittleEndian44100HzMono.wav"
+	source := New(testFile)
+	
+	// Source should have samples before teardown
+	assert.NotNil(t, source.sample)
+	assert.True(t, len(source.sample) > 0)
+	
+	// Teardown should not panic
+	assert.NotPanics(t, func() {
+		source.Teardown()
+	})
+	
+	// After teardown, sample should be nil
+	assert.Nil(t, source.sample)
 }
 
 func TestMixer_mixVolume(t *testing.T) {

@@ -179,3 +179,79 @@ func TestTeardown(t *testing.T) {
 		fire.Teardown()
 	})
 }
+
+func TestFire_VolumeAndPan(t *testing.T) {
+	src := "test.wav"
+	bgnTz := spec.Tz(100)
+	endTz := spec.Tz(150)
+	
+	// Test with different volume levels
+	fire1 := New(src, bgnTz, endTz, 0.5, 0)
+	assert.Equal(t, 0.5, fire1.Volume)
+	
+	fire2 := New(src, bgnTz, endTz, 1.0, 0)
+	assert.Equal(t, 1.0, fire2.Volume)
+	
+	// Test with different pan values
+	fireLeft := New(src, bgnTz, endTz, 1.0, -1.0)
+	assert.Equal(t, -1.0, fireLeft.Pan)
+	
+	fireRight := New(src, bgnTz, endTz, 1.0, 1.0)
+	assert.Equal(t, 1.0, fireRight.Pan)
+	
+	fireCenter := New(src, bgnTz, endTz, 1.0, 0.0)
+	assert.Equal(t, 0.0, fireCenter.Pan)
+}
+
+func TestFire_ZeroEndTz(t *testing.T) {
+	src := "test.wav"
+	bgnTz := spec.Tz(100)
+	
+	// Create fire with EndTz = 0 (should be calculated from source)
+	fire := New(src, bgnTz, 0, 1.0, 0)
+	assert.Equal(t, spec.Tz(0), fire.EndTz)
+	
+	// Start playing
+	fire.At(bgnTz)
+	assert.Equal(t, fireStatePlay, fire.state)
+	
+	// After calling At() during play, EndTz should be calculated
+	fire.At(bgnTz + 1)
+	// EndTz should now be set (we can't predict exact value without source)
+	assert.True(t, fire.EndTz >= bgnTz)
+}
+
+func TestFire_MultipleAtCalls(t *testing.T) {
+	src := "test.wav"
+	bgnTz := spec.Tz(100)
+	endTz := spec.Tz(110)
+	fire := New(src, bgnTz, endTz, 1.0, 0)
+	
+	// Multiple calls before begin should return 0
+	for i := 0; i < 5; i++ {
+		result := fire.At(bgnTz - 10)
+		assert.Equal(t, spec.Tz(0), result)
+		assert.Equal(t, fireStateReady, fire.state)
+	}
+	
+	// Start playing
+	fire.At(bgnTz)
+	assert.Equal(t, fireStatePlay, fire.state)
+	
+	// Multiple calls during play should increment
+	for i := spec.Tz(1); i <= 5; i++ {
+		result := fire.At(bgnTz + i)
+		assert.Equal(t, i, result)
+	}
+	
+	// Reach end
+	fire.At(endTz)
+	assert.Equal(t, fireStateDone, fire.state)
+	
+	// Multiple calls after end should return 0
+	for i := 0; i < 5; i++ {
+		result := fire.At(endTz + 10)
+		assert.Equal(t, spec.Tz(0), result)
+		assert.Equal(t, fireStateDone, fire.state)
+	}
+}
