@@ -191,8 +191,8 @@ func Spec() *spec.AudioSpec {
 }
 
 // SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start), with sustain time.Duration, volume from 0 to 1, and pan from -1 to +1
-func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) *fire.Fire {
-	return mix.SetFire(source, begin, sustain, volume, pan)
+func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, attack time.Duration, decay time.Duration, sustainLevel float64, release time.Duration) *fire.Fire {
+	return mix.SetFire(source, begin, sustain, volume, pan, attack, decay, sustainLevel, release)
 }
 
 // FireCount to check the number of fires currently scheduled for playback

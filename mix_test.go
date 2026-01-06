@@ -49,23 +49,23 @@ func TestSpec(t *testing.T) {
 
 func TestSetFire(t *testing.T) {
 	testAPISetup()
-	fire := SetFire("lib/source/testdata/Signed16bitLittleEndian44100HzMono.wav", time.Duration(0), 0, 1.0, 0)
+	fire := SetFire("lib/source/testdata/Signed16bitLittleEndian44100HzMono.wav", time.Duration(0), 0, 1.0, 0, 0, 0, 1.0, 0)
 	assert.NotNil(t, fire)
 }
 
 func TestFireCount(t *testing.T) {
 	testAPISetup()
 	assert.Equal(t, 0, FireCount())
-	SetFire("lib/source/testdata/Float32bitLittleEndian48000HzEstéreo.wav", time.Duration(0), 0, 1.0, 0)
+	SetFire("lib/source/testdata/Float32bitLittleEndian48000HzEstéreo.wav", time.Duration(0), 0, 1.0, 0, 0, 0, 1.0, 0)
 	assert.Equal(t, 1, FireCount())
-	SetFire("lib/source/testdata/Signed16bitLittleEndian44100HzMono.wav", time.Duration(0), 0, 1.0, 0)
+	SetFire("lib/source/testdata/Signed16bitLittleEndian44100HzMono.wav", time.Duration(0), 0, 1.0, 0, 0, 0, 1.0, 0)
 	assert.Equal(t, 2, FireCount())
 	// TODO: assert count drains during back to 0 as a result of playback
 }
 
 func TestClearAllFires(t *testing.T) {
 	testAPISetup()
-	SetFire("lib/source/testdata/Signed16bitLittleEndian44100HzMono.wav", time.Duration(0), 0, 1.0, 0)
+	SetFire("lib/source/testdata/Signed16bitLittleEndian44100HzMono.wav", time.Duration(0), 0, 1.0, 0, 0, 0, 1.0, 0)
 	ClearAllFires()
 	assert.Equal(t, 0, FireCount())
 }

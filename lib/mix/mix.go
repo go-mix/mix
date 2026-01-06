@@ -21,7 +21,8 @@ func NextSample() []sample.Value {
 	var fireSample []sample.Value
 	for _, fire := range mixLiveFires {
 		if fireTz := fire.At(nowTz); fireTz > 0 {
-			fireSample = mixSourceAt(fire.Source, fire.Volume, fire.Pan, fireTz)
+			envelope := fire.Envelope(nowTz)
+			fireSample = mixSourceAt(fire.Source, fire.Volume*envelope, fire.Pan, fireTz)
 			for c := 0; c < masterSpec.Channels; c++ {
 				smp[c] += fireSample[c]
 			}
@@ -62,14 +63,17 @@ func Teardown() {
 }
 
 // SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start), with sustain time.Duration, volume from 0 to 1, and pan from -1 to +1
-func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) *fire.Fire {
+func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, attack time.Duration, decay time.Duration, sustainLevel float64, release time.Duration) *fire.Fire {
 	mixPrepareSource(mixSourcePrefix + source)
 	beginTz := spec.Tz(begin.Nanoseconds() / masterTzDur.Nanoseconds())
 	var endTz spec.Tz
 	if sustain != 0 {
 		endTz = beginTz + spec.Tz(sustain.Nanoseconds()/masterTzDur.Nanoseconds())
 	}
-	f := fire.New(mixSourcePrefix+source, beginTz, endTz, volume, pan)
+	attackTz := spec.Tz(attack.Nanoseconds() / masterTzDur.Nanoseconds())
+	decayTz := spec.Tz(decay.Nanoseconds() / masterTzDur.Nanoseconds())
+	releaseTz := spec.Tz(release.Nanoseconds() / masterTzDur.Nanoseconds())
+	f := fire.New(mixSourcePrefix+source, beginTz, endTz, volume, pan, attackTz, decayTz, sustainLevel, releaseTz)
 	mixReadyFires = append(mixReadyFires, f)
 	return f
 }
