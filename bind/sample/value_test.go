@@ -3,6 +3,8 @@ package sample
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestValueFromByteU8(t *testing.T) {
@@ -99,4 +101,26 @@ func TestValueToInt16(t *testing.T) {
 
 func TestValueToInt32(t *testing.T) {
 	// TODO
+}
+
+
+func TestValueAbs(t *testing.T) {
+// Test positive value
+v1 := Value(0.5)
+assert.Equal(t, Value(0.5), v1.Abs())
+
+// Test negative value
+v2 := Value(-0.5)
+assert.Equal(t, Value(0.5), v2.Abs())
+
+// Test zero
+v3 := Value(0)
+assert.Equal(t, Value(0), v3.Abs())
+
+// Test edge cases
+v4 := Value(-1.0)
+assert.Equal(t, Value(1.0), v4.Abs())
+
+v5 := Value(1.0)
+assert.Equal(t, Value(1.0), v5.Abs())
 }
