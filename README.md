@@ -67,7 +67,7 @@ See `demo/demo.go`:
       t := 2 * time.Second // padding before music
       for n := 0; n < loops; n++ {
         for s := 0; s < len(pattern); s++ {
-          mix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, 0)
+          mix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, 0, 0, 0, 1.0, 0)
         }
         t += time.Duration(len(pattern)) * step
       }
@@ -125,6 +125,29 @@ Mix takes maximum advantage of Go by storing and mixing audio in native Go `[]fl
 To the Mix API, time is specified as a time.Duration-since-epoch, where the epoch is the moment that mix.Start() was called.
 
 Internally, time is tracked as samples-since-epoch at the master out playback frequency (e.g. 48000 Hz). This is most efficient because source audio is pre-converted to the master out playback frequency, and all audio maths are performed in terms of samples.
+
+### ADSR Envelope
+
+Mix supports ADSR (Attack, Decay, Sustain, Release) envelopes for each fire, allowing precise control over how audio volume changes over time:
+
+- **Attack**: Time for the sound to reach full volume from silence
+- **Decay**: Time for the sound to drop from peak to sustain level
+- **Sustain**: The level (0 to 1) at which the sound stays during playback
+- **Release**: Time for the sound to fade out after playback ends
+
+Example usage with ADSR:
+
+    // Quick attack (10ms), short decay (20ms), sustain at 80%, smooth release (50ms)
+    attack := 10 * time.Millisecond
+    decay := 20 * time.Millisecond
+    sustainLevel := 0.8
+    release := 50 * time.Millisecond
+    
+    mix.SetFire("sound.wav", begin, duration, volume, pan, attack, decay, sustainLevel, release)
+
+To disable the envelope effect (constant volume throughout), use:
+
+    mix.SetFire("sound.wav", begin, duration, volume, pan, 0, 0, 1.0, 0)
 
 ### The Mixing Algorithm
 

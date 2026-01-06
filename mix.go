@@ -63,7 +63,7 @@
 //       t := 2 * time.Second // padding before music
 //       for n := 0; n < loops; n++ {
 //         for s := 0; s < len(pattern); s++ {
-//           mix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, 0)
+//           mix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, 0, 0, 0, 1.0, 0)
 //         }
 //         t += time.Duration(len(pattern)) * step
 //       }
@@ -190,7 +190,10 @@ func Spec() *spec.AudioSpec {
 	return mix.Spec()
 }
 
-// SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start), with sustain time.Duration, volume from 0 to 1, and pan from -1 to +1
+// SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start), 
+// with sustain time.Duration (duration of playback), volume from 0 to 1, pan from -1 to +1,
+// and ADSR envelope parameters: attack time.Duration, decay time.Duration, sustainLevel (0 to 1), release time.Duration.
+// To disable the ADSR envelope effect, use: attack=0, decay=0, sustainLevel=1.0, release=0
 func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, attack time.Duration, decay time.Duration, sustainLevel float64, release time.Duration) *fire.Fire {
 	return mix.SetFire(source, begin, sustain, volume, pan, attack, decay, sustainLevel, release)
 }
