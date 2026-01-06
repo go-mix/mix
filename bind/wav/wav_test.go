@@ -57,6 +57,32 @@ func TestWAVReading(t *testing.T) {
 				0xff, 0xff, 0xff, 0x7f, // 2147483647
 			},
 		},
+		{
+			name:       "F32_Float_32bit",
+			format:     spec.AudioF32,
+			sampleRate: 48000,
+			channels:   1,
+			testValues: []float64{-1.0, 0.0, 1.0},
+			// F32 Little Endian (IEEE 754): -1.0, 0.0, 1.0
+			wavSampleBytes: []byte{
+				0x00, 0x00, 0x80, 0xbf, // -1.0
+				0x00, 0x00, 0x00, 0x00, // 0.0
+				0x00, 0x00, 0x80, 0x3f, // 1.0
+			},
+		},
+		{
+			name:       "F64_Float_64bit",
+			format:     spec.AudioF64,
+			sampleRate: 44100,
+			channels:   1,
+			testValues: []float64{-1.0, 0.0, 1.0},
+			// F64 Little Endian (IEEE 754): -1.0, 0.0, 1.0
+			wavSampleBytes: []byte{
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0xbf, // -1.0
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 0.0
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf0, 0x3f, // 1.0
+			},
+		},
 	}
 
 	for _, tt := range tests {
