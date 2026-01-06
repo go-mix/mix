@@ -29,6 +29,90 @@ func TestRequiresProperAudioSpec(t *testing.T) {
 	})
 }
 
+func TestMixingAlgorithmDefault(t *testing.T) {
+	Configure(spec.AudioSpec{
+		Freq:     44100,
+		Format:   spec.AudioU16,
+		Channels: 2,
+	})
+	// Should default to logarithmic
+	assert.Equal(t, spec.MixLogarithmic, mixAlgorithm)
+}
+
+func TestMixingAlgorithmLogarithmic(t *testing.T) {
+	Configure(spec.AudioSpec{
+		Freq:      44100,
+		Format:    spec.AudioU16,
+		Channels:  2,
+		Algorithm: spec.MixLogarithmic,
+	})
+	assert.Equal(t, spec.MixLogarithmic, mixAlgorithm)
+}
+
+func TestMixingAlgorithmLinear(t *testing.T) {
+	Configure(spec.AudioSpec{
+		Freq:      44100,
+		Format:    spec.AudioU16,
+		Channels:  2,
+		Algorithm: spec.MixLinear,
+	})
+	assert.Equal(t, spec.MixLinear, mixAlgorithm)
+}
+
+func TestMixLinearClamp(t *testing.T) {
+	// Test clamping at boundaries
+	assert.Equal(t, float32(-1.0), float32(mixLinearClamp(-2.5)))
+	assert.Equal(t, float32(-1.0), float32(mixLinearClamp(-1.5)))
+	assert.Equal(t, float32(1.0), float32(mixLinearClamp(2.5)))
+	assert.Equal(t, float32(1.0), float32(mixLinearClamp(1.5)))
+	
+	// Test pass-through in range
+	assert.Equal(t, float32(0.0), float32(mixLinearClamp(0.0)))
+	assert.Equal(t, float32(0.5), float32(mixLinearClamp(0.5)))
+	assert.Equal(t, float32(-0.5), float32(mixLinearClamp(-0.5)))
+	assert.Equal(t, float32(1.0), float32(mixLinearClamp(1.0)))
+	assert.Equal(t, float32(-1.0), float32(mixLinearClamp(-1.0)))
+}
+
+func TestMixLogarithmicRangeCompression(t *testing.T) {
+	// Test that values in range are scaled by golden ratio
+	result := mixLogarithmicRangeCompression(0.5)
+	expected := 0.5 / 1.61803398875
+	assert.InDelta(t, expected, float64(result), 0.0001)
+	
+	// Test that values outside range are compressed logarithmically
+	// Values > 1 should be compressed
+	resultAbove := mixLogarithmicRangeCompression(2.0)
+	assert.True(t, resultAbove > 0 && resultAbove < 1.5)
+	
+	// Values < -1 should be compressed
+	resultBelow := mixLogarithmicRangeCompression(-2.0)
+	assert.True(t, resultBelow < 0 && resultBelow > -1.5)
+}
+
+func TestMixApplyAlgorithm(t *testing.T) {
+	// Test with linear algorithm
+	Configure(spec.AudioSpec{
+		Freq:      44100,
+		Format:    spec.AudioU16,
+		Channels:  2,
+		Algorithm: spec.MixLinear,
+	})
+	result := mixApplyAlgorithm(2.0)
+	assert.Equal(t, float32(1.0), float32(result))
+	
+	// Test with logarithmic algorithm
+	Configure(spec.AudioSpec{
+		Freq:      44100,
+		Format:    spec.AudioU16,
+		Channels:  2,
+		Algorithm: spec.MixLogarithmic,
+	})
+	result = mixApplyAlgorithm(0.5)
+	expected := 0.5 / 1.61803398875
+	assert.InDelta(t, expected, float64(result), 0.0001)
+}
+
 func TestInitialize(t *testing.T) {
 	// TODO: Test Mixer Initialize
 }

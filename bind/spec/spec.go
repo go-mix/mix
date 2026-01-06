@@ -10,10 +10,11 @@ type Tz uint64
 
 // AudioSpec represents the frequency, format, # channels and sample rate of any audio I/O
 type AudioSpec struct {
-	Freq     float64
-	Format   AudioFormat
-	Channels int
-	Length   time.Duration
+	Freq      float64
+	Format    AudioFormat
+	Channels  int
+	Length    time.Duration
+	Algorithm MixAlgorithm
 }
 
 // Validate these specs
@@ -55,3 +56,12 @@ const AudioF32 AudioFormat = "F32"
 
 // AudioF64 is floating-point 64-bit sample (per channel)
 const AudioF64 AudioFormat = "F64"
+
+// MixAlgorithm represents the algorithm used for mixing audio samples
+type MixAlgorithm string
+
+// MixLogarithmic is Paul Vögler's logarithmic normalization algorithm (default)
+const MixLogarithmic MixAlgorithm = "logarithmic"
+
+// MixLinear is simple linear mixing (clamping)
+const MixLinear MixAlgorithm = "linear"

@@ -31,7 +31,7 @@ func NextSample() []sample.Value {
 	nowTz++
 	out := make([]sample.Value, masterSpec.Channels)
 	for c := 0; c < masterSpec.Channels; c++ {
-		out[c] = mixLogarithmicRangeCompression(smp[c])
+		out[c] = mixApplyAlgorithm(smp[c])
 	}
 	if nowTz > nextCycleTz {
 		mixCycle()
@@ -45,6 +45,12 @@ func Configure(s spec.AudioSpec) {
 	masterFreq = float64(s.Freq)
 	masterTzDur = time.Second / time.Duration(masterFreq)
 	masterCycleDurTz = spec.Tz(masterFreq)
+	// Set mixing algorithm (default to logarithmic if not specified)
+	if s.Algorithm == "" {
+		mixAlgorithm = spec.MixLogarithmic
+	} else {
+		mixAlgorithm = s.Algorithm
+	}
 	source.Configure(s)
 }
 
@@ -155,6 +161,7 @@ var (
 	mixLiveFires    []*fire.Fire
 	masterSpec      *spec.AudioSpec
 	masterFreq      float64
+	mixAlgorithm    spec.MixAlgorithm
 )
 
 func init() {
@@ -224,5 +231,25 @@ func mixLogarithmicRangeCompression(i sample.Value) sample.Value {
 		return sample.Value(math.Log(float64(i)-0.85)/14 + 0.75)
 	} else {
 		return sample.Value(i / 1.61803398875)
+	}
+}
+
+func mixLinearClamp(i sample.Value) sample.Value {
+	if i < -1 {
+		return sample.Value(-1)
+	} else if i > 1 {
+		return sample.Value(1)
+	}
+	return i
+}
+
+func mixApplyAlgorithm(i sample.Value) sample.Value {
+	switch mixAlgorithm {
+	case spec.MixLinear:
+		return mixLinearClamp(i)
+	case spec.MixLogarithmic:
+		return mixLogarithmicRangeCompression(i)
+	default:
+		return mixLogarithmicRangeCompression(i)
 	}
 }
