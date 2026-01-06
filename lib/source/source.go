@@ -1,8 +1,10 @@
-// Package source models a single audio source
 package source
 
 import (
+	"io"
 	"math"
+
+	riff "github.com/youpy/go-riff"
 
 	"github.com/go-mix/mix/bind"
 	"github.com/go-mix/mix/bind/debug"
@@ -23,6 +25,28 @@ func New(URL string) *Source {
 		URL:   URL,
 	}
 	s.load()
+	return s
+}
+
+// NewFromReader creates a Source from an io.Reader+io.ReaderAt containing WAV data
+func NewFromReader(r riff.RIFFReader) *Source {
+	s := &Source{
+		state: STAGED,
+		URL:   "<reader>",
+	}
+	s.loadFromReader(r)
+	return s
+}
+
+// NewFromSamples creates a Source from pre-loaded sample data
+func NewFromSamples(samples []sample.Sample, audioSpec *spec.AudioSpec) *Source {
+	s := &Source{
+		state:     READY,
+		URL:       "<samples>",
+		sample:    samples,
+		audioSpec: audioSpec,
+		maxTz:     spec.Tz(len(samples)),
+	}
 	return s
 }
 
@@ -98,6 +122,17 @@ func (s *Source) load() {
 	if s.audioSpec == nil {
 		// TODO: handle errors loading file
 		debug.Printf("could not load WAV %s\n", s.URL)
+	}
+	s.maxTz = spec.Tz(len(s.sample))
+	s.state = READY
+}
+
+func (s *Source) loadFromReader(r riff.RIFFReader) {
+	s.state = LOADING
+	s.sample, s.audioSpec = bind.LoadWAVFromReader(r)
+	if s.audioSpec == nil {
+		// TODO: handle errors loading from reader
+		debug.Printf("could not load WAV from reader\n")
 	}
 	s.maxTz = spec.Tz(len(s.sample))
 	s.state = READY

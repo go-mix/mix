@@ -5,6 +5,8 @@ import (
 	"io"
 	"os"
 
+	riff "github.com/youpy/go-riff"
+
 	"github.com/go-mix/mix/bind/sample"
 	"github.com/go-mix/mix/bind/spec"
 )
@@ -15,7 +17,12 @@ func Load(path string) (out []sample.Sample, specs *spec.AudioSpec) {
 		panic("File not found: " + path)
 	}
 	file, _ := os.Open(path)
-	reader, err := NewReader(file)
+	return LoadFromReader(file)
+}
+
+// LoadFromReader loads WAV data from an io.Reader+io.ReaderAt into memory
+func LoadFromReader(r riff.RIFFReader) (out []sample.Sample, specs *spec.AudioSpec) {
+	reader, err := NewReader(r)
 	if err != nil {
 		panic(err)
 	}

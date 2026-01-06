@@ -1,9 +1,10 @@
-// Package bind is for modular binding of mix to audio interface
 package bind
 
 import (
 	"io"
 	"time"
+
+	riff "github.com/youpy/go-riff"
 
 	"github.com/go-mix/mix/bind/hardware/null"
 	"github.com/go-mix/mix/bind/opt"
@@ -60,6 +61,19 @@ func LoadWAV(file string) ([]sample.Sample, *spec.AudioSpec) {
 		return wav.Load(file)
 	case opt.InputSOX:
 		return sox.Load(file)
+	default:
+		return make([]sample.Sample, 0), &spec.AudioSpec{}
+	}
+}
+
+// LoadWAVFromReader loads WAV data from an io.Reader+io.ReaderAt into a buffer
+func LoadWAVFromReader(r riff.RIFFReader) ([]sample.Sample, *spec.AudioSpec) {
+	switch useLoader {
+	case opt.InputWAV:
+		return wav.LoadFromReader(r)
+	case opt.InputSOX:
+		// SOX doesn't support io.Reader, fall back to WAV
+		return wav.LoadFromReader(r)
 	default:
 		return make([]sample.Sample, 0), &spec.AudioSpec{}
 	}
