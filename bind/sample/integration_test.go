@@ -2,33 +2,40 @@
 package sample
 
 import (
-"testing"
+	"testing"
 
-"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
+)
+
+const (
+	// Tolerance values for round-trip conversion tests
+	toleranceS16 = 0.001
+	toleranceS32 = 0.0001
+	toleranceF32 = 0.0001
 )
 
 func TestSampleValueRoundTrip_S16(t *testing.T) {
-original := Value(0.5)
-bytes := original.ToBytesS16LSB()
-roundTrip := ValueOfBytesS16LSB(bytes)
-diff := (original - roundTrip).Abs()
-assert.True(t, diff < 0.001, "Round trip should preserve value within tolerance")
+	original := Value(0.5)
+	bytes := original.ToBytesS16LSB()
+	roundTrip := ValueOfBytesS16LSB(bytes)
+	diff := (original - roundTrip).Abs()
+	assert.True(t, diff < toleranceS16, "Round trip should preserve value within tolerance")
 }
 
 func TestSampleValueRoundTrip_S32(t *testing.T) {
-original := Value(0.5)
-bytes := original.ToBytesS32LSB()
-roundTrip := ValueOfBytesS32LSB(bytes)
-diff := (original - roundTrip).Abs()
-assert.True(t, diff < 0.0001, "Round trip should preserve value within tolerance")
+	original := Value(0.5)
+	bytes := original.ToBytesS32LSB()
+	roundTrip := ValueOfBytesS32LSB(bytes)
+	diff := (original - roundTrip).Abs()
+	assert.True(t, diff < toleranceS32, "Round trip should preserve value within tolerance")
 }
 
 func TestSampleValueRoundTrip_F32(t *testing.T) {
-original := Value(0.123456789)
-bytes := original.ToBytesF32LSB()
-roundTrip := ValueOfBytesF32LSB(bytes)
-diff := (original - roundTrip).Abs()
-assert.True(t, diff < 0.0001, "Round trip should preserve value within float32 tolerance")
+	original := Value(0.123456789)
+	bytes := original.ToBytesF32LSB()
+	roundTrip := ValueOfBytesF32LSB(bytes)
+	diff := (original - roundTrip).Abs()
+	assert.True(t, diff < toleranceF32, "Round trip should preserve value within float32 tolerance")
 }
 
 func TestSampleWithMultipleValues(t *testing.T) {

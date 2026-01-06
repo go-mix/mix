@@ -8,6 +8,11 @@ import (
 	"github.com/go-mix/mix/bind/spec"
 )
 
+const (
+	testFile1 = "testdata/Signed16bitLittleEndian44100HzMono.wav"
+	testFile2 = "testdata/Float32bitLittleEndian48000HzEstéreo.wav"
+)
+
 func TestPrepare(t *testing.T) {
 	// Setup
 	testSourceSetup(44100, 1)
@@ -16,18 +21,17 @@ func TestPrepare(t *testing.T) {
 	initialCount := Count()
 	
 	// Prepare a test source
-	testFile := "testdata/Signed16bitLittleEndian44100HzMono.wav"
-	Prepare(testFile)
+	Prepare(testFile1)
 	
 	// Count should increase by 1
 	assert.Equal(t, initialCount+1, Count())
 	
 	// Preparing the same source again should not increase count
-	Prepare(testFile)
+	Prepare(testFile1)
 	assert.Equal(t, initialCount+1, Count())
 	
 	// The source should now be retrievable
-	src := Get(testFile)
+	src := Get(testFile1)
 	assert.NotNil(t, src)
 }
 
@@ -35,32 +39,28 @@ func TestGet(t *testing.T) {
 	// Setup
 	testSourceSetup(44100, 1)
 	
-	testFile := "testdata/Signed16bitLittleEndian44100HzMono.wav"
-	
 	// Getting a non-existent source should return nil
 	src := Get("non-existent-file.wav")
 	assert.Nil(t, src)
 	
 	// Prepare and get a source
-	Prepare(testFile)
-	src = Get(testFile)
+	Prepare(testFile1)
+	src = Get(testFile1)
 	assert.NotNil(t, src)
-	assert.Equal(t, testFile, src.URL)
+	assert.Equal(t, testFile1, src.URL)
 }
 
 func TestGetLength(t *testing.T) {
 	// Setup
 	testSourceSetup(44100, 1)
 	
-	testFile := "testdata/Signed16bitLittleEndian44100HzMono.wav"
-	
 	// Getting length of non-existent source should return 0
 	length := GetLength("non-existent-file.wav")
 	assert.Equal(t, spec.Tz(0), length)
 	
 	// Prepare a source and get its length
-	Prepare(testFile)
-	length = GetLength(testFile)
+	Prepare(testFile1)
+	length = GetLength(testFile1)
 	assert.True(t, length > 0, "Length should be greater than 0 for a valid audio file")
 }
 
@@ -69,26 +69,23 @@ func TestPrune(t *testing.T) {
 	testSourceSetup(44100, 1)
 	
 	// Prepare multiple sources
-	file1 := "testdata/Signed16bitLittleEndian44100HzMono.wav"
-	file2 := "testdata/Float32bitLittleEndian48000HzEstéreo.wav"
-	
-	Prepare(file1)
-	Prepare(file2)
+	Prepare(testFile1)
+	Prepare(testFile2)
 	
 	initialCount := Count()
 	assert.True(t, initialCount >= 2, "Should have at least 2 sources")
 	
 	// Keep only file1
 	keep := map[string]bool{
-		file1: true,
+		testFile1: true,
 	}
 	Prune(keep)
 	
 	// file1 should still exist
-	assert.NotNil(t, Get(file1))
+	assert.NotNil(t, Get(testFile1))
 	
 	// file2 should be pruned
-	assert.Nil(t, Get(file2))
+	assert.Nil(t, Get(testFile2))
 }
 
 func TestCount(t *testing.T) {
@@ -102,11 +99,9 @@ func TestCount(t *testing.T) {
 	count := Count()
 	
 	// Prepare sources and verify count increases
-	file1 := "testdata/Signed16bitLittleEndian44100HzMono.wav"
-	Prepare(file1)
+	Prepare(testFile1)
 	assert.Equal(t, count+1, Count())
 	
-	file2 := "testdata/Float32bitLittleEndian48000HzEstéreo.wav"
-	Prepare(file2)
+	Prepare(testFile2)
 	assert.Equal(t, count+2, Count())
 }
