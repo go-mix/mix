@@ -195,8 +195,8 @@ func TestStereoImplicitPanningWithVolume(t *testing.T) {
 // TestStereoChannelIdentity verifies that channel 0 is left and channel 1 is right
 // by testing the volume function's behavior with stereo configuration
 func TestStereoChannelIdentity(t *testing.T) {
-	// Set up for stereo
-	masterChannelsFloat = 2
+	// Set up for stereo using the standard test setup function
+	testSourceSetup(48000, 2)
 	
 	// With pan=0 (center), both channels should have equal volume multiplier
 	leftVol := volume(0, 1.0, 0)   // channel 0 = left
