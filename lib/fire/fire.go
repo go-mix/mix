@@ -106,8 +106,8 @@ func (f *Fire) Envelope(at spec.Tz) float64 {
 		return 0.0
 	}
 	
-	// If no ADSR is configured, return 1.0 (full volume)
-	if f.Attack == 0 && f.Decay == 0 && f.Release == 0 {
+	// If no ADSR is configured and sustain is full, return 1.0 (full volume)
+	if f.Attack == 0 && f.Decay == 0 && f.Sustain == 1.0 && f.Release == 0 {
 		return 1.0
 	}
 
