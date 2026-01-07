@@ -80,18 +80,21 @@ func (s *Source) SampleAtInterpolated(at float64, vol float64, pan float64) (out
 		sample2 = sample1
 	}
 	
+	// Helper function for linear interpolation
+	interpolate := func(srcChan int) sample.Value {
+		return sample1.Values[srcChan]*(1.0-sample.Value(atFrac)) + sample2.Values[srcChan]*sample.Value(atFrac)
+	}
+	
 	// Linear interpolation between samples
 	if masterSpec.Channels == s.audioSpec.Channels {
 		for c := int(0); c < masterSpec.Channels; c++ {
-			interpolated := sample1.Values[c]*(1.0-sample.Value(atFrac)) + sample2.Values[c]*sample.Value(atFrac)
-			out[c] = volume(float64(c), vol, pan) * interpolated
+			out[c] = volume(float64(c), vol, pan) * interpolate(c)
 		}
 	} else {
 		tc := float64(s.audioSpec.Channels)
 		for c := int(0); c < masterSpec.Channels; c++ {
 			srcChan := int(math.Floor(tc * float64(c) / masterChannelsFloat))
-			interpolated := sample1.Values[srcChan]*(1.0-sample.Value(atFrac)) + sample2.Values[srcChan]*sample.Value(atFrac)
-			out[c] = volume(float64(c), vol, pan) * interpolated
+			out[c] = volume(float64(c), vol, pan) * interpolate(srcChan)
 		}
 	}
 	return

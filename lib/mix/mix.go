@@ -20,10 +20,11 @@ func NextSample() []sample.Value {
 	smp := make([]sample.Value, masterSpec.Channels)
 	var fireSample []sample.Value
 	for _, fire := range mixLiveFires {
-		if fireTz := fire.At(nowTz); fireTz > 0 {
+		if fireTz := fire.At(nowTz); fireTz > 0 || fire.IsPlaying() {
 			// Use interpolated sampling if pitch shifting is enabled
 			if fire.Pitch != 0 && fire.Pitch != 1.0 {
-				fireSample = mixSourceAtInterpolated(fire.Source, fire.Volume, fire.Pan, float64(fireTz))
+				// Use fractional playback position for interpolation
+				fireSample = mixSourceAtInterpolated(fire.Source, fire.Volume, fire.Pan, fire.PlaybackTz)
 			} else {
 				fireSample = mixSourceAt(fire.Source, fire.Volume, fire.Pan, fireTz)
 			}

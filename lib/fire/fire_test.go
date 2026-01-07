@@ -82,15 +82,18 @@ func TestPitchShift(t *testing.T) {
 	fire := New(src, bgnTz, 0, vol, pan, pitch, timeStretch)
 	
 	// Test that pitch shift affects playback position
-	fire.At(bgnTz) // start
+	fire.At(bgnTz) // start - transitions to play state, initializes PlaybackTz to pitch value
 	assert.Equal(t, fireStatePlay, fire.state)
+	assert.Equal(t, float64(2.0), fire.PlaybackTz) // PlaybackTz initialized to pitch
 	
 	// With pitch=2.0, each At() call should advance by 2 samples in source
 	firstSample := fire.At(bgnTz + 1)
-	assert.Equal(t, spec.Tz(2), firstSample) // Should be at sample 2 (pitch * 1)
+	assert.Equal(t, spec.Tz(2), firstSample) // Should return sample 2
+	assert.Equal(t, float64(4.0), fire.PlaybackTz) // PlaybackTz advances by pitch to 4.0
 	
 	secondSample := fire.At(bgnTz + 2)
-	assert.Equal(t, spec.Tz(4), secondSample) // Should be at sample 4 (pitch * 2)
+	assert.Equal(t, spec.Tz(4), secondSample) // Should return sample 4
+	assert.Equal(t, float64(6.0), fire.PlaybackTz) // PlaybackTz advances to 6.0
 }
 
 func TestTimeStretch(t *testing.T) {

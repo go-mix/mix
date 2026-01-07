@@ -21,7 +21,7 @@ func New(source string, beginTz spec.Tz, endTz spec.Tz, volume float64, pan floa
 		TimeStretch: timeStretch,
 		/* playback */
 		state:      fireStateReady,
-		playbackTz: 0,
+		PlaybackTz: 0,
 	}
 	return s
 }
@@ -38,7 +38,7 @@ type Fire struct {
 	TimeStretch float64 // time stretch multiplier (1.0 = no stretch, 2.0 = twice as slow, 0.5 = twice as fast)
 	/* playback */
 	nowTz      spec.Tz
-	playbackTz float64 // fractional position for pitch/time stretch
+	PlaybackTz float64 // fractional position for pitch/time stretch - exposed for interpolation
 	state      fireStateEnum
 }
 
@@ -50,20 +50,21 @@ func (f *Fire) At(at spec.Tz) (t spec.Tz) {
 		if at >= f.BeginTz {
 			f.state = fireStatePlay
 			f.nowTz++
-			// Initialize playbackTz based on pitch
+			// Initialize PlaybackTz to 1 (matches original nowTz behavior)
 			if f.Pitch != 0 && f.Pitch != 1.0 {
-				f.playbackTz = f.Pitch
+				f.PlaybackTz = f.Pitch
 			} else {
-				f.playbackTz = 1.0
+				f.PlaybackTz = 1.0
 			}
 		}
 	case fireStatePlay:
-		t = spec.Tz(f.playbackTz)
+		// Return current sample position
+		t = spec.Tz(f.PlaybackTz)
 		// Advance playback position based on pitch (affects playback rate)
 		if f.Pitch != 0 && f.Pitch != 1.0 {
-			f.playbackTz += f.Pitch
+			f.PlaybackTz += f.Pitch
 		} else {
-			f.playbackTz += 1.0
+			f.PlaybackTz += 1.0
 		}
 		f.nowTz++
 		if f.EndTz != 0 {
