@@ -1,89 +1,88 @@
 // Sequence-based Go-native audio mixer for music apps
 //
-// Go-native audio mixer for Music apps
+// # Go-native audio mixer for Music apps
 //
 // See `demo/demo.go`:
 //
-//     package main
+//	package main
 //
-//     import (
-//       "fmt"
-//       "os"
-//       "time"
+//	import (
+//	  "fmt"
+//	  "os"
+//	  "time"
 //
-//       "github.com/go-mix/mix"
-//       "github.com/go-mix/mix/bind"
-//     )
+//	  "github.com/go-mix/mix"
+//	  "github.com/go-mix/mix/bind"
+//	)
 //
-//     var (
-//       sampleHz   = float64(48000)
-//       spec = bind.AudioSpec{
-//         Freq:     sampleHz,
-//         Format:   bind.AudioF32,
-//         Channels: 2,
-//         }
-//       bpm        = 120
-//       step       = time.Minute / time.Duration(bpm*4)
-//       loops      = 16
-//       prefix     = "sound/808/"
-//       kick1      = "kick1.wav"
-//       kick2      = "kick2.wav"
-//       marac      = "maracas.wav"
-//       snare      = "snare.wav"
-//       hitom      = "hightom.wav"
-//       clhat      = "cl_hihat.wav"
-//       pattern    = []string{
-//         kick2,
-//         marac,
-//         clhat,
-//         marac,
-//         snare,
-//         marac,
-//         clhat,
-//         kick2,
-//         marac,
-//         marac,
-//         hitom,
-//         marac,
-//         snare,
-//         kick1,
-//         clhat,
-//         marac,
-//       }
-//     )
+//	var (
+//	  sampleHz   = float64(48000)
+//	  spec = bind.AudioSpec{
+//	    Freq:     sampleHz,
+//	    Format:   bind.AudioF32,
+//	    Channels: 2,
+//	    }
+//	  bpm        = 120
+//	  step       = time.Minute / time.Duration(bpm*4)
+//	  loops      = 16
+//	  prefix     = "sound/808/"
+//	  kick1      = "kick1.wav"
+//	  kick2      = "kick2.wav"
+//	  marac      = "maracas.wav"
+//	  snare      = "snare.wav"
+//	  hitom      = "hightom.wav"
+//	  clhat      = "cl_hihat.wav"
+//	  pattern    = []string{
+//	    kick2,
+//	    marac,
+//	    clhat,
+//	    marac,
+//	    snare,
+//	    marac,
+//	    clhat,
+//	    kick2,
+//	    marac,
+//	    marac,
+//	    hitom,
+//	    marac,
+//	    snare,
+//	    kick1,
+//	    clhat,
+//	    marac,
+//	  }
+//	)
 //
-//     func main() {
-//       defer mix.Teardown()
+//	func main() {
+//	  defer mix.Teardown()
 //
-//       mix.Debug(true)
-//       mix.Configure(spec)
-//       mix.SetSoundsPath(prefix)
-//       mix.StartAt(time.Now().Add(1 * time.Second))
+//	  mix.Debug(true)
+//	  mix.Configure(spec)
+//	  mix.SetSoundsPath(prefix)
+//	  mix.StartAt(time.Now().Add(1 * time.Second))
 //
-//       t := 2 * time.Second // padding before music
-//       for n := 0; n < loops; n++ {
-//         for s := 0; s < len(pattern); s++ {
-//           mix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, 0, 0, 0, 1.0, 0)
-//         }
-//         t += time.Duration(len(pattern)) * step
-//       }
+//	  t := 2 * time.Second // padding before music
+//	  for n := 0; n < loops; n++ {
+//	    for s := 0; s < len(pattern); s++ {
+//	      mix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, 0, 0, 0, 1.0, 0)
+//	    }
+//	    t += time.Duration(len(pattern)) * step
+//	  }
 //
-//       fmt.Printf("Mix, pid:%v, spec:%v\n", os.Getpid(), spec)
-//       for mix.FireCount() > 0 {
-//         time.Sleep(1 * time.Second)
-//       }
-//     }
+//	  fmt.Printf("Mix, pid:%v, spec:%v\n", os.Getpid(), spec)
+//	  for mix.FireCount() > 0 {
+//	    time.Sleep(1 * time.Second)
+//	  }
+//	}
 //
 // Play this Demo from the root of the project, with no actual audio playback
 //
-//     make demo
+//	make demo
 //
 // Or export WAV via stdout `> demo/output.wav`:
 //
-//     make demo.wav
+//	make demo.wav
 //
-//
-// What
+// # What
 //
 // Game audio mixers are designed to play audio spontaneously, but when the timing is known in advance (e.g. sequence-based music apps) there is a demand for much greater accuracy in playback timing.
 //
@@ -93,8 +92,7 @@
 //
 // Mix stores and mixes audio in native Go `[]float64` and natively implements Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression" (details below)
 //
-//
-// Credit
+// # Credit
 //
 // Nick Charney Kaye
 // https://charneykaye.com
@@ -102,8 +100,7 @@
 // XJ Music Inc.
 // https://xj.io
 //
-//
-// Why
+// # Why
 //
 // Even after selecting a hardware interface library such as http://www.portaudio.com/ or https://www.libsdl.org/, there remains a critical design problem to be solved.
 //
@@ -119,36 +116,47 @@
 //
 // Mix takes maximum advantage of Go by storing and mixing audio in native Go `[]float64` and natively implementing Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression" (see The Mixing Algorithm below)
 //
-//
-// Time
+// # Time
 //
 // To the Mix API, time is specified as a time.Duration-since-epoch, where the epoch is the moment that mix.Start() was called.
 //
 // Internally, time is tracked as samples-since-epoch at the main out playback frequency (e.g. 48000 Hz). This is most efficient because source audio is pre-converted to the main out playback frequency, and all audio maths are performed in terms of samples.
 //
-// The Mixing Algorithm
+// # The Mixing Algorithm
 //
-// Inspired by the theory paper "Mixing two digital audio streams with on the fly Loudness Normalization by Logarithmic Dynamic Range Compression" by Paul Vögler, 2012-04-20. This paper is published at http://www.voegler.eu/pub/audio/digital-audio-mixing-and-normalization.html.
+// Mix provides two mixing algorithms that can be selected via the AudioSpec configuration:
 //
+// Logarithmic (Default): Inspired by the theory paper "Mixing two digital audio streams with on the fly Loudness Normalization by Logarithmic Dynamic Range Compression" by Paul Vögler, 2012-04-20. This paper is published at http://www.voegler.eu/pub/audio/digital-audio-mixing-and-normalization.html. This algorithm provides automatic loudness normalization and dynamic range compression.
 //
-// Usage
+// Linear: Simple linear mixing with clamping. When multiple audio sources exceed the dynamic range, values are clamped to the valid range [-1, 1].
+//
+// To select an algorithm, specify it in the AudioSpec when calling Configure():
+//
+//	spec := bind.AudioSpec{
+//	    Freq:      48000,
+//	    Format:    bind.AudioF32,
+//	    Channels:  2,
+//	    Algorithm: bind.MixLinear, // or bind.MixLogarithmic (default)
+//	}
+//	mix.Configure(spec)
+//
+// # Usage
 //
 // There's a demo implementation of **mix** included in the `demo/` folder in this repository. Run it using the defaults:
 //
-//     cd demo && go get && go run demo.go
+//	cd demo && go get && go run demo.go
 //
 // Or specify options, e.g. using WAV bytes to stdout for playback (piped to system native `aplay`)
 //
-//     go run demo.go --out wav | aplay
+//	go run demo.go --out wav | aplay
 //
 // To show the help screen:
 //
-//     go run demo.go --help
+//	go run demo.go --help
 //
 // Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. http://github.com/go-mix/mix
 //
 // Mix in good health!
-//
 package mix
 
 import (
@@ -190,7 +198,7 @@ func Spec() *spec.AudioSpec {
 	return mix.Spec()
 }
 
-// SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start), 
+// SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start),
 // with sustain time.Duration (duration of playback), volume from 0 to 1, pan from -1 to +1,
 // and ADSR envelope parameters: attack time.Duration, decay time.Duration, sustainLevel (0 to 1), release time.Duration.
 // To disable the ADSR envelope effect, use: attack=0, decay=0, sustainLevel=1.0, release=0

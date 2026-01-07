@@ -54,7 +54,7 @@ func TestPrintf(t *testing.T) {
 func TestInit(t *testing.T) {
 	// Verify logger is initialized
 	assert.NotNil(t, logger)
-	
+
 	// Verify it uses os.Stderr (we can't test this directly but we can check it's not nil)
 	// This is more of a sanity check
 	assert.NotNil(t, os.Stderr)

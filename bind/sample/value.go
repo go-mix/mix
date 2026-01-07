@@ -52,7 +52,7 @@ func (this Value) ToBytesF64LSB() (out []byte) {
 
 func (this Value) ToUint8() uint8 {
 	// U8 range: 0 to 255, where 0 = -1.0, 128 = 0.0, 255 = ~1.0
-	result := (float64(this) + 1.0) * 127.5 + 0.5 // Add 0.5 for rounding
+	result := (float64(this)+1.0)*127.5 + 0.5 // Add 0.5 for rounding
 	if result < 0 {
 		return 0
 	}
@@ -76,7 +76,7 @@ func (this Value) ToInt8() int8 {
 
 func (this Value) ToUint16() uint16 {
 	// U16 range: 0 to 65535, where 0 = -1.0, 32768 = 0.0, 65535 = ~1.0
-	result := (float64(this) + 1.0) * 32767.5 + 0.5 // Add 0.5 for rounding
+	result := (float64(this)+1.0)*32767.5 + 0.5 // Add 0.5 for rounding
 	if result < 0 {
 		return 0
 	}

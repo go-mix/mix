@@ -74,7 +74,7 @@ func Teardown() {
 	nowTz = 0
 }
 
-// SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start), 
+// SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start),
 // with sustain time.Duration (duration of playback), volume from 0 to 1, pan from -1 to +1,
 // and ADSR envelope parameters: attack time.Duration, decay time.Duration, sustainLevel (0 to 1), release time.Duration.
 // To disable the ADSR envelope effect, use: attack=0, decay=0, sustainLevel=1.0, release=0

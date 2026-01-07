@@ -65,7 +65,7 @@ func TestMixLinearClamp(t *testing.T) {
 	assert.Equal(t, float32(-1.0), float32(mixLinearClamp(-1.5)))
 	assert.Equal(t, float32(1.0), float32(mixLinearClamp(2.5)))
 	assert.Equal(t, float32(1.0), float32(mixLinearClamp(1.5)))
-	
+
 	// Test pass-through in range
 	assert.Equal(t, float32(0.0), float32(mixLinearClamp(0.0)))
 	assert.Equal(t, float32(0.5), float32(mixLinearClamp(0.5)))
@@ -79,12 +79,12 @@ func TestMixLogarithmicRangeCompression(t *testing.T) {
 	result := mixLogarithmicRangeCompression(0.5)
 	expected := 0.5 / 1.61803398875
 	assert.InDelta(t, expected, float64(result), 0.0001)
-	
+
 	// Test that values outside range are compressed logarithmically
 	// Values > 1 should be compressed
 	resultAbove := mixLogarithmicRangeCompression(2.0)
 	assert.True(t, resultAbove > 0 && resultAbove < 1.5)
-	
+
 	// Values < -1 should be compressed
 	resultBelow := mixLogarithmicRangeCompression(-2.0)
 	assert.True(t, resultBelow < 0 && resultBelow > -1.5)
@@ -100,7 +100,7 @@ func TestMixApplyAlgorithm(t *testing.T) {
 	})
 	result := mixApplyAlgorithm(2.0)
 	assert.Equal(t, float32(1.0), float32(result))
-	
+
 	// Test with logarithmic algorithm
 	Configure(spec.AudioSpec{
 		Freq:      44100,
