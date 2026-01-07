@@ -31,6 +31,9 @@ func OutNextBytes() (out []byte) {
 		return nil
 	}
 	in := outNextCallback()
+	if in == nil {
+		return nil
+	}
 	for ch := 0; ch < outSpec.Channels; ch++ {
 		switch outSpec.Format {
 		case spec.AudioU8:
