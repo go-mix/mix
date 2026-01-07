@@ -45,33 +45,75 @@ func (this Value) ToBytesF32LSB() (out []byte) {
 }
 
 func (this Value) ToBytesF64LSB() (out []byte) {
-	out = make([]byte, 4)
+	out = make([]byte, 8)
 	binary.LittleEndian.PutUint64(out, math.Float64bits(float64(this)))
 	return
 }
 
 func (this Value) ToUint8() uint8 {
-	return uint8(0x80 * (this + 1))
+	// U8 range: 0 to 255, where 0 = -1.0, 128 = 0.0, 255 = ~1.0
+	result := (float64(this) + 1.0) * 127.5 + 0.5 // Add 0.5 for rounding
+	if result < 0 {
+		return 0
+	}
+	if result > 255 {
+		return 255
+	}
+	return uint8(result)
 }
 
 func (this Value) ToInt8() int8 {
-	return int8(0x80 * this)
+	// S8 range: -128 to 127, where -128 = -1.0, 0 = 0.0, 127 = ~1.0
+	if this <= -1.0 {
+		return -128
+	}
+	result := math.Round(float64(this) * 127.0)
+	if result > 127 {
+		return 127
+	}
+	return int8(result)
 }
 
 func (this Value) ToUint16() uint16 {
-	return uint16(0x8000 * (this + 1))
+	// U16 range: 0 to 65535, where 0 = -1.0, 32768 = 0.0, 65535 = ~1.0
+	result := (float64(this) + 1.0) * 32767.5 + 0.5 // Add 0.5 for rounding
+	if result < 0 {
+		return 0
+	}
+	if result > 65535 {
+		return 65535
+	}
+	return uint16(result)
 }
 
 func (this Value) ToInt16() int16 {
-	return int16(0x8000 * this)
+	// S16 range: -32768 to 32767, where -32768 = -1.0, 0 = 0.0, 32767 = ~1.0
+	if this <= -1.0 {
+		return -32768
+	}
+	result := math.Round(float64(this) * 32767.0)
+	if result > 32767 {
+		return 32767
+	}
+	return int16(result)
 }
 
 func (this Value) ToInt32() int32 {
-	return int32(0x80000000 * this)
+	// S32 range: -2147483648 to 2147483647
+	if this <= -1.0 {
+		return -2147483648
+	}
+	result := math.Round(float64(this) * 2147483647.0)
+	if result > 2147483647 {
+		return 2147483647
+	}
+	return int32(result)
 }
 
 func ValueOfByteU8(sample byte) Value {
-	return Value(int8(sample))/Value(0x7F) - Value(1)
+	// U8: 0 = -1.0, 128 = 0.0, 255 = 1.0
+	// Formula: (sample / 127.5) - 1.0
+	return Value(sample)/Value(127.5) - Value(1)
 }
 
 func ValueOfByteS8(sample byte) Value {
@@ -79,7 +121,9 @@ func ValueOfByteS8(sample byte) Value {
 }
 
 func ValueOfBytesU16LSB(sample []byte) Value {
-	return Value(binary.LittleEndian.Uint16(sample))/Value(0x8000) - Value(1)
+	// U16: 0 = -1.0, 32768 = 0.0, 65535 = 1.0
+	// Formula: (value / 32767.5) - 1.0
+	return Value(binary.LittleEndian.Uint16(sample))/Value(32767.5) - Value(1)
 }
 
 //func ValueOfBytesU16MSB(sample []byte) Value {

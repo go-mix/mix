@@ -17,21 +17,27 @@ import (
 
 // NextSample returns the next sample mixed in all channels
 func NextSample() []sample.Value {
-	smp := make([]sample.Value, masterSpec.Channels)
+	if masterSpec == nil {
+		return nil
+	}
+	channels := masterSpec.Channels
+	smp := make([]sample.Value, channels)
 	var fireSample []sample.Value
 	for _, fire := range mixLiveFires {
 		if fireTz := fire.At(nowTz); fireTz > 0 {
-			envelope := fire.Envelope(nowTz)
-			fireSample = mixSourceAt(fire.Source, fire.Volume*envelope, fire.Pan, fireTz)
-			for c := 0; c < masterSpec.Channels; c++ {
+			fireSample = mixSourceAt(fire.Source, fire.Volume, fire.Pan, fireTz)
+			if len(fireSample) < channels {
+				continue
+			}
+			for c := 0; c < channels; c++ {
 				smp[c] += fireSample[c]
 			}
 		}
 	}
 	//	debug.Printf("*Mixer.nextSample %+v\n", sample)
 	nowTz++
-	out := make([]sample.Value, masterSpec.Channels)
-	for c := 0; c < masterSpec.Channels; c++ {
+	out := make([]sample.Value, channels)
+	for c := 0; c < channels; c++ {
 		out[c] = mixLogarithmicRangeCompression(smp[c])
 	}
 	if nowTz > nextCycleTz {

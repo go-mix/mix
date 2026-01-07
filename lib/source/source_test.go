@@ -286,6 +286,7 @@ func TestStereoChannelIdentity(t *testing.T) {
 //
 
 func testSourceSetup(freq float64, channels int) {
+	Clear()
 	Configure(spec.AudioSpec{
 		Freq:     freq,
 		Format:   spec.AudioF32,
