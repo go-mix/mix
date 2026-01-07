@@ -21,7 +21,12 @@ func NextSample() []sample.Value {
 	var fireSample []sample.Value
 	for _, fire := range mixLiveFires {
 		if fireTz := fire.At(nowTz); fireTz > 0 {
-			fireSample = mixSourceAt(fire.Source, fire.Volume, fire.Pan, fireTz)
+			// Use interpolated sampling if pitch shifting is enabled
+			if fire.Pitch != 0 && fire.Pitch != 1.0 {
+				fireSample = mixSourceAtInterpolated(fire.Source, fire.Volume, fire.Pan, float64(fireTz))
+			} else {
+				fireSample = mixSourceAt(fire.Source, fire.Volume, fire.Pan, fireTz)
+			}
 			for c := 0; c < masterSpec.Channels; c++ {
 				smp[c] += fireSample[c]
 			}
@@ -63,13 +68,20 @@ func Teardown() {
 
 // SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start), with sustain time.Duration, volume from 0 to 1, and pan from -1 to +1
 func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) *fire.Fire {
+	return SetFireWithPitch(source, begin, sustain, volume, pan, 1.0, 1.0)
+}
+
+// SetFireWithPitch to represent a single audio source playing at a specific time with pitch shifting and time stretching
+// pitch: multiplier for pitch (1.0 = no change, 2.0 = up one octave, 0.5 = down one octave)
+// timeStretch: multiplier for duration (1.0 = no change, 2.0 = twice as slow, 0.5 = twice as fast)
+func SetFireWithPitch(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, pitch float64, timeStretch float64) *fire.Fire {
 	mixPrepareSource(mixSourcePrefix + source)
 	beginTz := spec.Tz(begin.Nanoseconds() / masterTzDur.Nanoseconds())
 	var endTz spec.Tz
 	if sustain != 0 {
 		endTz = beginTz + spec.Tz(sustain.Nanoseconds()/masterTzDur.Nanoseconds())
 	}
-	f := fire.New(mixSourcePrefix+source, beginTz, endTz, volume, pan)
+	f := fire.New(mixSourcePrefix+source, beginTz, endTz, volume, pan, pitch, timeStretch)
 	mixReadyFires = append(mixReadyFires, f)
 	return f
 }
@@ -170,6 +182,14 @@ func mixSourceAt(src string, volume float64, pan float64, at spec.Tz) []sample.V
 	// 	debug.Printf("About to source.SampleAt %v in %v\n", at, s.URL)
 	// }
 	return s.SampleAt(at, volume, pan)
+}
+
+func mixSourceAtInterpolated(src string, volume float64, pan float64, at float64) []sample.Value {
+	s := mixGetSource(src)
+	if s == nil {
+		return make([]sample.Value, masterSpec.Channels)
+	}
+	return s.SampleAtInterpolated(at, volume, pan)
 }
 
 func mixPrepareSource(src string) {

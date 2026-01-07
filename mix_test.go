@@ -53,6 +53,21 @@ func TestSetFire(t *testing.T) {
 	assert.NotNil(t, fire)
 }
 
+func TestSetFireWithPitch(t *testing.T) {
+	testAPISetup()
+	// Test with pitch shift up one octave (2.0)
+	fire := SetFireWithPitch("lib/source/testdata/Signed16bitLittleEndian44100HzMono.wav", time.Duration(0), 0, 1.0, 0, 2.0, 1.0)
+	assert.NotNil(t, fire)
+	assert.Equal(t, 2.0, fire.Pitch)
+	assert.Equal(t, 1.0, fire.TimeStretch)
+	
+	// Test with pitch shift down one octave (0.5)
+	fire2 := SetFireWithPitch("lib/source/testdata/Signed16bitLittleEndian44100HzMono.wav", time.Duration(0), 0, 1.0, 0, 0.5, 1.0)
+	assert.NotNil(t, fire2)
+	assert.Equal(t, 0.5, fire2.Pitch)
+}
+
+
 func TestFireCount(t *testing.T) {
 	testAPISetup()
 	assert.Equal(t, 0, FireCount())

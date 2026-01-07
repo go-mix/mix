@@ -67,6 +67,43 @@ func TestSampleAt(t *testing.T) {
 	// TODO: Test Source SampleAt
 }
 
+func TestSampleAtInterpolated(t *testing.T) {
+	Configure(spec.AudioSpec{
+		Freq:     44100,
+		Format:   spec.AudioF32,
+		Channels: 1,
+	})
+	source := New("testdata/Signed16bitLittleEndian44100HzMono.wav")
+	assert.NotNil(t, source)
+	
+	// Test interpolated sampling at fractional positions
+	sample1 := source.SampleAtInterpolated(1.0, 1.0, 0)
+	assert.NotNil(t, sample1)
+	
+	// Test interpolation between samples
+	sample2 := source.SampleAtInterpolated(1.5, 1.0, 0)
+	assert.NotNil(t, sample2)
+	
+	// Interpolated value should be between the two adjacent samples
+	sampleBefore := source.SampleAt(1, 1.0, 0)
+	sampleAfter := source.SampleAt(2, 1.0, 0)
+	
+	// The interpolated value at 1.5 should be between sample at 1 and sample at 2
+	for c := 0; c < len(sample2); c++ {
+		if sampleBefore[c] != sampleAfter[c] {
+			// Check that interpolated value is between the two samples (or equal to one if they're the same)
+			minVal := sampleBefore[c]
+			maxVal := sampleAfter[c]
+			if minVal > maxVal {
+				minVal, maxVal = maxVal, minVal
+			}
+			assert.True(t, sample2[c] >= minVal && sample2[c] <= maxVal, 
+				"Interpolated sample should be between adjacent samples")
+		}
+	}
+}
+
+
 func TestState(t *testing.T) {
 	// TODO: Test Source State
 }

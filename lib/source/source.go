@@ -57,6 +57,46 @@ func (s *Source) SampleAt(at spec.Tz, vol float64, pan float64) (out []sample.Va
 	return
 }
 
+// SampleAtInterpolated at a fractional Tz position using linear interpolation, volume (0 to 1), and pan (-1 to +1)
+// This is used for pitch shifting and time stretching to avoid artifacts
+func (s *Source) SampleAtInterpolated(at float64, vol float64, pan float64) (out []sample.Value) {
+	out = make([]sample.Value, masterSpec.Channels)
+	
+	// Get the integer and fractional parts
+	atInt := spec.Tz(math.Floor(at))
+	atFrac := at - math.Floor(at)
+	
+	if atInt >= s.maxTz {
+		return out
+	}
+	
+	// Get samples for interpolation
+	sample1 := s.sample[atInt]
+	var sample2 sample.Sample
+	if atInt+1 < s.maxTz {
+		sample2 = s.sample[atInt+1]
+	} else {
+		// If we're at the end, use the last sample
+		sample2 = sample1
+	}
+	
+	// Linear interpolation between samples
+	if masterSpec.Channels == s.audioSpec.Channels {
+		for c := int(0); c < masterSpec.Channels; c++ {
+			interpolated := sample1.Values[c]*(1.0-sample.Value(atFrac)) + sample2.Values[c]*sample.Value(atFrac)
+			out[c] = volume(float64(c), vol, pan) * interpolated
+		}
+	} else {
+		tc := float64(s.audioSpec.Channels)
+		for c := int(0); c < masterSpec.Channels; c++ {
+			srcChan := int(math.Floor(tc * float64(c) / masterChannelsFloat))
+			interpolated := sample1.Values[srcChan]*(1.0-sample.Value(atFrac)) + sample2.Values[srcChan]*sample.Value(atFrac)
+			out[c] = volume(float64(c), vol, pan) * interpolated
+		}
+	}
+	return
+}
+
 // Length of the source audio in Tz
 func (s *Source) Length() spec.Tz {
 	return s.maxTz

@@ -195,6 +195,13 @@ func SetFire(source string, begin time.Duration, sustain time.Duration, volume f
 	return mix.SetFire(source, begin, sustain, volume, pan)
 }
 
+// SetFireWithPitch to represent a single audio source playing at a specific time with pitch shifting and time stretching
+// pitch: multiplier for pitch (1.0 = no change, 2.0 = up one octave, 0.5 = down one octave)
+// timeStretch: multiplier for duration (1.0 = no change, 2.0 = twice as slow, 0.5 = twice as fast)
+func SetFireWithPitch(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, pitch float64, timeStretch float64) *fire.Fire {
+	return mix.SetFireWithPitch(source, begin, sustain, volume, pan, pitch, timeStretch)
+}
+
 // FireCount to check the number of fires currently scheduled for playback
 func FireCount() int {
 	return mix.FireCount()
