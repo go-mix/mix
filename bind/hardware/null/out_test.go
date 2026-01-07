@@ -4,8 +4,8 @@ package null
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/go-mix/mix/bind/spec"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestConfigureOutput_DoesNotPanic(t *testing.T) {
@@ -18,12 +18,12 @@ func TestConfigureOutput_DoesNotPanic(t *testing.T) {
 		Format:   spec.AudioF32,
 		Channels: 2,
 	}
-	
+
 	// Verify the spec is valid - this is what ConfigureOutput would use
 	assert.NotPanics(t, func() {
 		s.Validate()
 	})
-	
+
 	// Verify the function signature is correct by assigning it
 	var configFunc func(spec.AudioSpec) = ConfigureOutput
 	assert.NotNil(t, configFunc)

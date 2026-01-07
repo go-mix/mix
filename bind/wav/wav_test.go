@@ -364,9 +364,9 @@ func TestSignedUnsignedConversion(t *testing.T) {
 			input    sample.Value
 			expected uint8
 		}{
-			{sample.Value(-1.0), 0},   // Min value
-			{sample.Value(0.0), 128},  // Center (silence)
-			{sample.Value(1.0), 255},  // Max value
+			{sample.Value(-1.0), 0},  // Min value
+			{sample.Value(0.0), 128}, // Center (silence)
+			{sample.Value(1.0), 255}, // Max value
 		}
 
 		for _, tc := range testCases {
@@ -417,9 +417,9 @@ func TestSignedUnsignedConversion(t *testing.T) {
 			input    sample.Value
 			expected uint16
 		}{
-			{sample.Value(-1.0), 0},     // Min value
-			{sample.Value(0.0), 32768},  // Center (silence)
-			{sample.Value(1.0), 65535},  // Max value
+			{sample.Value(-1.0), 0},    // Min value
+			{sample.Value(0.0), 32768}, // Center (silence)
+			{sample.Value(1.0), 65535}, // Max value
 		}
 
 		for _, tc := range testCases {

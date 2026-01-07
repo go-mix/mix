@@ -89,7 +89,7 @@ func TestTz_Type(t *testing.T) {
 	// Test that Tz can be used as expected
 	var tz Tz = 48000
 	assert.Equal(t, Tz(48000), tz)
-	
+
 	// Test basic arithmetic
 	tz = tz * 2
 	assert.Equal(t, Tz(96000), tz)
@@ -103,12 +103,12 @@ func TestAudioSpec_AllFields(t *testing.T) {
 		Channels: 5,
 		Length:   time.Hour,
 	}
-	
+
 	assert.Equal(t, float64(48000), spec.Freq)
 	assert.Equal(t, AudioF64, spec.Format)
 	assert.Equal(t, 5, spec.Channels)
 	assert.Equal(t, time.Hour, spec.Length)
-	
+
 	// Should validate successfully
 	assert.NotPanics(t, func() {
 		spec.Validate()
@@ -121,14 +121,14 @@ func TestAudioFormat_AllConstants(t *testing.T) {
 		AudioU8, AudioS8, AudioU16, AudioS16,
 		AudioS32, AudioF32, AudioF64,
 	}
-	
+
 	// Check they're all different
 	seen := make(map[AudioFormat]bool)
 	for _, format := range formats {
 		assert.False(t, seen[format], "Format should be unique: %v", format)
 		seen[format] = true
 	}
-	
+
 	// Verify count
 	assert.Equal(t, 7, len(formats))
 }

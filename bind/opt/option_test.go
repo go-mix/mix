@@ -17,7 +17,7 @@ func TestInput_TypeString(t *testing.T) {
 	// Test that Input type can be converted to string
 	wav := InputWAV
 	assert.Equal(t, "wav", string(wav))
-	
+
 	sox := InputSOX
 	assert.Equal(t, "sox", string(sox))
 }
@@ -32,7 +32,7 @@ func TestOutput_TypeString(t *testing.T) {
 	// Test that Output type can be converted to string
 	null := OutputNull
 	assert.Equal(t, "null", string(null))
-	
+
 	wav := OutputWAV
 	assert.Equal(t, "wav", string(wav))
 }

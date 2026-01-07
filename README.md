@@ -154,7 +154,39 @@ To disable the envelope effect (constant volume throughout), use:
 
 ### The Mixing Algorithm
 
+Mix provides two mixing algorithms that can be selected when configuring the audio specification:
+
+#### Logarithmic (Default)
+
 Inspired by the theory paper "Mixing two digital audio streams with on the fly Loudness Normalization by Logarithmic Dynamic Range Compression" by Paul Vögler, 2012-04-20. A .PDF has been included [here](docs/LogarithmicDynamicRangeCompression-PaulVogler.pdf), from the paper originally published [here](http://www.voegler.eu/pub/audio/digital-audio-mixing-and-normalization.html).
+
+This algorithm provides automatic loudness normalization and dynamic range compression, ideal for music applications where maintaining perceived loudness is important.
+
+#### Linear
+
+Simple linear mixing with clamping. When multiple audio sources exceed the dynamic range, values are clamped to the valid range [-1, 1]. This algorithm is simpler and may be preferred for applications that need predictable mixing behavior.
+
+#### Selecting an Algorithm
+
+To select a mixing algorithm, specify it in the AudioSpec:
+
+    import "github.com/go-mix/mix/bind/spec"
+
+    // Use logarithmic mixing (default)
+    specs := spec.AudioSpec{
+        Freq:      48000,
+        Format:    spec.AudioF32,
+        Channels:  2,
+        Algorithm: spec.MixLogarithmic, // or omit for default
+    }
+
+    // Use linear mixing
+    specs := spec.AudioSpec{
+        Freq:      48000,
+        Format:    spec.AudioF32,
+        Channels:  2,
+        Algorithm: spec.MixLinear,
+    }
 
 ### Usage
 

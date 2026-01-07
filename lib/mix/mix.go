@@ -36,9 +36,9 @@ func NextSample() []sample.Value {
 	}
 	//	debug.Printf("*Mixer.nextSample %+v\n", sample)
 	nowTz++
-	out := make([]sample.Value, channels)
-	for c := 0; c < channels; c++ {
-		out[c] = mixLogarithmicRangeCompression(smp[c])
+	out := make([]sample.Value, masterSpec.Channels)
+	for c := 0; c < masterSpec.Channels; c++ {
+		out[c] = mixApplyAlgorithm(smp[c])
 	}
 	if nowTz > nextCycleTz {
 		mixCycle()
@@ -52,6 +52,12 @@ func Configure(s spec.AudioSpec) {
 	masterFreq = float64(s.Freq)
 	masterTzDur = time.Second / time.Duration(masterFreq)
 	masterCycleDurTz = spec.Tz(masterFreq)
+	// Set mixing algorithm (default to logarithmic if not specified)
+	if s.Algorithm == "" {
+		mixAlgorithm = spec.MixLogarithmic
+	} else {
+		mixAlgorithm = s.Algorithm
+	}
 	source.Configure(s)
 }
 
@@ -68,7 +74,7 @@ func Teardown() {
 	nowTz = 0
 }
 
-// SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start), 
+// SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start),
 // with sustain time.Duration (duration of playback), volume from 0 to 1, pan from -1 to +1,
 // and ADSR envelope parameters: attack time.Duration, decay time.Duration, sustainLevel (0 to 1), release time.Duration.
 // To disable the ADSR envelope effect, use: attack=0, decay=0, sustainLevel=1.0, release=0
@@ -168,6 +174,7 @@ var (
 	mixLiveFires    []*fire.Fire
 	masterSpec      *spec.AudioSpec
 	masterFreq      float64
+	mixAlgorithm    spec.MixAlgorithm
 )
 
 func init() {
@@ -237,5 +244,25 @@ func mixLogarithmicRangeCompression(i sample.Value) sample.Value {
 		return sample.Value(math.Log(float64(i)-0.85)/14 + 0.75)
 	} else {
 		return sample.Value(i / 1.61803398875)
+	}
+}
+
+func mixLinearClamp(i sample.Value) sample.Value {
+	if i < -1 {
+		return sample.Value(-1)
+	} else if i > 1 {
+		return sample.Value(1)
+	}
+	return i
+}
+
+func mixApplyAlgorithm(i sample.Value) sample.Value {
+	switch mixAlgorithm {
+	case spec.MixLinear:
+		return mixLinearClamp(i)
+	case spec.MixLogarithmic:
+		return mixLogarithmicRangeCompression(i)
+	default:
+		return mixLogarithmicRangeCompression(i)
 	}
 }
