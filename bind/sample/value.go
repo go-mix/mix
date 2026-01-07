@@ -67,7 +67,7 @@ func (this Value) ToInt8() int8 {
 	if this <= -1.0 {
 		return -128
 	}
-	result := float64(this) * 127.0
+	result := math.Round(float64(this) * 127.0)
 	if result > 127 {
 		return 127
 	}
@@ -91,7 +91,7 @@ func (this Value) ToInt16() int16 {
 	if this <= -1.0 {
 		return -32768
 	}
-	result := float64(this) * 32767.0
+	result := math.Round(float64(this) * 32767.0)
 	if result > 32767 {
 		return 32767
 	}
@@ -103,7 +103,7 @@ func (this Value) ToInt32() int32 {
 	if this <= -1.0 {
 		return -2147483648
 	}
-	result := float64(this) * 2147483647.0
+	result := math.Round(float64(this) * 2147483647.0)
 	if result > 2147483647 {
 		return 2147483647
 	}
