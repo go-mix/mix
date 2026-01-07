@@ -142,7 +142,12 @@ defer mix.Teardown()
 
 ### Scheduling Audio
 ```go
-mix.SetFire(filename, atTime, channel, volume, pan)
+mix.SetFire(source, begin, sustain, volume, pan)
+// source: audio file name (string)
+// begin: start time as time.Duration
+// sustain: duration to play as time.Duration  
+// volume: volume level (float64)
+// pan: stereo pan position (float64)
 ```
 
 ### Audio Source Management
