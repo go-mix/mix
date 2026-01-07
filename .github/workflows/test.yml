@@ -27,10 +27,13 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
 
-      - name: Install dependencies
+      - name: Install system dependencies
         run: |
-          go get gopkg.in/stretchr/testify.v1/assert
-          go get -v -t ./...
+          sudo apt-get update
+          sudo apt-get install -y libsox-dev
+
+      - name: Install dependencies
+        run: go get -v -t ./...
 
       - name: Run tests
         run: go test -v ./...
