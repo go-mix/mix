@@ -124,7 +124,7 @@
 //
 // To the Mix API, time is specified as a time.Duration-since-epoch, where the epoch is the moment that mix.Start() was called.
 //
-// Internally, time is tracked as samples-since-epoch at the master out playback frequency (e.g. 48000 Hz). This is most efficient because source audio is pre-converted to the master out playback frequency, and all audio maths are performed in terms of samples.
+// Internally, time is tracked as samples-since-epoch at the main out playback frequency (e.g. 48000 Hz). This is most efficient because source audio is pre-converted to the main out playback frequency, and all audio maths are performed in terms of samples.
 //
 // The Mixing Algorithm
 //
