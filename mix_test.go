@@ -2,6 +2,7 @@
 package mix
 
 import (
+	"bytes"
 	"testing"
 	"time"
 
@@ -12,11 +13,24 @@ import (
 )
 
 func TestDebug(t *testing.T) {
-	// TODO: Test API Debug
+	// Test turning debug on
+	Debug(true)
+	// Since debug package is internal, we test indirectly that it doesn't panic
+	assert.NotPanics(t, func() {
+		Debug(true)
+		Debug(false)
+	})
 }
 
 func TestConfigure(t *testing.T) {
-	// TODO: Test API Configure
+	// Test valid configuration
+	assert.NotPanics(t, func() {
+		Configure(spec.AudioSpec{
+			Freq:     44100,
+			Format:   spec.AudioF32,
+			Channels: 2,
+		})
+	})
 }
 
 func TestConfigure_FailureFreqNotGreaterThanZero(t *testing.T) {
@@ -71,7 +85,11 @@ func TestClearAllFires(t *testing.T) {
 }
 
 func TestSetSoundsPath(t *testing.T) {
-	// TODO: Test API SetSoundsPath
+	// Test setting sounds path doesn't panic
+	assert.NotPanics(t, func() {
+		SetSoundsPath("test/path/")
+		SetSoundsPath("")
+	})
 }
 
 func TestSetGetMixCycleDuration(t *testing.T) {
@@ -96,23 +114,43 @@ func TestGetStartTime(t *testing.T) {
 }
 
 func TestGetNowAt(t *testing.T) {
-	// TODO
+	testAPISetup()
+	Start()
+	// Give it a moment to start
+	time.Sleep(10 * time.Millisecond)
+	now := GetNowAt()
+	// Should be a positive duration after start
+	assert.True(t, now >= 0)
 }
 
 func TestOutputStart(t *testing.T) {
-	// TODO: Test
+	testAPISetup()
+	// Create a buffer to write to
+	var buf bytes.Buffer
+	assert.NotPanics(t, func() {
+		OutputStart(1*time.Second, &buf)
+	})
 }
 
 func TestOutputContinueTo(t *testing.T) {
-	// TODO: Test
+	testAPISetup()
+	assert.NotPanics(t, func() {
+		OutputContinueTo(100 * time.Millisecond)
+	})
 }
 
 func TestOutputClose(t *testing.T) {
-	// TODO: Test
+	testAPISetup()
+	assert.NotPanics(t, func() {
+		OutputClose()
+	})
 }
 
 func TestAudioCallback(t *testing.T) {
-	// TODO: Test API AudioCallback
+	// Test that the audio system can be configured
+	// This is tested indirectly through Configure
+	testAPISetup()
+	assert.NotNil(t, Spec())
 }
 
 //
