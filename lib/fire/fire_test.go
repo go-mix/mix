@@ -48,7 +48,7 @@ func TestNewFire(t *testing.T) {
 	vol := float64(0.8)
 	pan := float64(-0.5)
 
-	fire := New(src, bgnTz, endTz, vol, pan, 0, 0, 1.0, 0)
+	fire := New(src, bgnTz, endTz, vol, pan, 0, 0, 1.0, 0, 1.0, 1.0)
 
 	assert.NotNil(t, fire)
 	assert.Equal(t, src, fire.Source)
@@ -63,7 +63,7 @@ func TestAt(t *testing.T) {
 	src := "test.wav"
 	bgnTz := spec.Tz(100)
 	endTz := spec.Tz(200)
-	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0)
+	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 1.0, 1.0)
 
 	// Before begin: should return 0 and stay in ready state
 	result := fire.At(bgnTz - 1)
@@ -87,7 +87,7 @@ func TestState(t *testing.T) {
 	src := "test.wav"
 	bgnTz := spec.Tz(100)
 	endTz := spec.Tz(150)
-	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0)
+	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 1.0, 1.0)
 
 	// Initial state should be ready
 	assert.Equal(t, fireStateReady, fire.state)
@@ -105,7 +105,7 @@ func TestIsAlive(t *testing.T) {
 	src := "test.wav"
 	bgnTz := spec.Tz(100)
 	endTz := spec.Tz(150)
-	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0)
+	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 1.0, 1.0)
 
 	// Should be alive in ready state
 	assert.True(t, fire.IsAlive())
@@ -123,7 +123,7 @@ func TestIsPlaying(t *testing.T) {
 	src := "test.wav"
 	bgnTz := spec.Tz(100)
 	endTz := spec.Tz(150)
-	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0)
+	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 1.0, 1.0)
 
 	// Should not be playing in ready state
 	assert.False(t, fire.IsPlaying())
@@ -144,7 +144,7 @@ func TestSetState(t *testing.T) {
 	src := "test.wav"
 	bgnTz := spec.Tz(100)
 	endTz := spec.Tz(150)
-	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0)
+	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 1.0, 1.0)
 
 	// Verify state transitions through At() method
 	assert.Equal(t, fireStateReady, fire.state)
@@ -159,7 +159,7 @@ func TestSourceLength(t *testing.T) {
 	// We test it indirectly through the Fire behavior when EndTz is 0
 	src := "test.wav"
 	bgnTz := spec.Tz(100)
-	fire := New(src, bgnTz, 0, 1.0, 0, 0, 0, 1.0, 0) // EndTz = 0
+	fire := New(src, bgnTz, 0, 1.0, 0, 0, 0, 1.0, 0, 1.0, 1.0) // EndTz = 0
 
 	// When we call At() during play state with EndTz=0,
 	// it should compute EndTz from source length
@@ -175,7 +175,7 @@ func TestTeardown(t *testing.T) {
 	src := "test.wav"
 	bgnTz := spec.Tz(100)
 	endTz := spec.Tz(150)
-	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0)
+	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 1.0, 1.0)
 
 	// Teardown should not panic
 	assert.NotPanics(t, func() {
@@ -189,20 +189,20 @@ func TestFire_VolumeAndPan(t *testing.T) {
 	endTz := spec.Tz(150)
 
 	// Test with different volume levels
-	fire1 := New(src, bgnTz, endTz, 0.5, 0, 0, 0, 1.0, 0)
+	fire1 := New(src, bgnTz, endTz, 0.5, 0, 0, 0, 1.0, 0, 1.0, 1.0)
 	assert.Equal(t, 0.5, fire1.Volume)
 
-	fire2 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0)
+	fire2 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 1.0, 1.0)
 	assert.Equal(t, 1.0, fire2.Volume)
 
 	// Test with different pan values
-	fireLeft := New(src, bgnTz, endTz, 1.0, -1.0, 0, 0, 1.0, 0)
+	fireLeft := New(src, bgnTz, endTz, 1.0, -1.0, 0, 0, 1.0, 0, 1.0, 1.0)
 	assert.Equal(t, -1.0, fireLeft.Pan)
 
-	fireRight := New(src, bgnTz, endTz, 1.0, 1.0, 0, 0, 1.0, 0)
+	fireRight := New(src, bgnTz, endTz, 1.0, 1.0, 0, 0, 1.0, 0, 1.0, 1.0)
 	assert.Equal(t, 1.0, fireRight.Pan)
 
-	fireCenter := New(src, bgnTz, endTz, 1.0, 0.0, 0, 0, 1.0, 0)
+	fireCenter := New(src, bgnTz, endTz, 1.0, 0.0, 0, 0, 1.0, 0, 1.0, 1.0)
 	assert.Equal(t, 0.0, fireCenter.Pan)
 }
 
@@ -211,7 +211,7 @@ func TestFire_ZeroEndTz(t *testing.T) {
 	bgnTz := spec.Tz(100)
 
 	// Create fire with EndTz = 0 (should be calculated from source)
-	fire := New(src, bgnTz, 0, 1.0, 0, 0, 0, 1.0, 0)
+	fire := New(src, bgnTz, 0, 1.0, 0, 0, 0, 1.0, 0, 1.0, 1.0)
 	assert.Equal(t, spec.Tz(0), fire.EndTz)
 
 	// Start playing
@@ -228,7 +228,7 @@ func TestFire_MultipleAtCalls(t *testing.T) {
 	src := "test.wav"
 	bgnTz := spec.Tz(100)
 	endTz := spec.Tz(110)
-	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0)
+	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 1.0, 1.0)
 
 	// Multiple calls before begin should return 0
 	for i := 0; i < 5; i++ {
@@ -264,7 +264,7 @@ func TestADSR_NoEnvelope(t *testing.T) {
 	src := "sound.wav"
 	bgnTz := spec.Tz(1000)
 	endTz := bgnTz + spec.Tz(100)
-	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0)
+	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 1.0, 1.0)
 
 	// Envelope should always be 1.0 when no ADSR is configured
 	assert.Equal(t, 1.0, fire.Envelope(bgnTz))
@@ -278,7 +278,7 @@ func TestADSR_AttackPhase(t *testing.T) {
 	bgnTz := spec.Tz(1000)
 	endTz := bgnTz + spec.Tz(200)
 	attack := spec.Tz(100)
-	fire := New(src, bgnTz, endTz, 1.0, 0, attack, 0, 1.0, 0)
+	fire := New(src, bgnTz, endTz, 1.0, 0, attack, 0, 1.0, 0, 1.0, 1.0)
 
 	// At start, envelope should be 0
 	assert.Equal(t, 0.0, fire.Envelope(bgnTz))
@@ -296,7 +296,7 @@ func TestADSR_DecayPhase(t *testing.T) {
 	attack := spec.Tz(50)
 	decay := spec.Tz(100)
 	sustain := 0.7
-	fire := New(src, bgnTz, endTz, 1.0, 0, attack, decay, sustain, 0)
+	fire := New(src, bgnTz, endTz, 1.0, 0, attack, decay, sustain, 0, 1.0, 1.0)
 
 	// At end of attack (start of decay), should be 1.0
 	assert.Equal(t, 1.0, fire.Envelope(bgnTz+attack))
@@ -316,7 +316,7 @@ func TestADSR_SustainPhase(t *testing.T) {
 	attack := spec.Tz(50)
 	decay := spec.Tz(50)
 	sustain := 0.6
-	fire := New(src, bgnTz, endTz, 1.0, 0, attack, decay, sustain, 0)
+	fire := New(src, bgnTz, endTz, 1.0, 0, attack, decay, sustain, 0, 1.0, 1.0)
 
 	// During sustain phase, envelope should stay at sustain level
 	assert.Equal(t, sustain, fire.Envelope(bgnTz+attack+decay))
@@ -333,7 +333,7 @@ func TestADSR_ReleasePhase(t *testing.T) {
 	decay := spec.Tz(30)
 	sustain := 0.8
 	release := spec.Tz(50)
-	fire := New(src, bgnTz, endTz, 1.0, 0, attack, decay, sustain, release)
+	fire := New(src, bgnTz, endTz, 1.0, 0, attack, decay, sustain, release, 1.0, 1.0)
 
 	// Play through to end to trigger release
 	fire.At(bgnTz) // Start
@@ -365,7 +365,7 @@ func TestADSR_FullCycle(t *testing.T) {
 	decay := spec.Tz(50)
 	sustain := 0.7
 	release := spec.Tz(50)
-	fire := New(src, bgnTz, endTz, 1.0, 0, attack, decay, sustain, release)
+	fire := New(src, bgnTz, endTz, 1.0, 0, attack, decay, sustain, release, 1.0, 1.0)
 
 	// Attack phase
 	assert.Equal(t, 0.0, fire.Envelope(bgnTz))
@@ -400,7 +400,7 @@ func TestADSR_ReleaseTransition(t *testing.T) {
 	bgnTz := spec.Tz(100)
 	endTz := bgnTz + spec.Tz(50)
 	release := spec.Tz(20)
-	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, release)
+	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, release, 1.0, 1.0)
 
 	// Start playing
 	fire.At(bgnTz)
@@ -438,7 +438,7 @@ func TestADSR_EdgeCases(t *testing.T) {
 	decay := spec.Tz(50)
 	sustain := 0.7
 	release := spec.Tz(50)
-	fire := New(src, bgnTz, endTz, 1.0, 0, attack, decay, sustain, release)
+	fire := New(src, bgnTz, endTz, 1.0, 0, attack, decay, sustain, release, 1.0, 1.0)
 
 	// Before begin time, envelope should be 0
 	assert.Equal(t, 0.0, fire.Envelope(bgnTz-10))
@@ -467,7 +467,7 @@ func TestADSR_AttackExceedsDuration(t *testing.T) {
 	decay := spec.Tz(50)         // Decay is also 50 samples
 	sustain := 0.7
 	release := spec.Tz(30)
-	fire := New(src, bgnTz, endTz, 1.0, 0, attack, decay, sustain, release)
+	fire := New(src, bgnTz, endTz, 1.0, 0, attack, decay, sustain, release, 1.0, 1.0)
 
 	// Start playing
 	fire.At(bgnTz)

@@ -85,13 +85,13 @@ func Teardown() {
 // and ADSR envelope parameters: attack time.Duration, decay time.Duration, sustainLevel (0 to 1), release time.Duration.
 // To disable the ADSR envelope effect, use: attack=0, decay=0, sustainLevel=1.0, release=0
 func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, attack time.Duration, decay time.Duration, sustainLevel float64, release time.Duration) *fire.Fire {
-	return SetFireWithPitch(source, begin, sustain, volume, pan, 1.0, 1.0)
+	return SetFireWithPitch(source, begin, sustain, volume, pan, attack, decay, sustainLevel, release, 1.0, 1.0)
 }
 
 // SetFireWithPitch to represent a single audio source playing at a specific time with pitch shifting and time stretching
 // pitch: multiplier for pitch (1.0 = no change, 2.0 = up one octave, 0.5 = down one octave)
 // timeStretch: multiplier for duration (1.0 = no change, 2.0 = twice as slow, 0.5 = twice as fast)
-func SetFireWithPitch(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, pitch float64, timeStretch float64) *fire.Fire {
+func SetFireWithPitch(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, attack time.Duration, decay time.Duration, sustainLevel float64, release time.Duration, pitch float64, timeStretch float64) *fire.Fire {
 	mixPrepareSource(mixSourcePrefix + source)
 	beginTz := spec.Tz(begin.Nanoseconds() / masterTzDur.Nanoseconds())
 	var endTz spec.Tz
