@@ -377,7 +377,7 @@ func TestSignedUnsignedConversion(t *testing.T) {
 
 			// Test round-trip
 			roundTrip := sample.ValueOfByteU8(result)
-			tolerance := 1.0 / 128.0
+			tolerance := getTolerance(spec.AudioU8)
 			if math.Abs(float64(tc.input)-float64(roundTrip)) > tolerance {
 				t.Errorf("U8 round-trip failed: input %f, got %f", tc.input, roundTrip)
 			}
@@ -431,7 +431,7 @@ func TestSignedUnsignedConversion(t *testing.T) {
 			// Test round-trip
 			bytes := tc.input.ToBytesU16LSB()
 			roundTrip := sample.ValueOfBytesU16LSB(bytes)
-			tolerance := 1.0 / 32768.0
+			tolerance := getTolerance(spec.AudioU16)
 			if math.Abs(float64(tc.input)-float64(roundTrip)) > tolerance {
 				t.Errorf("U16 round-trip failed: input %f, got %f", tc.input, roundTrip)
 			}
