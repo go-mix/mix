@@ -7,10 +7,19 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/go-mix/mix/bind/opt"
+	"github.com/go-mix/mix/bind/spec"
 )
 
-func TestAPI(t *testing.T) {
-	// TODO
+func TestAPI_Configure(t *testing.T) {
+	// Test Configure doesn't panic with valid spec
+	s := spec.AudioSpec{
+		Freq:     44100,
+		Format:   spec.AudioF32,
+		Channels: 2,
+	}
+	assert.NotPanics(t, func() {
+		Configure(s)
+	})
 }
 
 func TestAPI_UseWAV(t *testing.T) {
@@ -51,6 +60,35 @@ func TestAPI_UseOutputString_Fail(t *testing.T) {
 	UseOutputString("this-will-panic")
 }
 
-func TestAPI_noErr(t *testing.T) {
-	//TODO: Test
+func TestAPI_IsDirectOutput(t *testing.T) {
+	// Test IsDirectOutput with WAV output
+	UseOutput(opt.OutputWAV)
+	assert.True(t, IsDirectOutput())
+
+	// Test IsDirectOutput with null output
+	UseOutput(opt.OutputNull)
+	assert.False(t, IsDirectOutput())
+}
+
+func TestAPI_UseLoaderSOX(t *testing.T) {
+	UseLoader(opt.InputSOX)
+	assert.Equal(t, opt.InputSOX, useLoader)
+}
+
+func TestAPI_UseLoaderSOXString(t *testing.T) {
+	UseLoaderString("sox")
+	assert.Equal(t, opt.InputSOX, useLoader)
+}
+
+func TestAPI_Teardown(t *testing.T) {
+	// Test teardown doesn't panic
+	UseOutput(opt.OutputNull)
+	assert.NotPanics(t, func() {
+		Teardown()
+	})
+
+	UseOutput(opt.OutputWAV)
+	assert.NotPanics(t, func() {
+		Teardown()
+	})
 }

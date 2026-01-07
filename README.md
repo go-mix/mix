@@ -1,8 +1,11 @@
 # Mix 
 
-[![Build Status](https://travis-ci.org/go-mix/mix.svg?branch=master)](https://travis-ci.org/go-mix/mix) [![GoDoc](https://godoc.org/github.com/go-mix/mix?status.svg)](https://godoc.org/github.com/go-mix/mix) [![codebeat badge](https://codebeat.co/badges/008a2ecc-76ac-4ef5-9baa-6ee99501cacc)](https://codebeat.co/projects/github-com-go-mix-mix) [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
+[![Tests](https://github.com/go-mix/mix/actions/workflows/test.yml/badge.svg)](https://github.com/go-mix/mix/actions/workflows/test.yml)
+[![GoDoc](https://godoc.org/gopkg.in/mix.v0?status.svg)](https://godoc.org/gopkg.in/mix.v0)
+[![Go Report Card](https://goreportcard.com/badge/gopkg.in/mix.v0)](https://goreportcard.com/report/gopkg.in/mix.v0)
+[![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
 
-https://github.com/go-mix/mix
+[gopkg.in/mix.v0](https://gopkg.in/mix.v0)
 
 #### Sequence-based Go-native audio mixer for music apps
 
@@ -88,7 +91,7 @@ Or export WAV via stdout `> demo/output.wav`:
 
 ##### Credit
 
-[Charney Kaye](https://charneykaye.com)
+[Nick Charney Kaye](https://charneykaye.com)
 
 [XJ Music Inc.](https://xj.io)
 
@@ -124,7 +127,7 @@ Mix takes maximum advantage of Go by storing and mixing audio in native Go `[]fl
 
 To the Mix API, time is specified as a time.Duration-since-epoch, where the epoch is the moment that mix.Start() was called.
 
-Internally, time is tracked as samples-since-epoch at the master out playback frequency (e.g. 48000 Hz). This is most efficient because source audio is pre-converted to the master out playback frequency, and all audio maths are performed in terms of samples.
+Internally, time is tracked as samples-since-epoch at the main out playback frequency (e.g. 48000 Hz). This is most efficient because source audio is pre-converted to the main out playback frequency, and all audio maths are performed in terms of samples.
 
 ### The Mixing Algorithm
 
