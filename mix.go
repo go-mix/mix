@@ -96,7 +96,7 @@
 //
 // Credit
 //
-// Charney Kaye
+// Nick Charney Kaye
 // https://charneykaye.com
 //
 // XJ Music Inc.

@@ -1,4 +1,4 @@
-/** Author: Charney Kaye */
+/** Author: Nick Charney Kaye */
 
 package main
 

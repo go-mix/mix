@@ -1,10 +1,11 @@
 # Mix 
 
-[![Build Status](https://travis-ci.org/go-mix/mix.svg?branch=master)](https://travis-ci.org/go-mix/mix) 
-[![GoDoc](https://godoc.org/github.com/go-mix/mix?status.svg)](https://godoc.org/github.com/go-mix/mix) 
+[![Tests](https://github.com/go-mix/mix/actions/workflows/test.yml/badge.svg)](https://github.com/go-mix/mix/actions/workflows/test.yml)
+[![GoDoc](https://godoc.org/gopkg.in/mix.v0?status.svg)](https://godoc.org/gopkg.in/mix.v0)
+[![Go Report Card](https://goreportcard.com/badge/gopkg.in/mix.v0)](https://goreportcard.com/report/gopkg.in/mix.v0)
 [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
 
-https://github.com/go-mix/mix
+[gopkg.in/mix.v0](https://gopkg.in/mix.v0)
 
 #### Sequence-based Go-native audio mixer for music apps
 
@@ -90,7 +91,7 @@ Or export WAV via stdout `> demo/output.wav`:
 
 ##### Credit
 
-[Charney Kaye](https://charneykaye.com)
+[Nick Charney Kaye](https://charneykaye.com)
 
 [XJ Music Inc.](https://xj.io)
 
