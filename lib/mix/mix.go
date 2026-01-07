@@ -24,16 +24,16 @@ func NextSample() []sample.Value {
 	smp := make([]sample.Value, channels)
 	var fireSample []sample.Value
 	for _, fire := range mixLiveFires {
-		if fireTz := fire.At(nowTz); fireTz > 0 || fire.IsPlaying() {
+		if fireTz := fire.At(nowTz); fireTz >= 0 && fire.IsPlaying() {
 			// Use interpolated sampling if pitch shifting is enabled
 			if fire.Pitch != 0 && fire.Pitch != 1.0 {
 				// Use fractional playback position for interpolation
 				fireSample = mixSourceAtInterpolated(fire.Source, fire.Volume, fire.Pan, fire.PlaybackTz)
 			} else {
 				fireSample = mixSourceAt(fire.Source, fire.Volume, fire.Pan, fireTz)
-				if len(fireSample) < channels {
-					continue
-				}
+			}
+			if len(fireSample) < channels {
+				continue
 			}
 			for c := 0; c < channels; c++ {
 				smp[c] += fireSample[c]
@@ -85,13 +85,29 @@ func Teardown() {
 // and ADSR envelope parameters: attack time.Duration, decay time.Duration, sustainLevel (0 to 1), release time.Duration.
 // To disable the ADSR envelope effect, use: attack=0, decay=0, sustainLevel=1.0, release=0
 func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, attack time.Duration, decay time.Duration, sustainLevel float64, release time.Duration) *fire.Fire {
-	return SetFireWithPitch(source, begin, sustain, volume, pan, attack, decay, sustainLevel, release, 1.0, 1.0)
+	return setFireInternal(source, begin, sustain, volume, pan, attack, decay, sustainLevel, release, 1.0, 1.0)
 }
 
-// SetFireWithPitch to represent a single audio source playing at a specific time with pitch shifting and time stretching
+// SetFireWithPitch represents a single audio source playing at a specific time with pitch shifting and time stretching.
 // pitch: multiplier for pitch (1.0 = no change, 2.0 = up one octave, 0.5 = down one octave)
 // timeStretch: multiplier for duration (1.0 = no change, 2.0 = twice as slow, 0.5 = twice as fast)
-func SetFireWithPitch(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, attack time.Duration, decay time.Duration, sustainLevel float64, release time.Duration, pitch float64, timeStretch float64) *fire.Fire {
+// This function uses a default ADSR envelope that has no effect (attack=0, decay=0, sustainLevel=1.0, release=0).
+func SetFireWithPitch(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, pitch float64, timeStretch float64) *fire.Fire {
+	const defaultSustainLevel = 1.0
+	return setFireInternal(source, begin, sustain, volume, pan, 0, 0, defaultSustainLevel, 0, pitch, timeStretch)
+}
+
+// SetFireWithPitchADSR represents a single audio source playing at a specific time with both
+// ADSR envelope control and pitch shifting / time stretching.
+// pitch: multiplier for pitch (1.0 = no change, 2.0 = up one octave, 0.5 = down one octave)
+// timeStretch: multiplier for duration (1.0 = no change, 2.0 = twice as slow, 0.5 = twice as fast)
+func SetFireWithPitchADSR(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, attack time.Duration, decay time.Duration, sustainLevel float64, release time.Duration, pitch float64, timeStretch float64) *fire.Fire {
+	return setFireInternal(source, begin, sustain, volume, pan, attack, decay, sustainLevel, release, pitch, timeStretch)
+}
+
+// setFireInternal is a shared helper that creates and schedules a Fire with full control over
+// ADSR envelope and pitch/timeStretch parameters.
+func setFireInternal(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, attack time.Duration, decay time.Duration, sustainLevel float64, release time.Duration, pitch float64, timeStretch float64) *fire.Fire {
 	mixPrepareSource(mixSourcePrefix + source)
 	beginTz := spec.Tz(begin.Nanoseconds() / masterTzDur.Nanoseconds())
 	var endTz spec.Tz

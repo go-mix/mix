@@ -64,10 +64,13 @@ func (f *Fire) At(at spec.Tz) (t spec.Tz) {
 			f.PlaybackTz = f.pitchAdvancement()
 		}
 	case fireStatePlay:
-		// Return current sample position
-		t = spec.Tz(f.PlaybackTz)
-		// Advance playback position based on pitch (affects playback rate)
-		f.PlaybackTz += f.pitchAdvancement()
+		// Capture current playback position before advancing so interpolation
+		// uses the pre-advancement value.
+		currentPlaybackTz := f.PlaybackTz
+		// Return current sample position based on the captured value.
+		t = spec.Tz(currentPlaybackTz)
+		// Advance playback position based on pitch (affects playback rate).
+		f.PlaybackTz = currentPlaybackTz + f.pitchAdvancement()
 		f.nowTz++
 		if f.EndTz != 0 {
 			if at >= f.EndTz {

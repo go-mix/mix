@@ -16,19 +16,29 @@ import (
 mix.SetFire("sound.wav", time.Duration(0), 0, 1.0, 0, 0, 0, 1.0, 0)
 
 // Pitch shifted up one octave (2.0x pitch), ADSR envelope disabled
-mix.SetFireWithPitch("sound.wav", time.Duration(0), 0, 1.0, 0, 0, 0, 1.0, 0, 2.0, 1.0)
+mix.SetFireWithPitch("sound.wav", time.Duration(0), 0, 1.0, 0, 2.0, 1.0)
 
 // Pitch shifted down one octave (0.5x pitch), ADSR envelope disabled
-mix.SetFireWithPitch("sound.wav", time.Duration(0), 0, 1.0, 0, 0, 0, 1.0, 0, 0.5, 1.0)
+mix.SetFireWithPitch("sound.wav", time.Duration(0), 0, 1.0, 0, 0.5, 1.0)
 
 // Pitch shifted up a perfect fifth (~1.5x pitch), ADSR envelope disabled
-mix.SetFireWithPitch("sound.wav", time.Duration(0), 0, 1.0, 0, 0, 0, 1.0, 0, 1.5, 1.0)
+mix.SetFireWithPitch("sound.wav", time.Duration(0), 0, 1.0, 0, 1.5, 1.0)
 ```
 
 ## API
 
 ```go
 func SetFireWithPitch(
+    source string,          // path to audio file
+    begin time.Duration,    // start time
+    sustain time.Duration,  // sustain duration (0 = play full file)
+    volume float64,         // volume (0 to 1)
+    pan float64,            // pan (-1 to +1)
+    pitch float64,          // pitch multiplier (1.0 = no change)
+    timeStretch float64     // time stretch multiplier (currently unused)
+) *fire.Fire
+
+func SetFireWithPitchADSR(
     source string,          // path to audio file
     begin time.Duration,    // start time
     sustain time.Duration,  // sustain duration (0 = play full file)
@@ -42,6 +52,8 @@ func SetFireWithPitch(
     timeStretch float64     // time stretch multiplier (currently unused)
 ) *fire.Fire
 ```
+
+**Note:** `SetFireWithPitch()` uses default ADSR settings (no envelope effect). For full control over both pitch shifting and ADSR envelope, use `SetFireWithPitchADSR()`.
 
 ## Pitch Multiplier
 
@@ -69,10 +81,9 @@ Currently, changing pitch also changes playback speed proportionally. True indep
 
 ```go
 // Play a drum loop at different pitches for variation
-// ADSR parameters: attack=0, decay=0, sustainLevel=1.0, release=0 (disabled)
-mix.SetFireWithPitch("drums.wav", 0*time.Second, 0, 1.0, 0, 0, 0, 1.0, 0, 1.0, 1.0)  // original
-mix.SetFireWithPitch("drums.wav", 4*time.Second, 0, 1.0, 0, 0, 0, 1.0, 0, 0.9, 1.0)  // slightly lower
-mix.SetFireWithPitch("drums.wav", 8*time.Second, 0, 1.0, 0, 0, 0, 1.0, 0, 1.1, 1.0)  // slightly higher
+mix.SetFireWithPitch("drums.wav", 0*time.Second, 0, 1.0, 0, 1.0, 1.0)  // original
+mix.SetFireWithPitch("drums.wav", 4*time.Second, 0, 1.0, 0, 0.9, 1.0)  // slightly lower
+mix.SetFireWithPitch("drums.wav", 8*time.Second, 0, 1.0, 0, 1.1, 1.0)  // slightly higher
 ```
 
 ### Creating Harmonies
@@ -80,9 +91,9 @@ mix.SetFireWithPitch("drums.wav", 8*time.Second, 0, 1.0, 0, 0, 0, 1.0, 0, 1.1, 1
 ```go
 // Play the same sample at different pitches to create harmony
 baseTime := 2 * time.Second
-mix.SetFireWithPitch("note.wav", baseTime, 0, 0.8, -0.5, 0, 0, 1.0, 0, 1.0, 1.0)   // root (left)
-mix.SetFireWithPitch("note.wav", baseTime, 0, 0.8, 0, 0, 0, 1.0, 0, 1.25, 1.0)     // major third (center)
-mix.SetFireWithPitch("note.wav", baseTime, 0, 0.8, 0.5, 0, 0, 1.0, 0, 1.5, 1.0)    // perfect fifth (right)
+mix.SetFireWithPitch("note.wav", baseTime, 0, 0.8, -0.5, 1.0, 1.0)   // root (left)
+mix.SetFireWithPitch("note.wav", baseTime, 0, 0.8, 0, 1.25, 1.0)     // major third (center)
+mix.SetFireWithPitch("note.wav", baseTime, 0, 0.8, 0.5, 1.5, 1.0)    // perfect fifth (right)
 ```
 
 ### Bass Drop Effect
@@ -92,6 +103,20 @@ mix.SetFireWithPitch("note.wav", baseTime, 0, 0.8, 0.5, 0, 0, 1.0, 0, 1.5, 1.0) 
 for i := 0; i < 10; i++ {
     pitch := 1.0 - float64(i)*0.1  // gradually lower pitch
     mix.SetFireWithPitch("bass.wav", time.Duration(i)*200*time.Millisecond, 
-                        200*time.Millisecond, 1.0, 0, 0, 0, 1.0, 0, pitch, 1.0)
+                        200*time.Millisecond, 1.0, 0, pitch, 1.0)
 }
+```
+
+### Combining Pitch Shift with ADSR Envelope
+
+```go
+// Use SetFireWithPitchADSR for full control over both pitch and envelope
+attack := 100 * time.Millisecond
+decay := 50 * time.Millisecond
+sustainLevel := 0.7
+release := 200 * time.Millisecond
+
+mix.SetFireWithPitchADSR("synth.wav", 0, 2*time.Second, 1.0, 0, 
+                         attack, decay, sustainLevel, release, 1.5, 1.0)
+```
 ```

@@ -132,8 +132,51 @@ func TestSampleAtInterpolated(t *testing.T) {
 				"Interpolated sample should be between adjacent samples")
 		}
 	}
+	
+	// Test edge case: sampling at position 0 (boundary)
+	sample0 := source.SampleAtInterpolated(0.0, 1.0, 0)
+	assert.NotNil(t, sample0)
+	assert.Equal(t, len(sample0), 1)
+	
+	// Test edge case: sampling beyond source length (should return zeros)
+	sampleBeyond := source.SampleAtInterpolated(float64(source.Length()+100), 1.0, 0)
+	assert.NotNil(t, sampleBeyond)
+	for c := 0; c < len(sampleBeyond); c++ {
+		assert.Equal(t, sample.Value(0), sampleBeyond[c], "Beyond source length should return zero")
+	}
+	
+	// Test edge case: sampling at the very last valid position
+	lastPos := float64(source.Length() - 1)
+	sampleLast := source.SampleAtInterpolated(lastPos, 1.0, 0)
+	assert.NotNil(t, sampleLast)
+	
+	// Test with volume adjustments
+	sampleHalfVol := source.SampleAtInterpolated(1.5, 0.5, 0)
+	assert.NotNil(t, sampleHalfVol)
+	// Volume should scale the interpolated value (using absolute values for comparison)
+	for c := 0; c < len(sampleHalfVol); c++ {
+		// Check that half volume produces approximately half the amplitude
+		if sample2[c] != 0 {
+			ratio := sampleHalfVol[c] / sample2[c]
+			assert.True(t, ratio >= 0.45 && ratio <= 0.55, 
+				"Half volume should produce approximately half the amplitude")
+		}
+	}
+	
+	// Test with pan adjustments (if multi-channel)
+	Configure(spec.AudioSpec{
+		Freq:     48000,
+		Format:   spec.AudioF32,
+		Channels: 2,
+	})
+	stereoSource := New("testdata/Float32bitLittleEndian48000HzEstéreo.wav")
+	if stereoSource != nil {
+		samplePanLeft := stereoSource.SampleAtInterpolated(1.5, 1.0, -1.0)
+		samplePanRight := stereoSource.SampleAtInterpolated(1.5, 1.0, 1.0)
+		assert.NotNil(t, samplePanLeft)
+		assert.NotNil(t, samplePanRight)
+	}
 }
-
 
 func TestState(t *testing.T) {
 	testSourceSetup(44100, 1)
