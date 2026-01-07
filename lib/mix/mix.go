@@ -17,7 +17,11 @@ import (
 
 // NextSample returns the next sample mixed in all channels
 func NextSample() []sample.Value {
-	smp := make([]sample.Value, masterSpec.Channels)
+	if masterSpec == nil {
+		return nil
+	}
+	channels := masterSpec.Channels
+	smp := make([]sample.Value, channels)
 	var fireSample []sample.Value
 	for _, fire := range mixLiveFires {
 		if fireTz := fire.At(nowTz); fireTz > 0 || fire.IsPlaying() {
@@ -27,8 +31,11 @@ func NextSample() []sample.Value {
 				fireSample = mixSourceAtInterpolated(fire.Source, fire.Volume, fire.Pan, fire.PlaybackTz)
 			} else {
 				fireSample = mixSourceAt(fire.Source, fire.Volume, fire.Pan, fireTz)
+				if len(fireSample) < channels {
+					continue
+				}
 			}
-			for c := 0; c < masterSpec.Channels; c++ {
+			for c := 0; c < channels; c++ {
 				smp[c] += fireSample[c]
 			}
 		}
@@ -37,7 +44,7 @@ func NextSample() []sample.Value {
 	nowTz++
 	out := make([]sample.Value, masterSpec.Channels)
 	for c := 0; c < masterSpec.Channels; c++ {
-		out[c] = mixLogarithmicRangeCompression(smp[c])
+		out[c] = mixApplyAlgorithm(smp[c])
 	}
 	if nowTz > nextCycleTz {
 		mixCycle()
@@ -51,6 +58,12 @@ func Configure(s spec.AudioSpec) {
 	masterFreq = float64(s.Freq)
 	masterTzDur = time.Second / time.Duration(masterFreq)
 	masterCycleDurTz = spec.Tz(masterFreq)
+	// Set mixing algorithm (default to logarithmic if not specified)
+	if s.Algorithm == "" {
+		mixAlgorithm = spec.MixLogarithmic
+	} else {
+		mixAlgorithm = s.Algorithm
+	}
 	source.Configure(s)
 }
 
@@ -67,8 +80,11 @@ func Teardown() {
 	nowTz = 0
 }
 
-// SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start), with sustain time.Duration, volume from 0 to 1, and pan from -1 to +1
-func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) *fire.Fire {
+// SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start),
+// with sustain time.Duration (duration of playback), volume from 0 to 1, pan from -1 to +1,
+// and ADSR envelope parameters: attack time.Duration, decay time.Duration, sustainLevel (0 to 1), release time.Duration.
+// To disable the ADSR envelope effect, use: attack=0, decay=0, sustainLevel=1.0, release=0
+func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, attack time.Duration, decay time.Duration, sustainLevel float64, release time.Duration) *fire.Fire {
 	return SetFireWithPitch(source, begin, sustain, volume, pan, 1.0, 1.0)
 }
 
@@ -82,7 +98,10 @@ func SetFireWithPitch(source string, begin time.Duration, sustain time.Duration,
 	if sustain != 0 {
 		endTz = beginTz + spec.Tz(sustain.Nanoseconds()/masterTzDur.Nanoseconds())
 	}
-	f := fire.New(mixSourcePrefix+source, beginTz, endTz, volume, pan, pitch, timeStretch)
+	attackTz := spec.Tz(attack.Nanoseconds() / masterTzDur.Nanoseconds())
+	decayTz := spec.Tz(decay.Nanoseconds() / masterTzDur.Nanoseconds())
+	releaseTz := spec.Tz(release.Nanoseconds() / masterTzDur.Nanoseconds())
+	f := fire.New(mixSourcePrefix+source, beginTz, endTz, volume, pan, attackTz, decayTz, sustainLevel, releaseTz, pitch, timeStretch)
 	mixReadyFires = append(mixReadyFires, f)
 	return f
 }
@@ -168,6 +187,7 @@ var (
 	mixLiveFires    []*fire.Fire
 	masterSpec      *spec.AudioSpec
 	masterFreq      float64
+	mixAlgorithm    spec.MixAlgorithm
 )
 
 func init() {
@@ -245,5 +265,25 @@ func mixLogarithmicRangeCompression(i sample.Value) sample.Value {
 		return sample.Value(math.Log(float64(i)-0.85)/14 + 0.75)
 	} else {
 		return sample.Value(i / 1.61803398875)
+	}
+}
+
+func mixLinearClamp(i sample.Value) sample.Value {
+	if i < -1 {
+		return sample.Value(-1)
+	} else if i > 1 {
+		return sample.Value(1)
+	}
+	return i
+}
+
+func mixApplyAlgorithm(i sample.Value) sample.Value {
+	switch mixAlgorithm {
+	case spec.MixLinear:
+		return mixLinearClamp(i)
+	case spec.MixLogarithmic:
+		return mixLogarithmicRangeCompression(i)
+	default:
+		return mixLogarithmicRangeCompression(i)
 	}
 }

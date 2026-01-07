@@ -19,14 +19,24 @@ func SetOutputCallback(fn OutNextCallbackFunc) {
 
 // OutNext to mix the next sample for all channels, in []float64
 func OutNext() []Value {
+	if outNextCallback == nil {
+		return nil
+	}
 	return outNextCallback()
 }
 
 // OutNextBytes to mix the next sample for all channels, in bytes
 func OutNextBytes() (out []byte) {
+	if outNextCallback == nil || outSpec == nil {
+		return nil
+	}
+	localSpec := outSpec
 	in := outNextCallback()
-	for ch := 0; ch < outSpec.Channels; ch++ {
-		switch outSpec.Format {
+	if in == nil || len(in) < localSpec.Channels {
+		return nil
+	}
+	for ch := 0; ch < localSpec.Channels; ch++ {
+		switch localSpec.Format {
 		case spec.AudioU8:
 			out = append(out, in[ch].ToByteU8())
 		case spec.AudioS8:

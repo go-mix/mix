@@ -53,6 +53,13 @@ func Count() int {
 	return len(storage)
 }
 
+// Clear all sources from storage
+func Clear() {
+	storageMutex.Lock()
+	defer storageMutex.Unlock()
+	storage = make(map[string]*Source, 0)
+}
+
 //
 // Private
 //

@@ -1,3 +1,6 @@
+//go:build sox
+// +build sox
+
 // Package sox is for file I/O via go-sox package
 package sox
 
