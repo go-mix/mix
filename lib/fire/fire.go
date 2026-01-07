@@ -50,22 +50,15 @@ func (f *Fire) At(at spec.Tz) (t spec.Tz) {
 		if at >= f.BeginTz {
 			f.state = fireStatePlay
 			f.nowTz++
-			// Initialize PlaybackTz to 1 (matches original nowTz behavior)
-			if f.Pitch != 0 && f.Pitch != 1.0 {
-				f.PlaybackTz = f.Pitch
-			} else {
-				f.PlaybackTz = 1.0
-			}
+			// Initialize PlaybackTz based on pitch advancement rate
+			// Matches original nowTz behavior where first sample position is 1
+			f.PlaybackTz = f.pitchAdvancement()
 		}
 	case fireStatePlay:
 		// Return current sample position
 		t = spec.Tz(f.PlaybackTz)
 		// Advance playback position based on pitch (affects playback rate)
-		if f.Pitch != 0 && f.Pitch != 1.0 {
-			f.PlaybackTz += f.Pitch
-		} else {
-			f.PlaybackTz += 1.0
-		}
+		f.PlaybackTz += f.pitchAdvancement()
 		f.nowTz++
 		if f.EndTz != 0 {
 			if at >= f.EndTz {
@@ -74,7 +67,7 @@ func (f *Fire) At(at spec.Tz) (t spec.Tz) {
 		} else {
 			actualLength := f.sourceLength()
 			// Adjust end time based on pitch (faster pitch = shorter duration)
-			if f.Pitch != 0 && f.Pitch != 1.0 {
+			if f.hasPitchShift() {
 				f.EndTz = f.BeginTz + spec.Tz(float64(actualLength)/f.Pitch)
 			} else {
 				f.EndTz = f.BeginTz + actualLength
@@ -116,4 +109,17 @@ const (
 
 func (f *Fire) sourceLength() spec.Tz {
 	return source.GetLength(f.Source)
+}
+
+// hasPitchShift returns true if pitch shifting is enabled
+func (f *Fire) hasPitchShift() bool {
+	return f.Pitch != 0 && f.Pitch != 1.0
+}
+
+// pitchAdvancement returns the amount to advance playback position per sample
+func (f *Fire) pitchAdvancement() float64 {
+	if f.hasPitchShift() {
+		return f.Pitch
+	}
+	return 1.0
 }
