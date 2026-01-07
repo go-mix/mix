@@ -57,7 +57,8 @@ func (r *Reader) ReadSamples(params ...uint32) (out []sample.Sample, err error) 
 	numSamples = n / blockAlign
 	r.Data.pos += uint32(numSamples * blockAlign)
 
-	for offset := 0; offset < len(buffer)-numChannels-bytesPerSample; offset += blockAlign {
+	// Read all complete sample frames from the buffer
+	for offset := 0; offset+blockAlign <= n; offset += blockAlign {
 		values := make([]sample.Value, numChannels)
 		for c := 0; c < int(numChannels); c++ {
 			offsetCh := offset + c*bytesPerSample
@@ -136,9 +137,11 @@ func (r *Reader) openAndParse() (format *Format, audio spec.AudioFormat, err err
 			case AudioFormatLinearPCM: // Linear PCM
 				switch format.BitsPerSample {
 				case 8:
-					audio = spec.AudioS8
+					audio = spec.AudioU8 // WAV spec: 8-bit PCM is unsigned
 				case 16:
 					audio = spec.AudioS16
+				case 32:
+					audio = spec.AudioS32
 				default:
 					panic(fmt.Sprintf("Unhandled Linear PCM bitrate: %+v", format.BitsPerSample))
 				}

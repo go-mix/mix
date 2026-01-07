@@ -63,7 +63,7 @@
 //       t := 2 * time.Second // padding before music
 //       for n := 0; n < loops; n++ {
 //         for s := 0; s < len(pattern); s++ {
-//           mix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, 0)
+//           mix.SetFire(pattern[s], t+time.Duration(s)*step, 0, 1.0, 0, 0, 0, 1.0, 0)
 //         }
 //         t += time.Duration(len(pattern)) * step
 //       }
@@ -96,7 +96,7 @@
 //
 // Credit
 //
-// Charney Kaye
+// Nick Charney Kaye
 // https://charneykaye.com
 //
 // XJ Music Inc.
@@ -124,7 +124,7 @@
 //
 // To the Mix API, time is specified as a time.Duration-since-epoch, where the epoch is the moment that mix.Start() was called.
 //
-// Internally, time is tracked as samples-since-epoch at the master out playback frequency (e.g. 48000 Hz). This is most efficient because source audio is pre-converted to the master out playback frequency, and all audio maths are performed in terms of samples.
+// Internally, time is tracked as samples-since-epoch at the main out playback frequency (e.g. 48000 Hz). This is most efficient because source audio is pre-converted to the main out playback frequency, and all audio maths are performed in terms of samples.
 //
 // The Mixing Algorithm
 //
@@ -190,9 +190,12 @@ func Spec() *spec.AudioSpec {
 	return mix.Spec()
 }
 
-// SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start), with sustain time.Duration, volume from 0 to 1, and pan from -1 to +1
-func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64) *fire.Fire {
-	return mix.SetFire(source, begin, sustain, volume, pan)
+// SetFire to represent a single audio source playing at a specific time in the future (in time.Duration from play start), 
+// with sustain time.Duration (duration of playback), volume from 0 to 1, pan from -1 to +1,
+// and ADSR envelope parameters: attack time.Duration, decay time.Duration, sustainLevel (0 to 1), release time.Duration.
+// To disable the ADSR envelope effect, use: attack=0, decay=0, sustainLevel=1.0, release=0
+func SetFire(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, attack time.Duration, decay time.Duration, sustainLevel float64, release time.Duration) *fire.Fire {
+	return mix.SetFire(source, begin, sustain, volume, pan, attack, decay, sustainLevel, release)
 }
 
 // FireCount to check the number of fires currently scheduled for playback
