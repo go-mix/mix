@@ -132,13 +132,15 @@
 //
 // To select an algorithm, specify it in the AudioSpec when calling Configure():
 //
-//	spec := bind.AudioSpec{
+//	import "github.com/go-mix/mix/bind/spec"
+//
+//	audioSpec := spec.AudioSpec{
 //	    Freq:      48000,
-//	    Format:    bind.AudioF32,
+//	    Format:    spec.AudioF32,
 //	    Channels:  2,
-//	    Algorithm: bind.MixLinear, // or bind.MixLogarithmic (default)
+//	    Algorithm: spec.MixLinear, // or spec.MixLogarithmic (default)
 //	}
-//	mix.Configure(spec)
+//	mix.Configure(audioSpec)
 //
 // # Usage
 //
