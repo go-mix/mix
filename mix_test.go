@@ -158,6 +158,7 @@ func TestAudioCallback(t *testing.T) {
 //
 
 func testAPISetup() {
+	Teardown()
 	ClearAllFires()
 	Configure(spec.AudioSpec{
 		Freq:     44100,
