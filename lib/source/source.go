@@ -82,6 +82,10 @@ func (s *Source) SampleAtInterpolated(at float64, vol float64, pan float64) (out
 	
 	// Helper function for linear interpolation
 	interpolate := func(srcChan int) sample.Value {
+		// Ensure srcChan is within the bounds of the sample value slices to avoid panics.
+		if srcChan < 0 || srcChan >= len(sample1.Values) || srcChan >= len(sample2.Values) {
+			return 0
+		}
 		return sample1.Values[srcChan]*(1.0-sample.Value(atFrac)) + sample2.Values[srcChan]*sample.Value(atFrac)
 	}
 	

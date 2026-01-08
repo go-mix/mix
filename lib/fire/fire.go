@@ -200,9 +200,9 @@ func (f *Fire) sourceLength() spec.Tz {
 	return source.GetLength(f.Source)
 }
 
-// hasPitchShift returns true if pitch shifting is enabled
+// HasPitchShift returns true if pitch shifting is enabled
 func (f *Fire) HasPitchShift() bool {
-	return f.Pitch != 0 && f.Pitch != 1.0
+	return f.Pitch != 1.0
 }
 
 // pitchAdvancement returns the amount to advance playback position per sample
