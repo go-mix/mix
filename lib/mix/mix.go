@@ -26,7 +26,7 @@ func NextSample() []sample.Value {
 	for _, fire := range mixLiveFires {
 		if fireTz := fire.At(nowTz); fireTz >= 0 && fire.IsPlaying() {
 			// Use interpolated sampling if pitch shifting is enabled
-			if fire.Pitch != 0 && fire.Pitch != 1.0 {
+			if fire.HasPitchShift() {
 				// Use fractional playback position for interpolation
 				fireSample = mixSourceAtInterpolated(fire.Source, fire.Volume, fire.Pan, fire.PlaybackTz)
 			} else {
@@ -90,9 +90,13 @@ func SetFire(source string, begin time.Duration, sustain time.Duration, volume f
 
 // SetFireWithPitch represents a single audio source playing at a specific time with pitch shifting and time stretching.
 // pitch: multiplier for pitch (1.0 = no change, 2.0 = up one octave, 0.5 = down one octave)
+//        Must be a positive non-zero value. Values < 0.01 or > 100 are not recommended.
 // timeStretch: multiplier for duration (1.0 = no change, 2.0 = twice as slow, 0.5 = twice as fast)
 // This function uses a default ADSR envelope that has no effect (attack=0, decay=0, sustainLevel=1.0, release=0).
 func SetFireWithPitch(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, pitch float64, timeStretch float64) *fire.Fire {
+	if pitch <= 0 {
+		panic("SetFireWithPitch: pitch must be a positive non-zero value")
+	}
 	const defaultSustainLevel = 1.0
 	return setFireInternal(source, begin, sustain, volume, pan, 0, 0, defaultSustainLevel, 0, pitch, timeStretch)
 }
@@ -100,8 +104,12 @@ func SetFireWithPitch(source string, begin time.Duration, sustain time.Duration,
 // SetFireWithPitchADSR represents a single audio source playing at a specific time with both
 // ADSR envelope control and pitch shifting / time stretching.
 // pitch: multiplier for pitch (1.0 = no change, 2.0 = up one octave, 0.5 = down one octave)
+//        Must be a positive non-zero value. Values < 0.01 or > 100 are not recommended.
 // timeStretch: multiplier for duration (1.0 = no change, 2.0 = twice as slow, 0.5 = twice as fast)
 func SetFireWithPitchADSR(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, attack time.Duration, decay time.Duration, sustainLevel float64, release time.Duration, pitch float64, timeStretch float64) *fire.Fire {
+	if pitch <= 0 {
+		panic("SetFireWithPitchADSR: pitch must be a positive non-zero value")
+	}
 	return setFireInternal(source, begin, sustain, volume, pan, attack, decay, sustainLevel, release, pitch, timeStretch)
 }
 

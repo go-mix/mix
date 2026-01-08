@@ -64,6 +64,8 @@ The `pitch` parameter is a multiplier:
 - `1.5` = up a perfect fifth
 - `0.75` = down a perfect fourth
 
+**Valid Range**: The pitch parameter must be a positive non-zero value. Extreme values (less than 0.01 or greater than 100) are not recommended as they may produce unexpected results or audio quality issues.
+
 ## How It Works
 
 The implementation uses sample-rate modification with linear interpolation:
@@ -118,5 +120,4 @@ release := 200 * time.Millisecond
 
 mix.SetFireWithPitchADSR("synth.wav", 0, 2*time.Second, 1.0, 0, 
                          attack, decay, sustainLevel, release, 1.5, 1.0)
-```
 ```

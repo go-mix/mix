@@ -47,7 +47,7 @@ type Fire struct {
 	/* playback */
 	nowTz      spec.Tz
 	releaseTz  spec.Tz // Time when release phase started
-	PlaybackTz float64 // fractional position for pitch/time stretch - exposed for interpolation
+	PlaybackTz float64 // fractional position for pitch/time stretch - exported for internal mixer use, do not modify externally
 	state      fireStateEnum
 }
 
@@ -57,11 +57,13 @@ func (f *Fire) At(at spec.Tz) (t spec.Tz) {
 	switch f.state {
 	case fireStateReady:
 		if at >= f.BeginTz {
+			// On the first playable sample, mirror fireStatePlay behavior:
+			// return the current PlaybackTz and then advance it.
+			currentPlaybackTz := f.PlaybackTz
+			t = spec.Tz(currentPlaybackTz)
 			f.state = fireStatePlay
 			f.nowTz++
-			// Initialize PlaybackTz based on pitch advancement rate
-			// Matches original nowTz behavior where first sample position is 1
-			f.PlaybackTz = f.pitchAdvancement()
+			f.PlaybackTz = currentPlaybackTz + f.pitchAdvancement()
 		}
 	case fireStatePlay:
 		// Capture current playback position before advancing so interpolation
@@ -85,7 +87,7 @@ func (f *Fire) At(at spec.Tz) (t spec.Tz) {
 		} else {
 			actualLength := f.sourceLength()
 			// Adjust end time based on pitch (faster pitch = shorter duration)
-			if f.hasPitchShift() {
+			if f.HasPitchShift() {
 				f.EndTz = f.BeginTz + spec.Tz(float64(actualLength)/f.Pitch)
 			} else {
 				f.EndTz = f.BeginTz + actualLength
@@ -199,13 +201,13 @@ func (f *Fire) sourceLength() spec.Tz {
 }
 
 // hasPitchShift returns true if pitch shifting is enabled
-func (f *Fire) hasPitchShift() bool {
+func (f *Fire) HasPitchShift() bool {
 	return f.Pitch != 0 && f.Pitch != 1.0
 }
 
 // pitchAdvancement returns the amount to advance playback position per sample
 func (f *Fire) pitchAdvancement() float64 {
-	if f.hasPitchShift() {
+	if f.HasPitchShift() {
 		return f.Pitch
 	}
 	return 1.0
