@@ -208,6 +208,28 @@ func SetFire(source string, begin time.Duration, sustain time.Duration, volume f
 	return mix.SetFire(source, begin, sustain, volume, pan, attack, decay, sustainLevel, release)
 }
 
+// SetFireWithPitch represents a single audio source playing at a specific time with pitch shifting and time stretching.
+// pitch: multiplier for pitch (1.0 = no change, 2.0 = up one octave, 0.5 = down one octave)
+// timeStretch: multiplier for duration (currently must be 1.0; time-stretching is not yet implemented)
+// This function uses a default ADSR envelope that has no effect (attack=0, decay=0, sustainLevel=1.0, release=0).
+func SetFireWithPitch(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, pitch float64, timeStretch float64) *fire.Fire {
+	if timeStretch != 1.0 {
+		panic("mix: timeStretch is not yet implemented; timeStretch must be 1.0")
+	}
+	return mix.SetFireWithPitch(source, begin, sustain, volume, pan, pitch, timeStretch)
+}
+
+// SetFireWithPitchADSR represents a single audio source playing at a specific time with both
+// ADSR envelope control and pitch shifting / time stretching.
+// pitch: multiplier for pitch (1.0 = no change, 2.0 = up one octave, 0.5 = down one octave)
+// timeStretch: multiplier for duration (currently must be 1.0; time-stretching is not yet implemented)
+func SetFireWithPitchADSR(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, attack time.Duration, decay time.Duration, sustainLevel float64, release time.Duration, pitch float64, timeStretch float64) *fire.Fire {
+	if timeStretch != 1.0 {
+		panic("mix: timeStretch is not yet implemented; timeStretch must be 1.0")
+	}
+	return mix.SetFireWithPitchADSR(source, begin, sustain, volume, pan, attack, decay, sustainLevel, release, pitch, timeStretch)
+}
+
 // FireCount to check the number of fires currently scheduled for playback
 func FireCount() int {
 	return mix.FireCount()

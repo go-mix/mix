@@ -8,21 +8,24 @@ import (
 )
 
 // New Fire to represent a single audio source playing at a specific time in the future.
-func New(source string, beginTz spec.Tz, endTz spec.Tz, volume float64, pan float64, attack spec.Tz, decay spec.Tz, sustain float64, release spec.Tz) *Fire {
+func New(source string, beginTz spec.Tz, endTz spec.Tz, volume float64, pan float64, attack spec.Tz, decay spec.Tz, sustain float64, release spec.Tz, pitch float64, timeStretch float64) *Fire {
 	// debug.Printf("NewFire(%v, %v, %v, %v, %v)\n", source, beginTz, endTz, volume, pan)
 	s := &Fire{
 		/* setup */
-		Source:  source,
-		Volume:  volume,
-		Pan:     pan,
-		BeginTz: beginTz,
-		EndTz:   endTz,
-		Attack:  attack,
-		Decay:   decay,
-		Sustain: sustain,
-		Release: release,
+		Source:      source,
+		Volume:      volume,
+		Pan:         pan,
+		BeginTz:     beginTz,
+		EndTz:       endTz,
+		Attack:      attack,
+		Decay:       decay,
+		Sustain:     sustain,
+		Release:     release,
+		Pitch:       pitch,
+		TimeStretch: timeStretch,
 		/* playback */
-		state: fireStateReady,
+		state:      fireStateReady,
+		PlaybackTz: 0,
 	}
 	return s
 }
@@ -30,19 +33,22 @@ func New(source string, beginTz spec.Tz, endTz spec.Tz, volume float64, pan floa
 // Fire represents a single audio source playing at a specific time in the future.
 type Fire struct {
 	/* setup */
-	BeginTz spec.Tz
-	EndTz   spec.Tz
-	Source  string
-	Volume  float64 // 0 to 1
-	Pan     float64 // -1 to +1
-	Attack  spec.Tz // ADSR: Attack time in samples
-	Decay   spec.Tz // ADSR: Decay time in samples
-	Sustain float64 // ADSR: Sustain level (0 to 1)
-	Release spec.Tz // ADSR: Release time in samples
+	BeginTz     spec.Tz
+	EndTz       spec.Tz
+	Source      string
+	Volume      float64 // 0 to 1
+	Pan         float64 // -1 to +1
+	Attack      spec.Tz // ADSR: Attack time in samples
+	Decay       spec.Tz // ADSR: Decay time in samples
+	Sustain     float64 // ADSR: Sustain level (0 to 1)
+	Release     spec.Tz // ADSR: Release time in samples
+	Pitch       float64 // pitch shift multiplier (1.0 = no shift, 2.0 = up one octave, 0.5 = down one octave)
+	TimeStretch float64 // time stretch multiplier (1.0 = no stretch, 2.0 = twice as slow, 0.5 = twice as fast)
 	/* playback */
-	nowTz     spec.Tz
-	releaseTz spec.Tz // Time when release phase started
-	state     fireStateEnum
+	nowTz      spec.Tz
+	releaseTz  spec.Tz // Time when release phase started
+	PlaybackTz float64 // fractional position for pitch/time stretch - exported for internal mixer use, do not modify externally
+	state      fireStateEnum
 }
 
 // At the series of Tz it's playing for, return the series of Tz corresponding to source audio.
@@ -51,11 +57,22 @@ func (f *Fire) At(at spec.Tz) (t spec.Tz) {
 	switch f.state {
 	case fireStateReady:
 		if at >= f.BeginTz {
+			// On the first playable sample, mirror fireStatePlay behavior:
+			// return the current PlaybackTz and then advance it.
+			currentPlaybackTz := f.PlaybackTz
+			t = spec.Tz(currentPlaybackTz)
 			f.state = fireStatePlay
 			f.nowTz++
+			f.PlaybackTz = currentPlaybackTz + f.pitchAdvancement()
 		}
 	case fireStatePlay:
-		t = f.nowTz
+		// Capture current playback position before advancing so interpolation
+		// uses the pre-advancement value.
+		currentPlaybackTz := f.PlaybackTz
+		// Return current sample position based on the captured value.
+		t = spec.Tz(currentPlaybackTz)
+		// Advance playback position based on pitch (affects playback rate).
+		f.PlaybackTz = currentPlaybackTz + f.pitchAdvancement()
 		f.nowTz++
 		if f.EndTz != 0 {
 			if at >= f.EndTz {
@@ -68,7 +85,13 @@ func (f *Fire) At(at spec.Tz) (t spec.Tz) {
 				}
 			}
 		} else {
-			f.EndTz = f.BeginTz + f.sourceLength()
+			actualLength := f.sourceLength()
+			// Adjust end time based on pitch (faster pitch = shorter duration)
+			if f.HasPitchShift() {
+				f.EndTz = f.BeginTz + spec.Tz(float64(actualLength)/f.Pitch)
+			} else {
+				f.EndTz = f.BeginTz + actualLength
+			}
 		}
 	case fireStateRelease:
 		t = f.nowTz
@@ -175,4 +198,17 @@ const (
 
 func (f *Fire) sourceLength() spec.Tz {
 	return source.GetLength(f.Source)
+}
+
+// HasPitchShift returns true if pitch shifting is enabled
+func (f *Fire) HasPitchShift() bool {
+	return f.Pitch != 1.0
+}
+
+// pitchAdvancement returns the amount to advance playback position per sample
+func (f *Fire) pitchAdvancement() float64 {
+	if f.HasPitchShift() {
+		return f.Pitch
+	}
+	return 1.0
 }

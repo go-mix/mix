@@ -108,6 +108,15 @@ Read the API documentation at [godoc.org/github.com/go-mix/mix](https://godoc.or
  
 Mix stores and mixes audio in native Go `[]float64` and natively implements Paul Vögler's "Loudness Normalization by Logarithmic Dynamic Range Compression" (details below)
 
+### Features
+
+- **Precise Timing**: Sample-accurate playback timing for sequence-based music applications
+- **Pitch Shifting**: Change the pitch of audio sources without manual resampling (see [docs/PITCH_SHIFTING.md](docs/PITCH_SHIFTING.md))
+- **Volume Control**: Per-source volume adjustment (0 to 1)
+- **Panning**: Stereo panning control (-1 to +1)
+- **Dynamic Range Compression**: Built-in logarithmic dynamic range compression
+- **Multiple Audio Formats**: Support for WAV and other formats via sox
+
 Best efforts will be made to preserve each API version in a release tag that can be parsed, e.g. **[github.com/go-mix/mix](http://github.com/go-mix/mix)** 
 
 ### Why?
