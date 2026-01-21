@@ -10,8 +10,6 @@
 [goreportcard.com](https://goreportcard.com/report/github.com/go-mix/mix) |
 [Coverage](https://app.codecov.io/github/go-mix/mix)
 
-[gopkg.in/mix.v0](https://gopkg.in/mix.v0)
-
 #### Sequence-based Go-native audio mixer for music apps
 
 See `demo/demo.go`:
