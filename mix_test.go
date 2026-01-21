@@ -103,6 +103,15 @@ func TestSetFireWithPitchEdgeCases(t *testing.T) {
 	assert.Panics(t, func() {
 		SetFireWithPitch("lib/source/testdata/Signed16bitLittleEndian44100HzMono.wav", time.Duration(0), 0, 1.0, 0, -1.0, 1.0)
 	}, "Negative pitch should panic")
+	
+	// Test that timeStretch != 1.0 panics
+	assert.Panics(t, func() {
+		SetFireWithPitch("lib/source/testdata/Signed16bitLittleEndian44100HzMono.wav", time.Duration(0), 0, 1.0, 0, 1.0, 2.0)
+	}, "timeStretch != 1.0 should panic")
+	
+	assert.Panics(t, func() {
+		SetFireWithPitch("lib/source/testdata/Signed16bitLittleEndian44100HzMono.wav", time.Duration(0), 0, 1.0, 0, 1.0, 0.5)
+	}, "timeStretch != 1.0 should panic")
 }
 
 func TestSetFireWithPitchADSR(t *testing.T) {
@@ -128,6 +137,12 @@ func TestSetFireWithPitchADSR(t *testing.T) {
 		SetFireWithPitchADSR("lib/source/testdata/Signed16bitLittleEndian44100HzMono.wav", 
 			time.Duration(0), 0, 1.0, 0, attack, decay, sustainLevel, release, 0.0, 1.0)
 	}, "Zero pitch should panic in SetFireWithPitchADSR")
+	
+	// Test that timeStretch != 1.0 panics in SetFireWithPitchADSR too
+	assert.Panics(t, func() {
+		SetFireWithPitchADSR("lib/source/testdata/Signed16bitLittleEndian44100HzMono.wav", 
+			time.Duration(0), 0, 1.0, 0, attack, decay, sustainLevel, release, 1.5, 2.0)
+	}, "timeStretch != 1.0 should panic in SetFireWithPitchADSR")
 }
 
 func TestFireCount(t *testing.T) {

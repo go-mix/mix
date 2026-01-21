@@ -508,169 +508,169 @@ func TestADSR_AttackExceedsDuration(t *testing.T) {
 }
 
 func TestPitchShiftPlaybackAdvancement(t *testing.T) {
-src := "test.wav"
-bgnTz := spec.Tz(100)
-endTz := spec.Tz(200)
+	src := "test.wav"
+	bgnTz := spec.Tz(100)
+	endTz := spec.Tz(200)
 
-// Test pitch shift up (2.0x)
-fire1 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 2.0, 1.0)
-assert.Equal(t, 2.0, fire1.Pitch)
-assert.Equal(t, 0.0, fire1.PlaybackTz) // Initial position
+	// Test pitch shift up (2.0x)
+	fire1 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 2.0, 1.0)
+	assert.Equal(t, 2.0, fire1.Pitch)
+	assert.Equal(t, 0.0, fire1.PlaybackTz) // Initial position
 
-// First call transitions to play and returns 0, advances to 2.0
-result := fire1.At(bgnTz)
-assert.Equal(t, spec.Tz(0), result)
-assert.Equal(t, fireStatePlay, fire1.state)
-assert.Equal(t, 2.0, fire1.PlaybackTz) // Advanced by pitch value
+	// First call transitions to play and returns 0, advances to 2.0
+	result := fire1.At(bgnTz)
+	assert.Equal(t, spec.Tz(0), result)
+	assert.Equal(t, fireStatePlay, fire1.state)
+	assert.Equal(t, 2.0, fire1.PlaybackTz) // Advanced by pitch value
 
-// Second call returns 2.0, advances to 4.0
-result = fire1.At(bgnTz + 1)
-assert.Equal(t, spec.Tz(2), result)
-assert.Equal(t, 4.0, fire1.PlaybackTz)
+	// Second call returns 2.0, advances to 4.0
+	result = fire1.At(bgnTz + 1)
+	assert.Equal(t, spec.Tz(2), result)
+	assert.Equal(t, 4.0, fire1.PlaybackTz)
 
-// Test pitch shift down (0.5x)
-fire2 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 0.5, 1.0)
-assert.Equal(t, 0.5, fire2.Pitch)
+	// Test pitch shift down (0.5x)
+	fire2 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 0.5, 1.0)
+	assert.Equal(t, 0.5, fire2.Pitch)
 
-// First call returns 0, advances to 0.5
-result = fire2.At(bgnTz)
-assert.Equal(t, spec.Tz(0), result)
-assert.Equal(t, 0.5, fire2.PlaybackTz)
+	// First call returns 0, advances to 0.5
+	result = fire2.At(bgnTz)
+	assert.Equal(t, spec.Tz(0), result)
+	assert.Equal(t, 0.5, fire2.PlaybackTz)
 
-// Second call returns 0.5, advances to 1.0
-result = fire2.At(bgnTz + 1)
-assert.Equal(t, spec.Tz(0), result) // Truncated to 0
-assert.Equal(t, 1.0, fire2.PlaybackTz)
+	// Second call returns 0.5, advances to 1.0
+	result = fire2.At(bgnTz + 1)
+	assert.Equal(t, spec.Tz(0), result) // Truncated to 0
+	assert.Equal(t, 1.0, fire2.PlaybackTz)
 }
 
 func TestPitchShiftEndTzCalculation(t *testing.T) {
-src := "test.wav"
-bgnTz := spec.Tz(100)
+	src := "test.wav"
+	bgnTz := spec.Tz(100)
 
-// Test with pitch shift up (2.0x) and no explicit endTz
-fire1 := New(src, bgnTz, 0, 1.0, 0, 0, 0, 1.0, 0, 2.0, 1.0)
-assert.Equal(t, spec.Tz(0), fire1.EndTz) // Initially 0
+	// Test with pitch shift up (2.0x) and no explicit endTz
+	fire1 := New(src, bgnTz, 0, 1.0, 0, 0, 0, 1.0, 0, 2.0, 1.0)
+	assert.Equal(t, spec.Tz(0), fire1.EndTz) // Initially 0
 
-// Start playing
-fire1.At(bgnTz)
-fire1.At(bgnTz + 1) // This should calculate EndTz
+	// Start playing
+	fire1.At(bgnTz)
+	fire1.At(bgnTz + 1) // This should calculate EndTz
 
-// EndTz should be calculated based on pitch adjustment
-// With 2.0x pitch, duration should be half
-assert.True(t, fire1.EndTz > 0, "EndTz should be calculated")
+	// EndTz should be calculated based on pitch adjustment
+	// With 2.0x pitch, duration should be half
+	assert.True(t, fire1.EndTz > 0, "EndTz should be calculated")
 
-// Test with pitch shift down (0.5x) and no explicit endTz
-fire2 := New(src, bgnTz, 0, 1.0, 0, 0, 0, 1.0, 0, 0.5, 1.0)
+	// Test with pitch shift down (0.5x) and no explicit endTz
+	fire2 := New(src, bgnTz, 0, 1.0, 0, 0, 0, 1.0, 0, 0.5, 1.0)
 
-// Start playing
-fire2.At(bgnTz)
-fire2.At(bgnTz + 1)
+	// Start playing
+	fire2.At(bgnTz)
+	fire2.At(bgnTz + 1)
 
-// EndTz should be calculated with pitch adjustment
-// With 0.5x pitch, duration should be double
-assert.True(t, fire2.EndTz > 0, "EndTz should be calculated")
+	// EndTz should be calculated with pitch adjustment
+	// With 0.5x pitch, duration should be double
+	assert.True(t, fire2.EndTz > 0, "EndTz should be calculated")
 }
 
 func TestHasPitchShift(t *testing.T) {
-src := "test.wav"
-bgnTz := spec.Tz(100)
-endTz := spec.Tz(200)
+	src := "test.wav"
+	bgnTz := spec.Tz(100)
+	endTz := spec.Tz(200)
 
-// Test with no pitch shift (1.0)
-fire1 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 1.0, 1.0)
-assert.False(t, fire1.HasPitchShift(), "Pitch 1.0 should not be considered pitch shift")
+	// Test with no pitch shift (1.0)
+	fire1 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 1.0, 1.0)
+	assert.False(t, fire1.HasPitchShift(), "Pitch 1.0 should not be considered pitch shift")
 
-// Test with pitch shift up
-fire2 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 2.0, 1.0)
-assert.True(t, fire2.HasPitchShift(), "Pitch 2.0 should be considered pitch shift")
+	// Test with pitch shift up
+	fire2 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 2.0, 1.0)
+	assert.True(t, fire2.HasPitchShift(), "Pitch 2.0 should be considered pitch shift")
 
-// Test with pitch shift down
-fire3 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 0.5, 1.0)
-assert.True(t, fire3.HasPitchShift(), "Pitch 0.5 should be considered pitch shift")
+	// Test with pitch shift down
+	fire3 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 0.5, 1.0)
+	assert.True(t, fire3.HasPitchShift(), "Pitch 0.5 should be considered pitch shift")
 
-// Test with slight pitch shift
-fire4 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 1.1, 1.0)
-assert.True(t, fire4.HasPitchShift(), "Pitch 1.1 should be considered pitch shift")
+	// Test with slight pitch shift
+	fire4 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 1.1, 1.0)
+	assert.True(t, fire4.HasPitchShift(), "Pitch 1.1 should be considered pitch shift")
 }
 
 func TestPitchAdvancement(t *testing.T) {
-src := "test.wav"
-bgnTz := spec.Tz(100)
-endTz := spec.Tz(200)
+	src := "test.wav"
+	bgnTz := spec.Tz(100)
+	endTz := spec.Tz(200)
 
-// Test no pitch shift returns 1.0
-fire1 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 1.0, 1.0)
-assert.Equal(t, 1.0, fire1.pitchAdvancement())
+	// Test no pitch shift returns 1.0
+	fire1 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 1.0, 1.0)
+	assert.Equal(t, 1.0, fire1.pitchAdvancement())
 
-// Test pitch shift returns pitch value
-fire2 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 2.0, 1.0)
-assert.Equal(t, 2.0, fire2.pitchAdvancement())
+	// Test pitch shift returns pitch value
+	fire2 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 2.0, 1.0)
+	assert.Equal(t, 2.0, fire2.pitchAdvancement())
 
-fire3 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 0.5, 1.0)
-assert.Equal(t, 0.5, fire3.pitchAdvancement())
+	fire3 := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 0.5, 1.0)
+	assert.Equal(t, 0.5, fire3.pitchAdvancement())
 }
 
 func TestPitchShiftWithStateTransitions(t *testing.T) {
-src := "test.wav"
-bgnTz := spec.Tz(100)
-endTz := spec.Tz(110) // Short duration
-release := spec.Tz(5)
+	src := "test.wav"
+	bgnTz := spec.Tz(100)
+	endTz := spec.Tz(110) // Short duration
+	release := spec.Tz(5)
 
-// Test pitch shifting with ADSR and state transitions
-fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, release, 2.0, 1.0)
+	// Test pitch shifting with ADSR and state transitions
+	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, release, 2.0, 1.0)
 
-// Before start - should be in Ready state
-assert.Equal(t, fireStateReady, fire.state)
-assert.Equal(t, 0.0, fire.PlaybackTz)
+	// Before start - should be in Ready state
+	assert.Equal(t, fireStateReady, fire.state)
+	assert.Equal(t, 0.0, fire.PlaybackTz)
 
-// Start playing - transition to Play state
-result := fire.At(bgnTz)
-assert.Equal(t, spec.Tz(0), result)
-assert.Equal(t, fireStatePlay, fire.state)
-assert.Equal(t, 2.0, fire.PlaybackTz) // Advanced by pitch
+	// Start playing - transition to Play state
+	result := fire.At(bgnTz)
+	assert.Equal(t, spec.Tz(0), result)
+	assert.Equal(t, fireStatePlay, fire.state)
+	assert.Equal(t, 2.0, fire.PlaybackTz) // Advanced by pitch
 
-// Continue playing with pitch shift
-for i := spec.Tz(1); i < 10; i++ {
-fire.At(bgnTz + i)
-}
+	// Continue playing with pitch shift
+	for i := spec.Tz(1); i < 10; i++ {
+		fire.At(bgnTz + i)
+	}
 
-// Should have advanced playback position significantly due to 2.0x pitch
-assert.True(t, fire.PlaybackTz >= 20.0, "PlaybackTz should advance by pitch multiplier")
+	// Should have advanced playback position significantly due to 2.0x pitch
+	assert.True(t, fire.PlaybackTz >= 20.0, "PlaybackTz should advance by pitch multiplier")
 
-// Play until end - should transition to Release state
-fire.At(endTz)
-assert.Equal(t, fireStateRelease, fire.state)
+	// Play until end - should transition to Release state
+	fire.At(endTz)
+	assert.Equal(t, fireStateRelease, fire.state)
 
-// Complete release
-for i := spec.Tz(1); i <= release; i++ {
-fire.At(endTz + i)
-}
+	// Complete release
+	for i := spec.Tz(1); i <= release; i++ {
+		fire.At(endTz + i)
+	}
 
-// Should be done
-assert.Equal(t, fireStateDone, fire.state)
+	// Should be done
+	assert.Equal(t, fireStateDone, fire.state)
 }
 
 func TestPitchShiftFractionalPositions(t *testing.T) {
-src := "test.wav"
-bgnTz := spec.Tz(100)
-endTz := spec.Tz(200)
+	src := "test.wav"
+	bgnTz := spec.Tz(100)
+	endTz := spec.Tz(200)
 
-// Test that fractional playback positions are maintained correctly
-fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 1.5, 1.0)
+	// Test that fractional playback positions are maintained correctly
+	fire := New(src, bgnTz, endTz, 1.0, 0, 0, 0, 1.0, 0, 1.5, 1.0)
 
-// Start
-fire.At(bgnTz)
-assert.Equal(t, 1.5, fire.PlaybackTz)
+	// Start
+	fire.At(bgnTz)
+	assert.Equal(t, 1.5, fire.PlaybackTz)
 
-// Second sample
-fire.At(bgnTz + 1)
-assert.Equal(t, 3.0, fire.PlaybackTz) // 1.5 * 2
+	// Second sample
+	fire.At(bgnTz + 1)
+	assert.Equal(t, 3.0, fire.PlaybackTz) // 1.5 * 2
 
-// Third sample
-fire.At(bgnTz + 2)
-assert.Equal(t, 4.5, fire.PlaybackTz) // 1.5 * 3
+	// Third sample
+	fire.At(bgnTz + 2)
+	assert.Equal(t, 4.5, fire.PlaybackTz) // 1.5 * 3
 
-// Fourth sample
-fire.At(bgnTz + 3)
-assert.Equal(t, 6.0, fire.PlaybackTz) // 1.5 * 4
+	// Fourth sample
+	fire.At(bgnTz + 3)
+	assert.Equal(t, 6.0, fire.PlaybackTz) // 1.5 * 4
 }

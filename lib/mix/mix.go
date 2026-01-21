@@ -91,11 +91,15 @@ func SetFire(source string, begin time.Duration, sustain time.Duration, volume f
 // SetFireWithPitch represents a single audio source playing at a specific time with pitch shifting and time stretching.
 // pitch: multiplier for pitch (1.0 = no change, 2.0 = up one octave, 0.5 = down one octave)
 //        Must be a positive non-zero value. Values < 0.01 or > 100 are not recommended.
-// timeStretch: multiplier for duration (1.0 = no change, 2.0 = twice as slow, 0.5 = twice as fast)
+// timeStretch: multiplier for duration (1.0 = no change, 2.0 = twice as slow, 0.5 = twice as fast).
+//              NOTE: timeStretch is not yet implemented; currently only a value of 1.0 is supported.
 // This function uses a default ADSR envelope that has no effect (attack=0, decay=0, sustainLevel=1.0, release=0).
 func SetFireWithPitch(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, pitch float64, timeStretch float64) *fire.Fire {
 	if pitch <= 0 {
 		panic("SetFireWithPitch: pitch must be a positive non-zero value")
+	}
+	if timeStretch != 1.0 {
+		panic("SetFireWithPitch: timeStretch != 1.0 is not yet implemented; only timeStretch = 1.0 is currently supported")
 	}
 	const defaultSustainLevel = 1.0
 	return setFireInternal(source, begin, sustain, volume, pan, 0, 0, defaultSustainLevel, 0, pitch, timeStretch)
@@ -105,10 +109,14 @@ func SetFireWithPitch(source string, begin time.Duration, sustain time.Duration,
 // ADSR envelope control and pitch shifting / time stretching.
 // pitch: multiplier for pitch (1.0 = no change, 2.0 = up one octave, 0.5 = down one octave)
 //        Must be a positive non-zero value. Values < 0.01 or > 100 are not recommended.
-// timeStretch: multiplier for duration (1.0 = no change, 2.0 = twice as slow, 0.5 = twice as fast)
+// timeStretch: multiplier for duration (1.0 = no change, 2.0 = twice as slow, 0.5 = twice as fast).
+//              NOTE: timeStretch is not yet implemented; currently only a value of 1.0 is supported.
 func SetFireWithPitchADSR(source string, begin time.Duration, sustain time.Duration, volume float64, pan float64, attack time.Duration, decay time.Duration, sustainLevel float64, release time.Duration, pitch float64, timeStretch float64) *fire.Fire {
 	if pitch <= 0 {
 		panic("SetFireWithPitchADSR: pitch must be a positive non-zero value")
+	}
+	if timeStretch != 1.0 {
+		panic("SetFireWithPitchADSR: timeStretch != 1.0 is not yet implemented; only timeStretch = 1.0 is currently supported")
 	}
 	return setFireInternal(source, begin, sustain, volume, pan, attack, decay, sustainLevel, release, pitch, timeStretch)
 }
