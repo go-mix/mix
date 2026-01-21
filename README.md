@@ -1,9 +1,14 @@
 # Mix 
 
-[![Tests](https://github.com/go-mix/mix/actions/workflows/test.yml/badge.svg)](https://github.com/go-mix/mix/actions/workflows/test.yml)
-[![GoDoc](https://godoc.org/gopkg.in/mix.v0?status.svg)](https://godoc.org/gopkg.in/mix.v0)
-[![Go Report Card](https://goreportcard.com/badge/gopkg.in/mix.v0)](https://goreportcard.com/report/gopkg.in/mix.v0)
+[![CI](https://github.com/go-mix/mix/actions/workflows/ci.yml/badge.svg)](https://github.com/go-mix/mix/actions/workflows/ci.yml) 
+[![GoDoc](https://godoc.org/gopkg.in/mix.v0?status.svg)](https://godoc.org/gopkg.in/mix.v0) 
+[![Go Report Card](https://goreportcard.com/badge/gopkg.in/mix.v0)](https://goreportcard.com/report/gopkg.in/mix.v0) 
 [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
+
+[Forge link](https://github.com/go-mix/mix) |
+[pkg.go.dev](https://pkg.go.dev/github.com/go-mix/mix) |
+[goreportcard.com](https://goreportcard.com/report/github.com/go-mix/mix) |
+[Coverage](https://app.codecov.io/github/go-mix/mix)
 
 [gopkg.in/mix.v0](https://gopkg.in/mix.v0)
 
